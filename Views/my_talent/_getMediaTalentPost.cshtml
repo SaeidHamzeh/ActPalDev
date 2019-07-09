@@ -1,0 +1,31 @@
+﻿@model IEnumerable<ViewModels.TalentPostViewModel>
+
+@if (Model.Count() > 0)
+{
+    
+        foreach (var item in Model)
+        {
+            string[] ext = item.MediaPath.Split('.');
+            if (ext[1] == "jpg" || ext[1] == "jpeg" || ext[1] == "png" || ext[1] == "gif")
+            {
+                <div class="imgBox col-sm-12">
+                    <img src="~/Content/TalentPost/PostMedia/@item.MemId@item.MediaPath" class="img-responsive" />
+                </div>
+            }
+            else if (ext[1] == "webm" || ext[1] == "flv" || ext[1] == "vob" || ext[1] == "ogg" || ext[1] == "avi" || ext[1] == "mov" || ext[1] == "wmv" || ext[1] == "mp4" || ext[1] == "3gp")
+            {
+                <div class="col-sm-12">
+                    <video style="width:300px;height:100px" controls class="img-responsive">
+                        <source src="~/Content/TalentPost/PostMedia/@item.MemId@item.MediaPath" />
+                    </video>
+                </div>
+            }
+            else
+            {
+                <div class="col-sm-12">
+                    <a href="~/Content/TalentPost/PostMedia/@item.MemId@item.MediaPath" download target="_blank">An Attachment</a>
+                </div>
+            }
+        }
+    
+}

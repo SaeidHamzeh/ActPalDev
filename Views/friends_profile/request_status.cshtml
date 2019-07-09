@@ -1,0 +1,264 @@
+﻿@model IEnumerable<ViewModels.RequestDetailViewModel>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutDashboard.cshtml";
+}
+
+
+@Html.Partial("_optionSearchPanel")
+<div class="clearfix"></div><br />
+<div class="contentSection">
+
+
+
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs tabsButton" role="tablist">
+        <li role="presentation" class="active"><a href="#request" aria-controls="request" role="tab" data-toggle="tab">Request</a></li>
+        <li role="presentation"><a href="#document" aria-controls="document" role="tab" data-toggle="tab">Document</a></li>
+        <li role="presentation"><a href="#interviews" aria-controls="interviews" role="tab" data-toggle="tab">Interviews</a></li>
+    </ul>
+
+    <!-- Tab panes -->
+    <div class="tab-content">
+        <div role="tabpanel" class="tab-pane active" id="request">
+
+            <div class="allPostDetail personalRequest">
+                @if (Model.Count() > 0)
+                {
+                    foreach (var item in Model)
+                    {
+                        <div class="row postRows">
+                            <div class="userProfile">
+                                <div class="userImage">
+                                    <a href="javascript:void(0)" title="Photo Change">
+                                        @if (item.Mem_pic != "")
+                                        {
+                                            <img id="imgPreview" class="img-responsive profilepic" data-userid="@item.Mem_ID" src="@item.Mem_pic" data-pin-nopin="true">
+                                        }
+                                        else
+                                        {
+                                            <img id="imgPreview" class="img-responsive profilepic" data-userid="@item.Mem_ID" src="~/Content/images/request-dummy.png" data-pin-nopin="true">
+                                        }
+                                    </a>
+                                </div>
+                            </div>
+
+                            <div class="detailOfRequest">
+                                <ul class="PostCategoryList">
+                                    <li>@item.Request_Title</li>
+                                    <li>@item.Request_Desc</li>
+                                    <li title="Click Here For Rating">
+                                        Rating
+                                        <span class="ratingStars" data-ratingreq="@item.Request_History_ID">
+                                            @for (int i = 0; i < 5; i++)
+                                            {
+                                                if (item.Request_Rating > i)
+                                                {
+                                                    double rest = item.Request_Rating - i;
+                                                    if (rest <= 0.9)
+                                                    {
+                                            <span><img src="~/Content/images/half-filled-star.png" /></span>
+                                                    }
+                                                    else
+                                                    {
+                                            <span><img src="~/Content/images/filled-star.png" /></span>
+                                                    }
+                                                }
+                                                else
+                                                {
+                                            <span><img src="~/Content/images/empty-star.png" /></span>
+                                                }
+                                            }
+                                            @if (item.Request_Rating != 0)
+                                            {
+                                            <span class="badge">@item.Request_Rating</span>
+                                            }
+                                        </span>
+                                    </li>
+                                </ul>
+                                <h4>@item.Request_Details_Title</h4>
+                                <p>@item.Request_Details_Desc</p>
+
+                                <div class="socialModule">
+@if (item.Request_Status != 5 && item.Request_Status != 6)
+                                        {
+                                    <span class="pull-left">  
+                                            <a href="javascript:void(0)" data-requestdetailid="@item.Request_History_ID" id="@item.Request_History_ID">
+                                                @if (item.Request_Detail_LikeByMe > 0)
+                                                {
+                                                    <label>Liked</label>
+                                                }
+                                                else
+                                                {
+                                                    <label>Like</label>
+                                                }
+                                                <label class="LikeCount">@item.Request_Detail_Like</label>
+                                            </a>                                        
+                                    </span>
+                                    <span class="pull-left"><a href="/Home/request_status/?req_id=@item.Request_History_ID">Comment @item.Request_comment_count</a></span>
+    }
+                                    @if (item.Request_Status == 4 && item.Mem_ID == Convert.ToInt32(Session["UserId"]))
+                                    {
+                                        <div style="display:inline;float:left;" class="shareBtn">
+                                            Share
+                                            <ul class="subItems">
+                                                <li onclick="ReqShareWith(3,@item.Request_History_ID,this)">
+                                                    Friends @if (@item.Request_Shared_ID == 3)
+                                                        {
+                                                        <text><i class="glyphicon glyphicon-ok"></i></text>  }
+                                                </li>
+                                                <li onclick="ReqShareWith(2,@item.Request_History_ID,this)">
+                                                    Public @if (@item.Request_Shared_ID == 2)
+                                                        {
+                                                        <text><i class="glyphicon glyphicon-ok"></i></text>  }
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    }
+
+                                    <span class="pull-right">
+                                        <span class="requestStatusMess" data-status="@item.Request_Status">
+                                            Status: @if (item.Request_Status == 2)
+                                            {
+                                                <text>In Process</text>
+                                            }
+                                            else if (item.Request_Status == 3)
+                                            {
+                                                <text>Confirmed</text>
+                                            }
+                                            else if (item.Request_Status == 4)
+                                            {
+                                                <text>Completed and Closed</text>
+                                            }
+                                            else if (item.Request_Status == 5)
+                                            {
+                                                <text>Suspended</text>
+                                            }
+                                            else if (item.Request_Status == 6)
+                                            {
+                                                <text>Rejected</text>
+                                            }
+                                        </span>
+                                        <a href="/Home/request_status/?req_id=@item.Request_History_ID">More</a>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <span>No Request Found.</span>
+                }
+            </div>
+            <div class="paginationBox col-sm-12">
+                @if (ViewBag.totalpages > 1)
+                {
+                    <ul class="pagination pull-left nomargin">
+                        @if (ViewBag.CurrentPage != 1)
+                        {
+                            <li><a href="javascript:void(0)" data-page="1"><span aria-hidden="true">&laquo;</span></a></li>
+                            <li><a href="javascript:void(0)" data-page="@(ViewBag.CurrentPage-1)"><span aria-hidden="true">&lsaquo;</span></a></li>
+                        }
+                        @if (ViewBag.totalpages > 1)
+                        {
+                            var i = 1; var last = 5;
+                            if (ViewBag.CurrentPage > 3)
+                            {
+                                i = ViewBag.CurrentPage - 2;
+                                last = ViewBag.CurrentPage + 2;
+                            }
+                            if (last > ViewBag.totalpages)
+                            {
+                                last = ViewBag.totalpages;
+                            }
+
+                            for (; i <= last; i++)
+                            {
+                                if (i == ViewBag.CurrentPage)
+                                {
+                                    <li class="active"><a href="javascript:void(0)" data-page="@i">@i</a></li>
+                                }
+                                else
+                                {
+                                    <li><a href="/User/index/?page=@i" data-page="@i">@i</a></li>
+                                }
+
+                            }
+                        }
+                        @if (ViewBag.totalpages > ViewBag.CurrentPage)
+                        {
+                            <li>
+                                <a href="javascript:void(0)" data-page="@(ViewBag.CurrentPage+1)">
+                                    <span aria-hidden="true">
+                                        &rsaquo;
+                                    </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" data-page="@ViewBag.totalpages">
+                                    <span aria-hidden="true">
+                                        &raquo;
+                                    </span>
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                }
+                <ul class="pull-left nomargin" id="allOptionList" style="list-style:none;padding: 0 0 0 10px;">
+                    <li>
+                        <input type="hidden" value="@ViewBag.pageSize" id="pageSize" />
+                        <select class="perPageDropdown">
+                            <option value="10">10</option>
+                            <option value="20">20</option>
+                            <option value="50">50</option>
+                        </select>
+                        select per page
+                    </li>
+                </ul>
+
+                <p class="pull-right nomargin">@ViewBag.CurrentPage-@ViewBag.totalpages of @ViewBag.totalPost items</p>
+            </div>
+
+        </div>
+        <div role="tabpanel" class="tab-pane" id="document">
+                Document
+        </div>
+        <div role="tabpanel" class="tab-pane" id="interviews">
+            interviews
+        </div>
+    </div>
+
+
+
+</div>
+<script type="text/javascript">
+    function ReqShareWith(shareId, Request_History_ID,event) {
+        var data = {"shareId": shareId, "Request_History_ID": Request_History_ID }
+
+        $(event).parents().find("i").remove();
+        $(event).append("<i class='glyphicon glyphicon-ok'></i>");
+        $.ajax({
+            type: "Post",
+            url: "/User/share_request",
+            data: data,
+            dataType: "text",
+            success: function (data) {
+                $("#confirmation").modal("show");
+                var msg;
+                if(shareId==2){
+                    msg="Request shared successfully with all members";
+                }else if(shareId==3){
+                    msg="Request shared successfully with friends";
+                }
+                $("#confirmation .modal-body h4").text(msg);
+                $("#confirmation a").hide();
+                $("#confirmation .modal-footer button").text("Ok");
+            },
+            error: function (data) {
+                //alert(data.d + "Error");
+            }
+        });k
+    }
+</script>

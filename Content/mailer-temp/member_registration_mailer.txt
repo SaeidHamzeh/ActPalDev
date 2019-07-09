@@ -1,0 +1,24 @@
+<div style="padding: 30px;max-width: 800px;font-family: sans-serif;margin: auto;">
+<header style="    border-bottom: 1px solid #ddd;float: left;width: 100%;padding: 20px 0;margin-bottom: 30px;">
+    <div style="max-width: 300px;float: left;"><img src="https://publickin.com/Content/images/logo-mailer.png" alt="ActPal" /></div>
+    <div style="float: right;margin-top: 15px;">@@Date</div>
+</header>
+<div style="clear: both">
+<p style="font-weight:bold;margin-bottom:30px;">Dear @@Name,</p>
+
+<p>Thank you for creating an ActPal account! To complete your registration, 
+please click on the link below to activate your account. Once you click 
+on the link, you will be able to login to ActPal Member Portal with your 
+User ID and Password.</p>
+
+<p>Please <a href=@@Verification>click here </a></p>
+<p>If the link does not work, you can copy and paste the URL below into your web browser. 
+If the link is expired, you can try to login and a "Resend Activation Link" will appear on the page. 
+Click on the "Resend Activation Link" and follow the steps on the screen.<br/><br/>@@Verification</p>
+<p>This is a system generated email alert. Do not reply.</p>
+<p>If you have any questions or concerns, send us an email at Support@ActPal.com.</p>
+<p>Sincerely,<br/>ActPal</p>
+
+</div>
+</div>
+

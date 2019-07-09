@@ -1,0 +1,98 @@
+﻿
+@{
+    ViewBag.Title = "ComingSoon";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script>
+    $(function () {
+        $('#future_date').countdowntimer({
+            dateAndTime: "2017/04/25 00:00:00",
+            size: "lg",
+            regexpMatchFormat: "([0-9]{1,2}):([0-9]{1,2}):([0-9]{1,2}):([0-9]{1,2})",
+            regexpReplaceWith: "<span class='displayformat'>$1 <small>days</small></span>   <span class='displayformat'>$2 <small>hours</small></span>  <span class='displayformat'>$3 <small>minutes</small></span>  <span class='displayformat'>$4 <small>seconds</small></span>"
+        });
+    });
+</script>
+
+    
+<div class="container-fluid comingSoon">
+    <div class="row">
+        <div class="col-sm-12 blueHeading">
+            <div class="clearfix"></div>
+            <div class="marginTop30px"></div>
+            <h2 class="text-center">Coming Soon</h2>
+            <div class="clearfix"></div>
+            <div id="countdowntimer">
+                <span id="future_date"></span>
+            </div>
+
+            <div class="clearfix"></div>
+            <div class="marginTop30px"></div>
+        </div>
+    </div>
+
+
+    <div class="row marginTop30px">
+        <div class="col-sm-6 col-sm-offset-3">
+            <div class="col-sm-3">
+                <h3>30</h3>
+                <h4>Days</h4>
+            </div>
+            <div class="col-sm-9">
+                <ul>
+                    <li>Call to order</li>
+                    <li>Treasure's Report</li>
+                    <li>News and Events</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="row marginTop30px">
+        <div class="col-sm-6 col-sm-offset-3">
+            <div class="col-sm-3">
+                <h3>60</h3>
+                <h4>Days</h4>
+            </div>
+            <div class="col-sm-9">
+                <ul>
+                    <li>Communicatoins</li>
+                    <li>New TTI Facebook</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row marginTop30px">
+        <div class="col-sm-6 col-sm-offset-3">
+            <div class="col-sm-3">
+                <h3>120</h3>
+                <h4>Days</h4>
+            </div>
+            <div class="col-sm-9">
+                <ul>
+                    <li>Community Service</li>
+                    <li>Fundraising</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="row marginTop30px">
+        <div class="col-sm-6 col-sm-offset-3">
+            <div class="col-sm-3">
+                <h3>180</h3>
+                <h4>Days</h4>
+            </div>
+            <div class="col-sm-9">
+                <ul>
+                    <li>Char's Report</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+</div>
+

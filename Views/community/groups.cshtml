@@ -1,0 +1,50 @@
+﻿@{
+    ViewBag.Title = "groups";
+    Layout = "~/Views/Shared/_Community_Group_Layout.cshtml";
+}
+
+<div class="row">
+    <div class="col-lg-12">
+        <h3 class="blueHeading">Groups</h3>
+    </div>
+</div>
+<div class="clearfix"></div>
+<div class="basicInfoForm ">
+    <div class="row businessForm active form-group hide">
+        @using (Ajax.BeginForm("_add_new_groups", "community", new AjaxOptions { OnSuccess = "success", OnFailure = "failure", HttpMethod = "POST", LoadingElementId = "loadingreg" }, new { @Class = "checkValidation" }))
+        {
+            <div class="col-sm-12">
+                <label>Community</label>
+                <input type="hidden" value="0" name="groupId" />
+                <span id="BusinessCommunity">
+                    @Html.Action("MemberCommunityView", "CascadingDropDown")
+                </span>
+            </div>
+
+            <div class="col-sm-12">
+                <label>Group Name</label>
+                <span>
+                    <input type="text" name="groupName" placeholder="Enter Community Name" class="form-control" />
+                </span>
+            </div>
+
+            <div class="col-sm-12">
+                <p class="requiredField text-center hide">All Fields Are Required!</p>
+            </div>
+
+            <div class="col-sm-12">
+                <p class="text-right">
+                    <input type="submit" class="btn btn-primary" value="Save" />
+                    <input class="btn btn-primary addGroupForm" type="reset" value="Cancel" />
+                </p>
+            </div>
+        }
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <div id="groupListData">
+                @Html.Action("_view_communities_groups", "community")
+            </div>
+        </div>
+    </div>
+</div>

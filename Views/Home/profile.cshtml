@@ -1,0 +1,10 @@
+﻿@if (@Session["UserID"] == null)
+{
+    ViewBag.Title = "Profile";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+else
+{
+    ViewBag.Title = "Profile";
+    Layout = "~/Views/Shared/_LayoutDashboard.cshtml";
+}

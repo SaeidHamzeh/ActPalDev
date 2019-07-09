@@ -1,0 +1,41 @@
+﻿@model IEnumerable<ViewModels.GroupTopicDiscussionViewModel>
+@{
+    ViewBag.Title = "group_topic_detail";
+    Layout = "~/Views/Shared/_LayoutMemGroup.cshtml";
+}
+
+<h2 class="blueHeading">Group Topic Detail <a href="~/community/add_experience_topic" class="btn btn-primary pull-right btn-xs">Add New Topic</a></h2>
+
+<div class="col-sm-12">
+    @if (Model.Count() > 0)
+    {
+        foreach (var item in Model)
+        {
+            <div class="GroupTopicContent">
+                <input type="hidden" value="2" name="TopicCat" />
+                <input type="hidden" value="@item.id" name="topicId" />
+                <h3>@item.title</h3>
+                <div class="description">@Html.Raw(item.description)</div>
+
+                <p class="text-right"><a href="~/Home/request_form/?optionId=@item.ServiceOfferId&CatId=@item.catId" target="_blank">View @(item.catId == 1 ? "Product" : item.catId == 2 ? "Service" : "")</a></p>
+            </div>
+
+            <button class="btn btn-primary btn-xs editTopicContent"><i class="fa fa-pencil"></i></button>
+    <button class="btn btn-primary hide pull-right updatePostBtn updateServicesContent">Update</button>
+            <button class="btn btn-primary hide pull-right cancelTopicContent">Cancel</button>
+
+            <hr style="width: 100%;margin-top: 30px;display: inline-block;" />
+            // topicType 1 means Chat topic and 2 is Experience
+            @Html.Action("_groupTopicsComments", "community", new { grTopicId = ViewBag.grTopicId, topicType = 2, MemId = item.MemId })
+        }
+
+    }
+    else
+    {
+        <h3>No Recourd Found</h3>
+    }
+
+</div>
+
+
+<script src="~/Content/js/post_and_comment.js"></script>

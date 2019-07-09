@@ -1,0 +1,226 @@
+﻿@model IEnumerable<ViewModels.FileDataMemberViewModel>
+
+@{
+    ViewBag.Title = "Friends";
+    Layout = "~/Views/Shared/_User_Layout.cshtml";
+}
+
+
+<div class="row">
+    <div class="clearfix"></div>
+
+    <div class="col-lg-12">
+        <div class="blueHeading">
+            <h3 class="nomargin">Photos</h3>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+    <div class="col-lg-12">
+        <div class="updateInformation pull-left">
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs userInfoTabs" role="tablist">
+                <li role="presentation" class="active">
+                    <a href="#basicInfo" aria-controls="basicInfo" role="tab" class="changeURL" data-dataurl="Photos" data-toggle="tab">Your Photos</a>
+                </li>
+                <li role="presentation">
+                    <a href="#contactInfo" aria-controls="contactInfo" role="tab" class="changeURL" data-dataurl="Albums" data-toggle="tab">Albums</a>
+                </li>
+            </ul>
+        </div>
+
+
+    </div>
+    <div class="clearfix"></div>
+    <div class="col-lg-12 updateInformation">
+        <div class="tab-content">
+            <div role="tabpanel" class="basicInfoForm photoGallPage tab-pane active" id="basicInfo">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="photoGalleryBox row">
+                            <button type="button" class="addPhotoButton blackBtnCss" id="photoGallery">
+                                <i class="fa fa-upload"></i> Upload Photos
+                            </button>
+                            <ul>
+                                @if (Model.Count() > 0)
+                                {
+                                    foreach (var item in Model)
+                                    {
+                                        <li style="background:url(/Content/images/gallery-photo/@item.photo_path) no-repeat center center;background-size:cover;">
+                                            <div class="overLayerFunction text-center">
+                                                <p class="photoDate">@item.date.ToString("MMM dd, yyyy")</p>
+                                                <a class="fancybox btn" rel="memberPhoto" href="~/Content/images/gallery-photo/@item.photo_path">
+                                                    <i class="fa fa-search-plus"></i>
+                                                </a>
+                                                <button type="button" class="btn removeCurrPhoto" data-photo-id="@item.photo_id"><i class="fa fa-remove"></i></button>
+                                            </div>
+                                        </li>
+                                    }
+                                }
+                            </ul>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div role="tabpanel" class="tab-pane ablumSection photoGallPage" id="contactInfo">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="photoGalleryBox">                            
+                            @if (ViewBag.albumid == 0) { 
+                            <button type="button" id="addAlbumButton" class="blackBtnCss insideTabBtn">
+                                <i class="fa fa-upload"></i> Create Album
+                            </button>
+                            }
+                            <ul class="photoGalleryBox ablumList">
+                                @Html.Action("_get_album_list", "User", new { userId = Session["UserID"], url = "/User/gallery?name=Albums" })
+                            </ul>
+                        </div>
+
+                        <div class="photoGalleryBox @(ViewBag.albumid==0?"hide":"")">
+                            <h3 style="margin-top: -25px;margin-bottom: 30px;border-bottom: 1px solid #ddd;padding-bottom: 10px;"><label class="pull-left"><a href="/User/gallery?name=Albums"><i class="fa fa-arrow-circle-left"></i></a></label>@ViewBag.albumName <a class="albumEdit pull-right" data-album-id="@ViewBag.albumid" data-album-name="@ViewBag.albumName"><i class="fa fa-edit"></i></a></h3>
+                            <button type="button" class="addPhotoButton blackBtnCss" id="photoGallery">
+                                <i class="fa fa-upload"></i> Upload Photos
+                            </button>
+                            <ul class="albumInner">
+                               
+                                @if (Model.Count() > 0)
+                                {
+                                    foreach (var item in Model)
+                                    {
+                                        <li style="background:url(/Content/images/gallery-photo/@item.photo_path) no-repeat center center;background-size:cover;">
+                                            <div class="overLayerFunction">
+                                                <a class="fancybox" rel="memberPhoto" title="Zoom Photo" href="~/Content/images/gallery-photo/@item.photo_path">
+                                                    <i class="fa fa-search-plus"></i>
+                                                </a>
+                                                <button type="button" class="removeCurrPhoto" title="Remove Photo" data-photo-id="@item.photo_id"><i class="fa fa-remove"></i></button>
+                                                <button type="button" class="makeCoverPhoto" title="Make Cover" data-photo-id="@item.photo_id" data-album-id="@ViewBag.albumid"><img src="~/Content/images/album-icon.png" alt="" /></button>
+                                                <p class="photoDate">@item.date.ToString("MMM dd, yyyy")</p>
+                                            </div>
+                                        </li>
+                                    }
+                                }
+
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="addPhotoGallery" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header blueHeading nomargin">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Add Photo In Gallery</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="addPhotoEvent">
+                        <div class="col-sm-12 text-center">
+                            <input type="hidden" value="@ViewBag.albumid" id="albumIdinput" />
+                            <input type="file" value="photo" name="photo" onchange="selectedImages(this)" id="inputPhoto" accept="image/*" capture multiple />
+                            <div class="choosePhoto marginB30Only">
+                                <h3 class="text-center">
+                                    <i class="fa fa-upload"></i><br />
+                                    Upload Photo <span class="onlyforMobile">/ Take Photo</span>
+                                </h3>
+                            </div>
+                        </div>
+
+                        @*<div class="col-sm-6">
+
+                                <h3 class="TakePhoto text-center" id="takePhotoByMedia">
+                                    <i class="fa fa-camera" aria-hidden="true"></i><br />
+                                    Take Photo
+                                </h3>
+
+                            </div>*@
+                    </div>
+                    <div class="selected-Photo-Preview hide">
+                        <ul></ul>
+                    </div>
+                    @*<div class="booth clearfix row">
+                            <div class="col-sm-6">
+                                <video id="liveVideo"></video>
+                            </div>
+                            <div class="col-sm-6">
+                                <canvas id="storePhotCanvas"></canvas>
+                                <div id="clickedPhoto">
+                                    <img src="#" class="img-responsive" />
+                                </div>
+                            </div>
+                            <button class="booth-capture-photo btn btn-primary" id="takeLivePhoto">Take Photo</button>
+                        </div>*@
+                    <h4 class="uploadMsg"></h4>
+                </div>
+                <div class="clearfix"></div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default hide addphotoBack">Back</button>
+                    <a id="uploadPhotoInProfile" class="btn btn-primary">Add Pictures</a>
+                    <button id="uploadClickedPhoto" type="button" class="btn btn-primary hide">Upload</button>
+                    <button type="button" class="btn" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="addAlbumPopUp" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header margin25pxTB">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title text-center graycolor" id="myModalLabel">
+                        <img src="~/Content/assets/icons/album-icon.png" /><br />
+                        Create Album
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div class="margin25pxTB">
+                        <div class="input-group">
+                            <input type="text" placeholder="Enter Album Name" class="form-control" />
+                            <div class="input-group-btn">
+                                <button id="createAlbum" class="btn btn-danger BtnCssyellow normal">Create</button>
+                                <button id="updateAlbum" class="btn btn-danger BtnCssyellow hide">Update</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+    <div class="clearfix"></div>
+    <div class="marginTop30px"></div>
+</div>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var query = window.location.search.substring(1);
+        var vars = query.split("&");
+
+        for (var i = 0; i < vars.length; i++) {
+            var items = vars[i].split("=");
+
+            if (items[0] == "name" && items[1] == "Albums") {
+                $(".userInfoTabs li:last-child, #contactInfo").addClass("active").siblings().removeClass("active");
+            } else {
+
+                if (items[0] == "album" && items[1] > 0) {
+                    $(".ablumList").addClass("hide");
+                    $(".albumInner").removeClass("hide");
+                }
+            }
+        }
+
+    });
+
+    getMemAlbum();
+</script>

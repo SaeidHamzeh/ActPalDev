@@ -1,0 +1,82 @@
+﻿@model IEnumerable<ViewModels.GroupViewModel>
+
+@if (Model.Count() > 0)
+{
+    // 4 - Pending, 1-Accept, 2-Reject, 3-Exit
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>User</th>
+                <th class="text-center">Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Mem_Name</td>
+                    <td>
+                        @if (item.Status == 1)
+                        {
+                            <span>Accepted</span>
+                        }
+                        else if (item.Status == 2)
+                        {
+                            <span>Rejected</span>
+                        }
+                        else if (item.Status == 3)
+                        {
+                            <span>Left</span>
+                        }
+                        else if (item.Status == 4)
+                        {
+                            <span>Pending</span>
+                        }
+                        else if (item.Status == 5)
+                        {
+                            <span>Blocked</span>
+                        }
+                        else if (item.Status == 6)
+                        {
+                            <span>Blocked By You</span>
+                        }
+                    </td>
+                    <td>
+                        @if (item.Status == 1)
+                        {
+                            <button class="btn btn-primary btn-xs groupStatusUpdate" data-groupid="@item.GroupId" data-updatestatus="-1" data-grmemid="@item.GrMemId">Remove</button>
+                            <button class="btn btn-primary btn-xs groupStatusUpdate" data-updatestatus="6" data-groupid="@item.GroupId" data-grmemid="@item.GrMemId">Block</button>
+                        }
+                        else if (item.Status == 2)
+                        {
+                            <button class="btn btn-primary btn-xs groupStatusUpdate" data-updatestatus="4" data-groupid="@item.GroupId" data-grmemid="@item.GrMemId">Resend</button>
+                            <button class="btn btn-primary btn-xs groupStatusUpdate" data-updatestatus="6" data-groupid="@item.GroupId" data-grmemid="@item.GrMemId">Block</button>
+                        }
+                        else if (item.Status == 3)
+                        {
+                            <button class="btn btn-primary btn-xs groupStatusUpdate" data-updatestatus="4" data-groupid="@item.GroupId" data-grmemid="@item.GrMemId">Resend</button>
+                            <button class="btn btn-primary btn-xs groupStatusUpdate" data-updatestatus="6" data-groupid="@item.GroupId" data-grmemid="@item.GrMemId">Block</button>
+                        }
+                        else if (item.Status == 4)
+                        {
+                            <button class="btn btn-primary btn-xs groupStatusUpdate" data-updatestatus="-1" data-groupid="@item.GroupId" data-grmemid="@item.GrMemId">Cancel</button>
+                        }
+                        else if (item.Status == 5)
+                        {
+                            
+                        }
+                        else if (item.Status == 6)
+                        {
+                            <button class="btn btn-primary btn-xs groupStatusUpdate" data-updatestatus="1" data-groupid="@item.GroupId" data-grmemid="@item.GrMemId">Unblock</button>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <h3 class="text-center">No Records Founds</h3>
+}

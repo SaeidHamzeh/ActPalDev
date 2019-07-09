@@ -1,0 +1,166 @@
+﻿@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_User_Layout.cshtml";
+}
+
+
+<div class="row">
+    <div class="col-lg-12">
+        <h3 class="blueHeading">Edit Detail</h3>
+    </div>
+    <div class="clearfix"></div>
+    <div class="col-lg-12">
+        <div class="updateInformation">
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs userInfoTabs" role="tablist">
+                <li role="presentation" class="active"><a href="#basicInfo" class="changeURL" data-dataurl="basicInfo" aria-controls="basicInfo" role="tab" data-toggle="tab">Basic</a></li>
+                <li role="presentation"><a href="#business" aria-controls="business" class="changeURL" data-dataurl="business" role="tab" data-toggle="tab">Business</a></li>
+                <li role="presentation"><a href="#contactInfo" aria-controls="contactInfo" class="changeURL" data-dataurl="contactInfo" role="tab" data-toggle="tab">Contact</a></li>
+                <li role="presentation"><a href="#education" aria-controls="education" class="changeURL" data-dataurl="education" role="tab" data-toggle="tab">Education</a></li>
+
+                <li>
+                    <a>More...</a>
+                    <ul class="sub-menu">
+                        <li><a href="#policiesSetting" aria-controls="policiesSetting" class="changeURL" data-dataurl="policiesSetting" role="tab" data-toggle="tab">Policies and Setting</a></li>
+                        <li><a href="#langAndRegion" aria-controls="langAndRegion" class="changeURL" data-dataurl="langAndRegion" role="tab" data-toggle="tab">Language and Region</a></li>
+                        <li><a href="#customProp" aria-controls="customProp" class="changeURL" data-dataurl="customProp" role="tab" data-toggle="tab">Security Policy</a></li>
+                        <li><a href="#changePassword" aria-controls="changePassword" class="changeURL" data-dataurl="changePassword" role="tab" data-toggle="tab">Change Password</a></li>
+                    </ul>
+                </li>
+            </ul>
+
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <div role="tabpanel" class="basicInfoForm tab-pane active" id="basicInfo">
+                    <div id="basicInfo-body">
+                        @{ Html.RenderAction("_BasicInfo", new { userID = @Session["UserID"] }); }
+                    </div>
+                </div>
+
+                <div role="tabpanel" class="basicInfoForm tab-pane" id="business">
+                    <div id="business-body" style="display:inline-block;width:100%;">
+                        @Html.Action("_Business", "User")
+                    </div>
+                </div>
+
+                <div role="tabpanel" class="tab-pane basicInfoForm" id="contactInfo">
+                    <div id="ContactInfo-body">
+                        @{ Html.RenderAction("_ContactInfo", new { userID = @Session["UserID"] }); }
+                    </div>
+                </div>
+
+                <div role="tabpanel" class="tab-pane basicInfoForm" id="education">
+                    <div id="EducationInfo-body">
+                        @{ Html.RenderAction("_EducationInfo", new { userID = @Session["UserID"] }); }
+                    </div>
+                </div>
+
+                <div role="tabpanel" class="tab-pane basicInfoForm privacyPlicies " id="policiesSetting">
+                    <div class="row">
+                        <div class="col-md-10 col-md-offset-1">
+                            <h4>(1) Introduction</h4>
+                            <p>
+                                Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s
+                            </p>
+
+                            <p>
+                                Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum
+                            </p>
+
+                            <h4>(2) Introduction</h4>
+                            <p>
+                                Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+                            </p>
+                            <ul>
+                                <li>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.</li>
+                                <li>Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece</li>
+                                <li>There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form</li>
+                                <li>The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. </li>
+                                <li>The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in section 1.10.32</li>
+
+                            </ul>
+
+                            <h4>(3) Introduction</h4>
+                            <p>
+                                Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+                            </p>
+                            <ul>
+                                <li>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.</li>
+                                <li>Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece</li>
+                                <li>There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form</li>
+                                <li>The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. </li>
+                                <li>The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in section 1.10.32</li>
+                                <li>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.</li>
+                                <li>Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece</li>
+                                <li>There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form</li>
+                                <li>The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. </li>
+                                <li>The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in section 1.10.32</li>
+                            </ul>
+
+
+                        </div>
+                    </div>
+                </div>
+
+                <div role="tabpanel" class="tab-pane basicInfoForm" id="langAndRegion">
+                    <div class="row">
+                        <div class="row countryIconName ">
+                            <div class="col-md-4">
+                                <h3>North America</h3>
+                                <ul>
+                                    <li>Canada</li>
+                                    <li>Maxico</li>
+                                    <li>United States</li>
+                                    <li>Canada</li>
+                                </ul>
+                            </div>
+
+                            <div class="col-md-4">
+                                <h3>Europe, Middle East &amp; Africa</h3>
+                                <ul>
+                                    <li>Denmark</li>
+                                    <li>France</li>
+                                    <li>South Africa</li>
+                                </ul>
+                            </div>
+
+                            <div class="col-md-4">
+                                <h3>Asia Pacific + Oceania</h3>
+                                <ul>
+                                    <li>Australia</li>
+                                    <li>Hong Kong</li>
+                                    <li>India</li>
+                                    <li>Canada</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <p class="text-right">
+                                <input type="submit" class="btn btn-primary" value="Save All And Close" />
+                                <a href="#" class="btn btn-primary">Cancel And Go Back</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div role="tabpanel" class="tab-pane basicInfoForm" id="customProp">
+                    <div id="Security-body">
+                        @{ Html.RenderAction("_SecurityQue", new { userID = @Session["UserID"] }); }
+                    </div>
+                </div>
+
+                <div class="tab-pane basicInfoForm " role="tabpanel" id="changePassword">
+                    <div id="ResetPassword-body">
+                        @{ Html.RenderAction("_ResetPassword"); }
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<script src="~/Content/js/validation_script.js"></script>

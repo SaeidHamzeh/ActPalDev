@@ -1,0 +1,19 @@
+﻿@{
+    ViewBag.Title = "Login";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="loginForm mainLogin text-center">
+    <h3>Sign in</h3>
+    <p>My Company Name Page</p>
+    <div id="login-body">
+        @Html.Action("Login", "Account")
+    </div>
+    <p>
+        No account? <a id="popUpReg">Create One!</a> &nbsp;&nbsp;&nbsp;<a href="/Account/ForgetPassword">Forgot my password</a>
+    </p>
+    <p>
+        <a href="#">Term of Use</a> &nbsp;&nbsp;&nbsp;<a href="/Home/Policy">Privacy &amp; Cookies</a>
+    </p>
+</div>

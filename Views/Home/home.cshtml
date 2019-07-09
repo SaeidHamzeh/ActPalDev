@@ -1,0 +1,244 @@
+﻿@model IEnumerable<ViewModels.RequestDetailViewModel>
+
+@if (@Session["UserID"] == null)
+{
+    ViewBag.Title = "Home Page";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+else
+{
+    ViewBag.Title = "Home Page";
+    Layout = "~/Views/Shared/_Shop_Layout.cshtml";
+}
+
+
+@Html.Partial("_optionSearchPanel")
+<div class="clearfix"></div>
+<br />
+<div class="contentSection">
+    <!-- Nav tabs -->
+    @if (@Session["UserID"] != null)
+    {
+        <ul class="nav nav-tabs tabsButton" role="tablist">
+            <li role="presentation" class="@(Request.QueryString["name"] == null || Request.QueryString["name"] == "request" ? "active" : "")"><a href="#request" class="changeURL" data-dataurl="request" aria-controls="request" role="tab" data-toggle="tab">Request</a></li>
+            <li role="presentation" class="@(Request.QueryString["name"] == "request" ? "active" : "")"><a href="#document" class="changeURL" data-dataurl="document" aria-controls="document" role="tab" data-toggle="tab">Document <span class="badge">@ViewBag.newDocumentCount</span></a></li>
+            <li role="presentation" class="@(Request.QueryString["name"] == "interviews" ? "active" : "")"><a href="#interviews" aria-controls="interviews" class="changeURL" data-dataurl="interviews" role="tab" data-toggle="tab">Interviews</a></li>
+        </ul>
+    }
+
+    <!-- Tab panes -->
+    <div class="tab-content">
+        <div role="tabpanel" class="tab-pane active" id="request">
+
+            <div class="allPostDetail">
+                @if (Model.Count() > 0)
+                {
+                    foreach (var item in Model)
+                    {
+                        <div class="row postRows">
+                            <div class="userProfile">
+                                <div class="nameDate onlyforMobile">
+                                    <p><span>@item.Mem_Name</span> <span class="pull-right">@item.Request_History_Date</span></p>
+                                </div>
+                                <div class="userImage">
+
+                                    @if (item.Mem_pic != "")
+                                    {
+                                        <span class="userprofilebtn" data-user-id="@item.Mem_ID" data-user-img="@item.Mem_pic" data-user-name="@item.Mem_Name" title="View Profile">
+                                            <img id="imgPreview" class="img-responsive profilepic" data-userid="@item.Mem_ID" src="@item.Mem_pic" data-pin-nopin="true">
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="userprofilebtn" data-user-id="@item.Mem_ID" data-user-img="../Content/images/default-profile.png" data-user-name="@item.Mem_Name" title="View Profile">
+                                            <img id="imgPreview" class="img-responsive profilepic" data-userid="@item.Mem_ID" src="~/Content/images/default-profile.png" data-pin-nopin="true">
+                                        </span>
+                                    }
+
+                                </div>
+                            </div>
+
+                            <div class="detailOfRequest">
+                                <ul class="PostCategoryList">
+                                    <li>@item.Request_Title</li>
+                                    <li>@item.Request_Desc</li>
+                                    <li title="Click Here For Rating">
+                                        Rating
+                                        <span class="ratingStars" data-ratingreq="@item.Request_History_ID">
+                                            @for (int i = 0; i < 5; i++)
+                                            {
+                                                if (item.Request_Rating > i)
+                                                {
+                                                    double rest = item.Request_Rating - i;
+                                                    if (rest <= 0.9)
+                                                    {
+                                                        <span><img src="~/Content/images/half-filled-star.png" /></span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span><img src="~/Content/images/filled-star.png" /></span>
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    <span><img src="~/Content/images/empty-star.png" /></span>
+                                                }
+                                            }
+                                            @if (item.Request_Rating != 0)
+                                            {
+                                                <span class="badge">@item.Request_Rating</span>
+                                            }
+                                        </span>
+                                    </li>
+                                </ul>
+                                <h4>@item.Request_Details_Title</h4>
+                                <p>@item.Request_Details_Desc</p>
+                                <p class="socialModule">
+                                    <a href="javascript:void(0)" data-requestdetailid="@item.Request_History_ID" id="@item.Request_History_ID">
+                                        @if (item.Request_Detail_LikeByMe > 0)
+                                        {
+                                            <label>Liked</label>
+                                        }
+                                        else
+                                        {
+                                            <label>Like</label>
+                                        }
+                                        <label class="LikeCount">@item.Request_Detail_Like</label>
+                                    </a>
+                                    &nbsp;&nbsp;&nbsp;<span>
+                                        <a href="/Home/request_status/?req_id=@item.Request_History_ID&name=comments">
+                                            Comment @item.Request_comment_count
+                                        </a>
+                                    </span>
+                                    <span class="pull-right" style="display:inline !important;"><a href="/Home/request_status/?req_id=@item.Request_History_ID">More...</a></span>
+                                </p>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <h2 class="text-center">No Record Found</h2>
+                }
+            </div>
+            <div class="paginationBox requestPagin col-sm-12">
+                @if (ViewBag.totalpages > 1)
+                {
+                    <ul class="pagination pull-left nomargin">
+                        @if (ViewBag.CurrentPage != 1)
+                        {
+                            <li><a href="javascript:void(0)" data-page="1"><span aria-hidden="true">&laquo;</span></a></li>
+                            <li><a href="javascript:void(0)" data-page="@(ViewBag.CurrentPage-1)"><span aria-hidden="true">&lsaquo;</span></a></li>
+                        }
+                        @if (ViewBag.totalpages > 1)
+                        {
+                            var i = 1; var last = 5;
+                            if (ViewBag.CurrentPage > 3)
+                            {
+                                i = ViewBag.CurrentPage - 2;
+                                last = ViewBag.CurrentPage + 2;
+                            }
+                            if (last > ViewBag.totalpages)
+                            {
+                                last = ViewBag.totalpages;
+                            }
+
+                            for (; i <= last; i++)
+                            {
+                                if (i == ViewBag.CurrentPage)
+                                {
+                                    <li class="active"><a href="javascript:void(0)" data-page="@i">@i</a></li>
+                                }
+                                else
+                                {
+                                    <li><a href="javascript:void(0)" data-page="@i">@i</a></li>
+                                }
+
+                            }
+                        }
+                        @if (ViewBag.totalpages > ViewBag.CurrentPage)
+                        {
+                            <li>
+                                <a href="javascript:void(0)" data-page="@(ViewBag.CurrentPage+1)">
+                                    <span aria-hidden="true">
+                                        &rsaquo;
+                                    </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" data-page="@ViewBag.totalpages">
+                                    <span aria-hidden="true">
+                                        &raquo;
+                                    </span>
+                                </a>
+                            </li>
+                        }
+                    </ul>
+
+                    <ul class="pull-left nomargin" style="list-style:none;padding: 0 0 0 10px;">
+                        <li>
+                            <input type="hidden" value="@ViewBag.pageSize" id="pageSize" />
+                            <select name="" class="perPageDropdown requestList">
+                                <option>10</option>
+                                <option>20</option>
+                                <option>50</option>
+                            </select>
+                            select per page
+                        </li>
+                    </ul>
+                }
+                <p class="pull-right nomargin">@ViewBag.CurrentPage-@ViewBag.totalpages of @ViewBag.totalPost items</p>
+            </div>
+
+        </div>
+        <div role="tabpanel" class="tab-pane" id="document">
+            <div class="row">
+                <div class="col-sm-12">
+                    @if (Convert.ToInt32(Session["UserID"]) > 0)
+                    {
+                        <div id="allReqPhoto">
+                            @Html.Action("_user_documents", "Home")
+                        </div>
+                    }
+                    else
+                    {
+                        <h3 class="text-center">This section will be open after Login!</h3>
+                    }
+                </div>
+            </div>
+        </div>
+        <div role="tabpanel" class="tab-pane" id="interviews">
+            interviews
+        </div>
+
+    </div>
+
+</div>
+
+
+
+@if (TempData["mailconfirmmsg"] != null)
+{
+    <div class="modal fade" id="SuccessMessage1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header blueHeading">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Product</h4>
+                </div>
+                <div class="modal-body">
+                    @TempData["mailconfirmmsg"];
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn" data-dismiss="modal">Ok</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#SuccessMessage1").modal("show");
+        });
+    </script>
+}

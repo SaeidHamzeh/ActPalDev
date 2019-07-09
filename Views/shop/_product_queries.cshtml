@@ -1,0 +1,41 @@
+﻿@model IEnumerable<ViewModels.Products.ProductDiscussionViewModel>
+
+<div class="postedQuestion marginB30Only">
+    @if (Model.Count() > 0)
+    {
+        foreach (var data in Model)
+        {
+            <div class="questionAnswerSection">
+                <div class="QuestionBox">
+                    @data.Question
+                </div>
+
+                @Html.Action("_product_queries_answer", "shop", new { QuestionId=data.QuestionId})
+                
+                <div class="leaveAComment">
+                    <div class="leaveACommentForm">
+                        @using (Ajax.BeginForm("_add_product_queries_answer", "shop", new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnSuccessAnswer", OnFailure = "OnFailureAnswer" }))
+                        {
+                            <input type="hidden" value="0" name="AnswerId" />
+                            <input type="hidden" value="@data.QuestionId" name="QuestionId" />                            
+                            <textarea class="form-control" name="Answer"></textarea>
+                            <input type="submit" class="btn BtnCssyellow" value="Send" />
+                        }
+                    </div>
+                    <button type="button" class="btnAsLink openProductQueriesAnswer">Leave A Comment</button> | Was This Helpful?    <button type="button" class="btnAsLink"><i class="fa fa-thumbs-up"></i> Yes - 20</button> <button type="button" class="btnAsLink"><i class="fa fa-thumbs-down"></i> No - 10</button>
+                </div>
+            </div>
+        }
+    }
+</div>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $(".openProductQueriesAnswer").click(function () {
+            $(".leaveACommentForm").removeClass("active");
+            $(this).prev().addClass("active");
+        });
+    });
+    
+</script>

@@ -1,0 +1,38 @@
+﻿
+    @using (Ajax.BeginForm("_add_new_community", "community", new AjaxOptions { OnSuccess = "success", OnFailure = "failure", HttpMethod = "POST", LoadingElementId = "loadingreg" }, new { @Class = "checkValidation" }))
+    {
+        <div class="modal-body">
+            <p class="">
+                <label>Industry</label>
+                <span id="industryList">
+                    <input type="hidden" name="id" value="0" />
+                    @Html.Action("IndustryView", "CascadingDropDown")
+                </span>
+            </p>
+
+            <p class="">
+                <label>Business Type</label>
+                <span id="BusinessTypeList">
+                    @Html.Action("BusinessTypeView", "CascadingDropDown")
+                </span>
+            </p>
+            <p class="">
+                <label>Community</label>
+                <span id="BusinessTypeList">
+                    <input type="text" placeholder="Enter Community Name" name="communityName" class="form-control IsRequired" />
+                </span>
+            </p>
+            <p class="">
+                <p class="requiredField text-center hide">All Fields Are Required!</p>
+            </p>
+        </div>
+        
+        <div class="modal-footer">
+            <p class="text-right">
+                <input type="submit" class="btn btn-primary" value="Save" />
+                <button class="btn btn-primary" data-dismiss="modal">Cancel</button>
+            </p>
+        </div>
+    }
+
+

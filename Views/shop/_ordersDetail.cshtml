@@ -1,0 +1,223 @@
+﻿@model IEnumerable<ViewModels.Products.OrderDetailViewModal>
+
+@if (Model.Count() > 0)
+{
+    <table class="table orderDetailTable nomargin">
+        @foreach (var data in Model)
+        {
+            <tr class="cartProducts" style="border-bottom:0;">
+                <td rowspan="2">
+                    @if (data.featureImage == null || data.featureImage == "")
+                    {
+                        <img src="~/Content/images/no_image.jpg" class="img-responsive" alt="Banner">
+                    }
+                    else
+                    {
+                        <img src="http://localhost:40795/Content/images/Service_Offer_Photos/@data.ServiceProvider_ID/@data.featureImage" class="img-responsive" alt="Banner">
+                    }
+                </td>
+                <td class="productSummary">
+                    <h4><strong><a href="/shop/product_details/@data.ProductId">@data.Name</a></strong></h4>
+                    <p class="smallText">QTY - <span class="darkColor">@data.Quantity</span> | size - <span class="darkColor">@data.size</span> | color - <span class="darkColor">@data.ColorName</span></p>
+                    <p>Seller - <a href="#">@data.ServiceProvider_Name</a></p>
+                    <p>Expected Delivery Date - <span class="darkColor">12 July 2019</span></p>
+                </td>
+                <td><strong>$@((data.DiscountType == 1 ? data.Price - ((data.Price * data.Discount) / 100) : (data.DiscountType == 2 ? data.Price - data.Discount : data.Price)) * @data.Quantity)</strong></td>
+                <td>
+                    <p><strong class="darkColor">Shipping Address</strong></p>
+                    @Html.Action("_user_billing_selected_address", "shop", new { addressId = ViewBag.AddressId })
+
+                    <p>
+                        <a href="#" class="productFeedBack" data-toggle="modal" data-target="#feedBackModal" data-productid="@data.ProductId"><strong>Give Your Feedback</strong></a> |
+                        <a href="#" class="returnProductFormBtn" data-toggle="modal" data-orderid="@ViewBag.OrderId" data-productid="@data.ProductId" data-target="#ReturnModal"><strong>Return Request</strong></a>
+                    </p>
+                </td>
+            </tr>
+            <tr>
+
+                <td colspan="3" class="noborder" style="padding-top:0 !important;padding-left:0 !important;">
+                    <ul class="statusBar">
+                        <li class="active">
+                            <span></span>
+                            Confirmed
+                        </li>
+                        <li class="active">
+                            <span></span>
+                            Packed
+                        </li>
+                        <li class="active">
+                            <span></span>
+                            Shipped
+                        </li>
+                        <li>
+                            <span></span>
+                            Delivered
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        }
+        <tr>
+            <td colspan="4">
+                <p>ORDERED TOTAL - <span class="darkColor">$@ViewBag.totalDiscountCost</span></p>
+            </td>
+        </tr>
+    </table>
+}
+
+
+
+<!-- Modal -->
+<div id="feedBackModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Post A Rating</h4>
+            </div>
+            @if (Session["UserID"] != null)
+            {
+                using (Ajax.BeginForm("_submit_ProductRating", "shop", new AjaxOptions { HttpMethod = "POST", OnSuccess = "ratingSubmitSuccess", OnFailure = "ratingSubmitFailure" }))
+                {
+            <div class="modal-body">
+                <label>Ratings</label>
+                <p>
+                    <input type="hidden" name="Product_Id" value="" />
+                    <input type="hidden" name="Product_Rating" value="" />
+                    <span class="ratingStars forRatingGiven">
+                        <span title="1" data-value="1"></span>
+                        <span title="2" data-value="2"></span>
+                        <span title="3" data-value="3"></span>
+                        <span title="4" data-value="4"></span>
+                        <span title="5" data-value="5"></span>
+                    </span>
+                </p>
+
+                <label>Comments</label>
+                <span>
+                    <textarea class="form-control" rows="5" name="Product_Comment"></textarea>
+                </span>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn BtnCssyellow">POST</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            </div>
+                }
+            }
+        </div>
+
+    </div>
+</div>
+
+<!-- Modal -->
+<div id="ReturnModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Return Item</h4>
+            </div>
+            @using (Ajax.BeginForm("_addProductReturnRequest", "shop", new AjaxOptions() { HttpMethod = "POST", OnSuccess = "ReturnRequestSuccess", OnFailure = "ReturnRequestFail" }))
+            {
+                <div class="modal-body">
+                    <div class="productDetail" id="productDetailForReturn">
+                    </div>
+                    <div class="returnProductForm">
+                        <p>
+                            <input type="hidden" name="OrderId" value="0" />
+                            <input type="hidden" name="Product_Id" value="0" />
+                            <label>Reason for Return</label>
+                            <span>
+                                <select class="form-control" name="ReasonId">
+                                    <option value="-1">CHOOSEN A REASON--</option>
+                                    <option value="1">Bad Quality</option>
+                                </select>
+                            </span>
+                        </p>
+                        <p>
+                            <label>COMMENT</label>
+                            <span>
+                                <textarea class="form-control" maxlength="1000" name="Comment"></textarea>
+                            </span>
+                        </p>
+
+                        <p>
+                            <label>Name</label>
+                            <span>
+                                <input type="text" name="NameInBank" class="form-control" />
+                            </span>
+                        </p>
+
+                        <p>
+                            <label>Select A Bank</label>
+                            <span>
+                                <select class="form-control" name="BankId">
+                                    <option>CHOOSEN A BANK--</option>
+                                    <option value="1">Bank of America</option>
+                                </select>
+                            </span>
+                        </p>
+
+                        <p>
+                            <label>Account Number</label>
+                            <span>
+                                <input type="text" name="AccountNumber" class="form-control" />
+                            </span>
+                        </p>
+
+                        <p>
+                            <label>IFSC</label>
+                            <span>
+                                <input type="text" name="IFSC" class="form-control" />
+                            </span>
+                        </p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn BtnCssyellow">Send Return Request</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            }
+        </div>
+
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".productFeedBack").click(function () {
+            var pid = $(this).attr("data-productId");
+            $("#feedBackModal input[name='Product_Id']").val(pid);
+        });
+
+        $(".returnProductFormBtn").click(function () {
+            var OrderId = $(this).attr("data-orderId");
+            var productId = $(this).attr("data-productId");
+            $("input[name='OrderId']").val(OrderId);
+            $("input[name='Product_Id']").val(productId);
+            $("#productDetailForReturn").load('@Url.Action("_product_short_info", "shop")?orderId=' + OrderId + '&productId=' + productId);
+        });
+    });
+
+    function ReturnRequestSuccess(data) {
+        if (data == "1") {
+            $("#notification .modal-body").text("Your Request Successfully Sent!");
+            $("#notification").modal("show");
+        } else if (data == "-1") {
+            $("#notification .modal-body").text("Your Request Allready Sent!");
+            $("#notification").modal("show");
+        } else {
+            $("#notification .modal-body").text(data);
+            $("#notification").modal("show");
+        }
+    }
+
+    function ReturnRequestFail(data) {
+        $("#notification .modal-body").text(data);
+        $("#notification").modal("show");
+    }
+</script>

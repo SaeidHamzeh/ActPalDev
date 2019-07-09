@@ -1,0 +1,10 @@
+﻿
+<div class="userInfoLog">
+    <ul>
+        <li><a href="/user/edit">My Account</a></li>
+        <li><a href="/dashboard/">Dashboard</a></li>
+        <li><a href="/shop/wishlist">Wishlist <span class="badge">@Html.Action("getWishListCount", "shop")</span></a></li>
+        <li><a href="#">Setting</a></li>
+        <li>@Html.ActionLink("Logout", "LogOut", "Account", null, new { })</li>
+    </ul>
+</div>

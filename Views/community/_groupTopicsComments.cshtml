@@ -1,0 +1,252 @@
+﻿@model IEnumerable<ViewModels.RequestCommentViewModel>
+
+
+<script src="~/Content/js/GroupComments.js"></script>
+
+
+<div class="row text-center">
+    <div class="col-xs-4">
+        @{string[] likeData = ViewBag.TotalLike.Split('-');}
+        <input type="hidden" value="@ViewBag.grTopicId" class="likeInput" name="topicId" />
+        <input type="hidden" value="@ViewBag.topicType" class="topicType" name="topicType" />
+        <p><span class="likeComment" role="button">@(likeData[1] == "0" ? "Like" : "Liked") (@likeData[0])</span></p>
+    </div>
+    <div class="col-xs-4">Comments</div>
+    <div class="col-xs-4">
+        @if (ViewBag.OwnerId == Convert.ToInt32(Session["UserId"]))
+        {
+            <ul class="userInfoTabs optionsList shareStatus">
+                <li role="button">
+                    Share
+                    <ul class="commentShareBtn sub-menu">
+                        <li>
+                            @using (Ajax.BeginForm("_updateShareGroupTopicStatsu", "community", new AjaxOptions { OnSuccess = "successShare", OnFailure = "failure", HttpMethod = "POST", LoadingElementId = "loadingreg" }, new { @id = "shareForm" }))
+                        {
+                        <input type="hidden" value="@ViewBag.grTopicId" name="topicId" />
+                        <input type="hidden" value="1" name="shareStatus" />
+                        <input type="hidden" value="@ViewBag.topicType" name="topicType" />
+                        <button type="submit" class="@(ViewBag.ShareStatus=="1"?"active":"")"><i class="glyphicon glyphicon-ok"></i> Make Private</button>
+                        }
+                        </li>
+                        <li>
+                            @using (Ajax.BeginForm("_updateShareGroupTopicStatsu", "community", new AjaxOptions { OnSuccess = "successShare", OnFailure = "failure", HttpMethod = "POST", LoadingElementId = "loadingreg" }, new { @id = "shareForm2" }))
+                        {
+                        <input type="hidden" value="@ViewBag.grTopicId" name="topicId" />
+                        <input type="hidden" value="3" name="shareStatus" />
+                        <input type="hidden" value="@ViewBag.topicType" name="topicType" />
+                        <button type="submit" class="@(ViewBag.ShareStatus=="3"?"active":"")"><i class="glyphicon glyphicon-ok"></i> Share With Friends</button>
+                        }
+                        </li>
+                        <li>
+                            @using (Ajax.BeginForm("_updateShareGroupTopicStatsu", "community", new AjaxOptions { OnSuccess = "successShare", OnFailure = "failure", HttpMethod = "POST", LoadingElementId = "loadingreg" }, new { @id = "shareForm3" }))
+                        {
+                        <input type="hidden" value="@ViewBag.grTopicId" name="topicId" />
+                        <input type="hidden" value="2" name="shareStatus" />
+                        <input type="hidden" value="@ViewBag.topicType" name="topicType" />
+                        <button type="submit" class="@(ViewBag.ShareStatus=="2"?"active":"")"><i class="glyphicon glyphicon-ok"></i> Share With Public</button>
+                        }
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        }
+    </div>
+</div>
+
+<div class="col-sm-12">
+    <div class="commentsBox" id="@ViewBag.grTopicId" style="max-height:800px;overflow:auto;">
+        @if (Model.Count() > 0)
+        {
+            foreach (var item in Model)
+            {
+                <div class="sentMessage" id="comm_@item.Request_Comment_ID">
+                    <div class="userImage">
+                        @if (item.Mem_photo == "")
+                        {
+                            <img src="~/Content/images/default-profile.png" alt="">
+                        }
+                        else
+                        {
+                            <img src="@item.Mem_photo" alt="">
+                        }
+                    </div>
+                    <div class="messageContent"><p><strong>@item.Mem_Name:</strong> <span class="commentText">@Html.Raw(item.Request_Comment_Desc)</span></p></div>
+                    @if (item.Mem_Id == Session["UserId"].ToString())
+                    {
+                        <ul class="userInfoTabs pull-right optionsList">
+                            <li>
+                                <a>....</a>
+                                <ul class="sub-menu">
+                                    @if (!(item.Request_Comment_Desc.Contains("<img src") || item.Request_Comment_Desc.Contains("<video") || item.Request_Comment_Desc.Contains("<a href")))
+                                    {
+                                        <li class="editComment" data-commentid="@item.Request_Comment_ID">Edit</li>
+                                    }
+                                    <li class="deleteComment" data-post="group" data-commentid="@item.Request_Comment_ID">Delete</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    }
+                </div>
+            }
+        }
+    </div>
+
+    <div class="commentWriteBox" id="groupTopicComment">
+        <input type="hidden" value="0" name="commentId" />
+        <textarea class="form-control messageInput" placeholder="Write Comment"></textarea>
+        <button class="sendComment btn" data-id="@ViewBag.grTopicId"><i class="fa fa-send"></i></button>
+        <button class="removeEditComment editCancel"><i class="fa fa-close"></i></button>
+    </div>
+    <div class="sendFilesOnComments">
+        <ul>
+            <li data-filetype="1"><i class="fa fa-file-image-o" aria-hidden="true"></i></li>
+            <li data-filetype="2"><i class="fa fa-video-camera" aria-hidden="true"></i></li>
+            <li data-filetype="3"><i class="fa fa-file" aria-hidden="true"></i></li>
+        </ul>
+    </div>
+</div>
+
+
+<div class="modal fade" id="commentFileUploading" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header blueHeading">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Choose <span></span></h4>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" value="0" name="fileType" />
+                <p><input type="file" data-filetype="1" name="uploadImg" accept="image/x-png,image/gif,image/jpeg" /></p>
+                <p><input type="file" data-filetype="2" name="uploadVideo" accept="video/*" /></p>
+                <p><input type="file" data-filetype="3" name="uploadFile" /></p>
+            </div>
+            <div class="modal-footer">
+                <button id="uploadCommentImage" class="btn btn-primary" onclick="fileUploadInComment()">Upload</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    function success(data) {
+        var likedata = data.split('-');
+        $("#likeForm .likeComment").val((likedata[1] == "0" ? "Like" : "Liked") + "(" + likedata[0] + ")");
+    }
+
+    function successShare(data) {
+        $(".commentShareBtn li button").removeClass("active");
+        if (data == 1) {
+            $(".commentShareBtn li:first-child button").addClass("active");
+        } else if (data == 2) {
+            $(".commentShareBtn li:last-child button").addClass("active");
+        } else if (data == 3) {
+            $(".commentShareBtn li:nth-child(2) button").addClass("active");
+        }
+    }
+
+    function failure(data) {
+        alert("failure");
+    }
+
+    $(document).ready(function () {
+        $("body").on("click", ".editComment", function () {
+            //alert($(this).parent().parent().parent().prev().find("p .commentText").html())
+            var desc = $(this).parent().parent().parent().prev().find("p .commentText").html().replace(/<br>/g, "\n");
+            var commId = $(this).attr("data-commentId");
+            $(".editCancel").addClass("active");
+            $("input[name='commentId']").val(commId);
+            $("body").find(".messageInput").val(desc);
+        });
+
+        $(".editCancel").click(function () {
+            $(".editCancel").removeClass("active");
+            $("input[name='commentId']").val(0);
+            $("body").find(".messageInput").val("");
+        });
+
+        $(".likeComment").click(function () {
+            var topicId = $("input[name='topicId'].likeInput").val();
+            var TopicCat = $("input[name='topicType'].topicType").val();
+            var data = { 'topicId': topicId, 'TopicCat': TopicCat };
+            $.ajax({
+                url: "/community/_addRemGroupTopicLike",
+                type: "POST",
+                data: data,
+                dataType: "text",
+                success: function (result) {
+                    var likeData = result.split('-');
+                    $(".likeComment").text((likeData[1] == "0" ? "Like" : "Liked") + "(" + likeData[0] + ")");
+                },
+                error: function (err) {
+                    alert(err.statusText + " Something is wrong Please check file type");
+                }
+            });
+        });
+
+        $(".commentWriteBox .sendFilesOnComments ul li").click(function () {
+            $("#commentFileUploading .modal-body input").removeClass("active");
+            var fileType = $(this).attr("data-fileType");
+            $("#commentFileUploading").modal("show");
+            $("#commentFileUploading h4 span").text((fileType == 1 ? "Images" : fileType == 2 ? "Video" : "Documents"));
+            $("#commentFileUploading .modal-body input[data-filetype='" + fileType + "']").addClass("active").siblings().removeClass("active");
+        });
+    });
+
+    function fileUploadInComment() {
+        $("#commentFileUploading").modal("hide");
+
+        //confirmBox("Do You Want Send This File!");
+        //$("#confirmBox").modal("show").on('click', '#confirmResponse', function (e) {
+
+        var fileUpload = $("#commentFileUploading input[type='file'].active").get(0);
+        var topicId = $("input[name='topicId']").val();
+        var files = fileUpload.files;
+        var commentFiles = new FormData();
+        for (var i = 0; i < files.length; i++) {
+            commentFiles.append(files[i].name, files[i]);
+        }
+        $("#commentFileUploading input[type='file']").val("");
+
+        //$("#confirmBox").modal("hide");
+        if (fileUpload != "") {
+            var msg, userId;
+            $.ajax({
+                url: "/community/fileUploadInComment?topicId=" + topicId,
+                type: "POST",
+                contentType: false,
+                processData: false,
+                data: commentFiles,
+                // dataType: "json",
+                success: function (result) {
+                    if (result != "") {
+                        var data = result.split(',');
+                        var commentHtml = "";
+                        for (var i = 0; data.length > i; i++) {
+                            var currUrl = data[i].split('.');
+                            if (currUrl[1] == "jpg" || currUrl[1] == "jpeg" || currUrl[1] == "png" || currUrl[1] == "gif") {
+                                commentHtml = commentHtml + "<img src='/Content/Group-Media/CommentMedia/" + topicId + "/" + data[i] + "' />";
+                            }
+                            else if (currUrl[1] == "webm" || currUrl[1] == "flv" || currUrl[1] == "vob" || currUrl[1] == "ogg" || currUrl[1] == "avi" || currUrl[1] == "mov" || currUrl[1] == "wmv" || currUrl[1] == "mp4" || currUrl[1] == "3gp") {
+                                commentHtml = commentHtml + "<video controls='' class='img-responsive'><source src='/Content/Group-Media/CommentMedia/" + topicId + "/" + data[i] + "'></video>";
+                            } else {
+                                commentHtml = commentHtml + "<a download target='_blank' href='/Content/Group-Media/CommentMedia/" + topicId + "/" + data[i] + "'>An Attachment</a>";
+                            }
+                        }
+                        $("#commentFileUploading input[type='file']").val("").removeClass("active");
+                        $("textarea.messageInput").val(commentHtml);
+                        $(".sendComment").click();
+                    }
+                },
+                error: function (err) {
+                    alert(err.statusText + " Something is wrong Please check file type");
+                }
+            });
+        }
+        else {
+            confirmBox("Do You Want To Submit Without File!");
+            $("#confirmBox").modal("show").on('click', '#confirmResponse', function (e) { });
+        }
+        //});
+    }
+</script>

@@ -1,0 +1,93 @@
+﻿@model IEnumerable<ViewModels.GroupTopicDiscussionViewModel>
+
+<div class="col-sm-12">
+
+    @if (Model.Count() > 0)
+    {
+        foreach (var item in Model)
+        {
+            <input type="hidden" value="@item.id" />
+            <h3>@item.title</h3>
+            <p>@Html.Raw(item.description) <a href="~/community/group_topic_detail?topicId=@item.id" class="pull-right"><small>View Detail..</small></a></p>
+        }
+    }
+    else
+    {
+
+    }
+
+
+    <div class="paginationBox  col-sm-12" id="allOptionList">
+        @if (ViewBag.totalpages > 1)
+            {
+            <ul class="pagination personalReqPage pull-left nomargin">
+                @if (ViewBag.CurrentPage != 1)
+                    {
+                    <li><a href="javascript:void(0)" data-page="1"><span aria-hidden="true">&laquo;</span></a></li>
+                    <li><a href="javascript:void(0)" data-page="@(ViewBag.CurrentPage-1)"><span aria-hidden="true">&lsaquo;</span></a></li>
+                    }
+                @if (ViewBag.totalpages > 1)
+                    {
+                        var i = 1; var last = 5;
+                        if (ViewBag.CurrentPage > 3)
+                        {
+                            i = ViewBag.CurrentPage - 2;
+                            last = ViewBag.CurrentPage + 2;
+                        }
+                        if (last > ViewBag.totalpages)
+                        {
+                            last = ViewBag.totalpages;
+                        }
+
+                        for (; i <= last; i++)
+                        {
+                            if (i == ViewBag.CurrentPage)
+                            {
+                    <li class="active"><a href="javascript:void(0)" data-page="@i">@i</a></li>
+                            }
+                            else
+                            {
+                    <li><a href="javascript:void(0)" data-page="@i">@i</a></li>
+                            }
+
+                        }
+                    }
+                @if (ViewBag.totalpages > ViewBag.CurrentPage)
+                    {
+                    <li>
+                        <a href="javascript:void(0)" data-page="@(ViewBag.CurrentPage+1)">
+                            <span aria-hidden="true">&rsaquo;</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0)" data-page="@ViewBag.totalpages">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                    }
+            </ul>
+
+            <ul class="pull-left nomargin" style="list-style:none;padding: 0 0 0 10px;">
+                <li>
+                    <input type="hidden" value="@ViewBag.pageSize" id="pageSize" />
+                    <select name="" class="perPageDropdown">
+                        <option>10</option>
+                        <option>20</option>
+                        <option>50</option>
+                    </select>
+                    select per page
+                </li>
+            </ul>
+            }
+        <p class="pull-right nomargin">@ViewBag.CurrentPage-@ViewBag.totalpages of @ViewBag.TotalRows items</p>
+    </div>
+</div>
+
+@if (TempData["msg"] != null) { 
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#modelsuccessful .modal-body h4").text(@TempData["msg"]);
+        $("#modelsuccessful").modal("show");       
+    });
+</script>
+}

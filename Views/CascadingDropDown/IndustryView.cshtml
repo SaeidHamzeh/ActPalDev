@@ -1,0 +1,17 @@
+﻿@model ViewModels.IndustryViewModel
+
+@{
+    Layout = null;
+}
+@Html.DropDownListFor(p => p.Mem_IndustryId, Model.IndustryIEnum, "--Industry Type--", new { @id = "Industry-DropdownID", @class = "form-control", selected = @Model.Mem_IndustryId })
+
+
+<script type="text/javascript">
+    $(function () {
+        // Populate State/Provinces
+        $('#Industry-DropdownID').change(function () {
+            var selectedIndustryID = this.value;
+            $('#BusinessTypeId').load('@Url.Action("BusinessTypeView","CascadingDropDown")?industryID=' + selectedIndustryID);
+        });
+    });
+</script>

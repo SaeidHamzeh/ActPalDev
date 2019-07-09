@@ -1,0 +1,54 @@
+﻿@if (Session["UserID"] == null)
+{
+    ViewBag.Title = "Product Details";
+    Layout = "~/Views/Shared/_Shop_Layout.cshtml";
+}
+else
+{
+    ViewBag.Title = "Product Details";
+    Layout = "~/Views/Shared/_Shop_Dashboard_Layout.cshtml";
+}
+
+<section class="container-fluid cart_page marginTop30px">
+    <div class="container">
+        <div class="row" id="cartDetails">
+            @Html.Action("_cart_products", "shop")
+        </div>
+    </div>
+</section>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        /*=========Remove From Cart=========*/
+        $("#cartDetails").on("click", ".removeFromCart", function () {
+            var Id = $(this).attr("data-cartid");
+            var data = { 'CartId': Id };
+            $.ajax({
+                type: "Post",
+                url: "/shop/_removeCartProduct",
+                data: data,
+                dataType: "text",
+                success: function (data) {
+                    if (data == "-1") {
+                        $("#notification .modal-body").text("Please Login First!");
+                        $("#notification").modal("show");
+                    } else {
+                        var divId = "#CartBox" + Id;
+                        $(divId).remove();
+
+                        $("#cartDetails").load('@Url.Action("_cart_products", "shop")');
+
+                        $("#cartCount").text(data);
+                    }
+                },
+                error: function (data) {
+                    $("#notification .modal-body").text(data);
+                    $("#notification").modal("show");
+                }
+            });
+        });
+
+    });
+</script>

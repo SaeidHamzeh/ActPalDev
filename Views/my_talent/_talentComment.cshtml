@@ -1,0 +1,260 @@
+﻿@model IEnumerable<ViewModels.TalentPostViewModel>
+
+
+<div class="postReviews">
+    <ul class="list-inline">
+        <li>
+            @{string[] likeData = ViewBag.TotalLike.Split('-');}
+            <input type="hidden" value="@ViewBag.talentId" class="likeInput" name="talentId" />
+            @if (Session["UserID"] != null)
+            {
+                <p><span class="likeTalentPost" role="button">@(likeData[1] == "0" ? "Like" : "Liked") <span class="badge redBG">@likeData[0]</span></span></p>
+            }
+            else
+            {
+                <p><span>Like <span class="badge redBG">@likeData[0]</span></span></p>
+            }
+        </li>
+        <li>Comments <span class="badge redBG">20</span></li>
+        <li>
+            @if (ViewBag.OwnerId == Convert.ToInt32(Session["UserId"]))
+            {
+                <ul class="userInfoTabs optionsList shareStatus">
+                    <li role="button">
+                        Share
+                        <ul class="commentShareBtn sub-menu">
+                            <li>
+                                @using (Ajax.BeginForm("_updateShareTalentPostStatus", "my_talent", new AjaxOptions { OnSuccess = "successShare", OnFailure = "failure", HttpMethod = "POST", LoadingElementId = "loadingreg" }, new { @id = "shareForm" }))
+                                {
+                                    <input type="hidden" value="@ViewBag.talentId" name="talentId" />
+                                    <input type="hidden" value="1" name="shareStatus" />
+                                    <button type="submit" class="@(ViewBag.ShareStatus=="1"?"active":"")"><i class="glyphicon glyphicon-ok"></i> Make Private</button>
+                                }
+                            </li>
+                            <li>
+                                @using (Ajax.BeginForm("_updateShareTalentPostStatus", "my_talent", new AjaxOptions { OnSuccess = "successShare", OnFailure = "failure", HttpMethod = "POST", LoadingElementId = "loadingreg" }, new { @id = "shareForm2" }))
+                                {
+                                    <input type="hidden" value="@ViewBag.talentId" name="talentId" />
+                                    <input type="hidden" value="3" name="shareStatus" />
+                                    <button type="submit" class="@(ViewBag.ShareStatus=="3"?"active":"")"><i class="glyphicon glyphicon-ok"></i> Share With Friends</button>
+                                }
+                            </li>
+                            <li>
+                                @using (Ajax.BeginForm("_updateShareTalentPostStatus", "my_talent", new AjaxOptions { OnSuccess = "successShare", OnFailure = "failure", HttpMethod = "POST", LoadingElementId = "loadingreg" }, new { @id = "shareForm3" }))
+                                {
+                                    <input type="hidden" value="@ViewBag.talentId" name="talentId" />
+                                    <input type="hidden" value="2" name="shareStatus" />
+                                    <button type="submit" class="@(ViewBag.ShareStatus=="2"?"active":"")"><i class="glyphicon glyphicon-ok"></i> Share With Public</button>
+                                }
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            }
+            Share <span class="badge redBG">20</span>
+        </li>
+    </ul>
+</div>
+<div class="clearfix"></div>
+
+
+<div class="col-sm-12">
+    <div class="commentsBox" id="@ViewBag.talentId" style="overflow:auto;">
+        @if (Model.Count() > 0)
+        {
+            foreach (var item in Model)
+            {
+                <div class="sentMessage" id="comm_@item.commentId">
+                    <div class="postOwnerImage">
+                        @if (item.Mem_photo == "")
+                        {
+                            <img src="~/Content/images/default-profile.png" alt="" />
+                        }
+                        else
+                        {
+                            <img src="@item.Mem_photo" alt="">
+                        }
+                    </div>
+                    <div class="memberDetail">
+                        @item.Mem_Name<br />
+                        <small>@item.entryDate</small>
+                    </div>
+                    <div class="messageContent"><p><span class="commentText">@Html.Raw(item.commentString)</span></p></div>
+                    @if (item.Mem_Id == Convert.ToInt32(Session["UserId"]))
+                    {
+                        <div class="userInfoTabs pull-right optionList">
+                            <span class="optionIcon dropdown-toggle" data-toggle="dropdown"><i class="fa fa-ellipsis-v" aria-hidden="true"></i></span>
+                            <ul class="dropdown-menu">
+                                @if (!(item.commentString.Contains("<img src") || item.commentString.Contains("<video") || item.commentString.Contains("<a href")))
+                                {
+                                    <li class="editComment" data-commentid="@item.commentId">Edit</li>
+                                }
+                                <li class="deleteComment" data-post="talent" data-commentid="@item.commentId">Delete</li>
+                            </ul>
+                        </div>
+                    }
+                </div>
+            }
+        }
+    </div>
+
+    @if (Session["UserID"] != null)
+    {
+        <div class="commentWriteBox" id="talentPostComment" style="position:relative;">
+            <input type="hidden" value="0" name="commentId" />
+            <textarea class="form-control messageInput" placeholder="Write Comment"></textarea>
+            <button class="sendTalentPostComment sendCommentBtn btn hide" data-id="@ViewBag.talentId"><i class="fa fa-send"></i></button>
+            <button class="removeEditComment editCancel hide"><i class="fa fa-close"></i></button>
+            <div class="sendFilesOnComments">
+                <ul>
+                    <li data-filetype="1"><i class="fa fa-plus-circle" aria-hidden="true"></i></li>
+                </ul>
+            </div>
+        </div>
+        
+    }
+</div>
+
+
+<div class="modal fade" id="commentFileUploading" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header blueHeading">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Choose <span></span></h4>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" value="0" name="fileType" />
+                <input type="file" data-filetype="1" name="uploadImg" accept="image/x-png,image/gif,image/jpeg" />
+                <input type="file" data-filetype="2" name="uploadVideo" accept="video/*" />
+                <input type="file" data-filetype="3" name="uploadFile" />
+            </div>
+            <div class="modal-footer">
+                <button id="uploadCommentImage" class="btn btn-primary" onclick="fileUploadInComment()">Upload</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (Session["UserID"] != null)
+{
+    <script type="text/javascript">
+        function success(data) {
+            var likedata = data.split('-');
+            $("#likeForm .likeComment").val((likedata[1] == "0" ? "Like" : "Liked") + "(" + likedata[0] + ")");
+        }
+
+        function successShare(data) {
+            $(".commentShareBtn li button").removeClass("active");
+            if (data == 1) {
+                $(".commentShareBtn li:first-child button").addClass("active");
+            } else if (data == 2) {
+                $(".commentShareBtn li:last-child button").addClass("active");
+            } else if (data == 3) {
+                $(".commentShareBtn li:nth-child(2) button").addClass("active");
+            }
+        }
+
+        function failure(data) {
+            alert("failure");
+        }
+
+        $(document).ready(function () {
+            $("body").on("click", ".editComment", function () {
+                //alert($(this).parent().parent().parent().prev().find("p .commentText").html())
+                var desc = $(this).parent().parent().parent().prev().find("p .commentText").html().replace(/<br>/g, "\n");
+                var commId = $(this).attr("data-commentId");
+                $(".editCancel").addClass("active");
+                $("input[name='commentId']").val(commId);
+                $("body").find(".messageInput").val(desc);
+            });
+
+            $(".editCancel").click(function () {
+                $(".editCancel").removeClass("active");
+                $("input[name='commentId']").val(0);
+                $("body").find(".messageInput").val("");
+            });
+
+            $(".likeTalentPost").click(function () {
+                var talentId = $("input[name='talentId'].likeInput").val();
+                var data = { 'talentId': talentId };
+                $.ajax({
+                    url: "/my_talent/_addRemTalentPostLike",
+                    type: "POST",
+                    data: data,
+                    dataType: "text",
+                    success: function (result) {
+                        var likeData = result.split('-');
+                        $(".likeTalentPost").text((likeData[1] == "0" ? "Like" : "Liked") + "(" + likeData[0] + ")");
+                    },
+                    error: function (err) {
+                        alert(err.statusText + " Something is wrong Please check file type");
+                    }
+                });
+            });
+
+            $(".commentWriteBox .sendFilesOnComments ul li").click(function () {
+                $("#commentFileUploading .modal-body input").removeClass("active");
+                var fileType = $(this).attr("data-fileType");
+                $("#commentFileUploading").modal("show");
+                $("#commentFileUploading h4 span").text((fileType == 1 ? "Images" : fileType == 2 ? "Video" : "Documents"));
+                $("#commentFileUploading .modal-body input[data-filetype='" + fileType + "']").addClass("active").siblings().removeClass("active");
+            });
+        });
+
+        function fileUploadInComment() {
+            $("#commentFileUploading").modal("hide");
+
+            var fileUpload = $("#commentFileUploading input[type='file'].active").get(0);
+            var talentId = $("input[name='talentId']").val();
+            var files = fileUpload.files;
+            var commentFiles = new FormData();
+            for (var i = 0; i < files.length; i++) {
+                commentFiles.append(files[i].name, files[i]);
+            }
+            $("#commentFileUploading input[type='file']").val("");
+
+            //$("#confirmBox").modal("hide");
+            if (fileUpload != "") {
+                var msg, userId;
+                $.ajax({
+                    url: "/my_talent/fileUploadInComment?talentId=" + talentId,
+                    type: "POST",
+                    contentType: false,
+                    processData: false,
+                    data: commentFiles,
+                    // dataType: "json",
+                    success: function (result) {
+                        if (result != "") {
+                            var data = result.split(',');
+                            var commentHtml = "";
+                            for (var i = 0; data.length > i; i++) {
+                                var currUrl = data[i].split('.');
+                                if (currUrl[1] == "jpg" || currUrl[1] == "jpeg" || currUrl[1] == "png" || currUrl[1] == "gif") {
+                                    commentHtml = commentHtml + "<img src='/Content/TalentPost/CommentMedia/" + talentId + "/" + data[i] + "' />";
+                                }
+                                else if (currUrl[1] == "webm" || currUrl[1] == "flv" || currUrl[1] == "vob" || currUrl[1] == "ogg" || currUrl[1] == "avi" || currUrl[1] == "mov" || currUrl[1] == "wmv" || currUrl[1] == "mp4" || currUrl[1] == "3gp") {
+                                    commentHtml = commentHtml + "<video controls='' class='img-responsive'><source src='/Content/TalentPost/CommentMedia/" + talentId + "/" + data[i] + "'></video>";
+                                } else if (data[i] != "No file Found!") {
+                                    commentHtml = commentHtml + "<a download target='_blank' href='/Content/TalentPost/CommentMedia/" + talentId + "/" + data[i] + "'>An Attachment</a>";
+                                }
+                            }
+                            $("#commentFileUploading input[type='file']").val("").removeClass("active");
+                            $("textarea.messageInput").val(commentHtml);
+                            $(".sendTalentPostComment").click();
+                        }
+                    },
+                    error: function (err) {
+                        alert(err.statusText + " Something is wrong Please check file type");
+                    }
+                });
+            }
+            else {
+                confirmBox("Do You Want To Submit Without File!");
+                $("#confirmBox").modal("show").on('click', '#confirmResponse', function (e) { });
+            }
+            //});
+        }
+    </script>
+
+}

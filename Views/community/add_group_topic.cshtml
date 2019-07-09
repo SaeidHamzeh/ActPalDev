@@ -1,0 +1,9 @@
+﻿
+@{
+    ViewBag.Title = "group_profile";
+    Layout = "~/Views/Shared/_Group_Topics.cshtml";
+}
+
+<h2 class="blueHeading">Group Profile <a href="~/community/group_profile" class="btn btn-primary pull-right btn-xs">Back</a></h2>
+
+@Html.Action("_add_group_topic", "community")

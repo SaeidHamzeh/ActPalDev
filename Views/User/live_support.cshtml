@@ -1,0 +1,24 @@
+﻿
+@{
+    ViewBag.Title = "live_support";
+    Layout = "";
+}
+@{
+    var url = "https://admin.publickin.com/chat/user_chat?userName=" + @Session["UserName"].ToString() + "&userType=Mem&userId=" + @Session["UserID"] + "&imgUrl=https://publickin.com" + Session["ProfilePic"];
+}
+<style type="text/css">
+    body {
+    margin:0px;
+    }
+    iframe {
+    height: 100vh;
+    width: 100%;
+    border: 0 !important;
+    margin:auto;
+    }
+</style>
+@if (@Session["UserID"] != null) { 
+<iframe class="marginTop30px" src="@url"></iframe>
+}else{
+    <h3 class="text-center">You are not authorized Person</h3>
+}

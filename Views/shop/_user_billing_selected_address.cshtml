@@ -1,0 +1,19 @@
+﻿@model IEnumerable<ViewModels.Products.BillingAddressViewModel>
+
+@if (Model.Count() > 0)
+{
+    int i = 0;
+    foreach (var data in Model)
+    {
+        i++;
+        <div class="row @(i==1?"active":"")">
+            <div class="col-sm-12">
+                <div class="addressDetail" data-addressid="@data.AddressId">
+                    <p>@data.FirstName @data.LastName - @data.PhoneNumber</p>                    
+                    <p>@data.AddressDetail</p>
+                </div>
+            </div>
+        </div>
+    }
+}
+

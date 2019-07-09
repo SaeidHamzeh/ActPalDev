@@ -1,0 +1,74 @@
+﻿@model Models.UserSecurityAnsModel
+
+@using (Ajax.BeginForm("ChangeSecurity", "User", null, new AjaxOptions() { HttpMethod = "POST", LoadingElementId = "loadingsecurity", UpdateTargetId = "Security-body" }))
+{
+    if (Model != null)
+    {
+        @Html.HiddenFor(u => u.Mem_ID)
+        @Html.HiddenFor(u => u.secAns_ID)
+    }
+    else
+    {
+        <input type="hidden" name="Mem_ID" value="@Session["UserID"]" />
+    }
+
+    <div id="loadingsecurity" class="loader-Class"></div>
+    <div class="row">
+        <div class="col-sm-8">
+            <label>Security Question 1</label>
+            <span>
+
+                @Html.DropDownListFor(model => model.SecQuestion1_ID, ViewBag.SecurityQue as IEnumerable<SelectListItem>, new { @class = "form-control" })
+                <span>@Html.ValidationMessageFor(u => u.SecQuestion1_ID)</span>
+            </span>
+        </div>
+
+    </div>
+
+    <div class="row">
+        <div class="col-sm-8">
+            <label>Answer</label>
+            <span>
+
+                @Html.TextBoxFor(u => u.secAnswer1, new { @class = "form-control" })
+                <span>@Html.ValidationMessageFor(u => u.secAnswer1)</span>
+            </span>
+        </div>
+
+    </div>
+
+    <div class="row">
+        <div class="col-sm-8">
+            <label>Security Question 2</label>
+            <span>
+
+                @Html.DropDownListFor(model => model.SecQuestion2_ID, ViewBag.SecurityQue as IEnumerable<SelectListItem>, new { @class = "form-control" })
+                <span>@Html.ValidationMessageFor(u => u.SecQuestion1_ID)</span>
+
+                <span>Lorem Ipsum is simply dummy text of the printing and type</span>
+            </span>
+        </div>
+
+    </div>
+
+    <div class="row">
+        <div class="col-sm-8">
+            <label>Answer</label>
+            <span>
+                @Html.TextBoxFor(u => u.secAnswer2, new { @class = "form-control" })
+                <span>@Html.ValidationMessageFor(u => u.secAnswer2)</span>
+            </span>
+        </div>
+
+    </div>
+
+
+    <div class="row">
+        <div class="col-sm-8">
+            <p class="text-right">
+                <input type="submit" class="btn btn-primary" value="Save All And Close" />
+                <a href="javascript:void(0)" class="btn btn-primary cancelGoBack">Cancel And Go Back</a>
+            </p>
+        </div>
+    </div>
+}

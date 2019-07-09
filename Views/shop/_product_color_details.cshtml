@@ -1,0 +1,18 @@
+﻿@model IEnumerable<ViewModels.Commans.ColorsViewModel>
+
+
+@if (Model.Count() > 0)
+{
+    foreach (var data in Model)
+    {
+        if (data.ColorId != 0)
+        {
+            <span class="@(ViewBag.selected == data.ColorId ? "active" : "")" style="background:@data.ColorCode;" data-id="@data.ColorId" title="@data.ColorName"></span>
+        }
+        else
+        {
+            
+        }
+    }
+}
+

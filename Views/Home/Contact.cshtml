@@ -1,0 +1,74 @@
+﻿@model Models.ContactUsModel
+
+@if (@Session["UserID"] == null)
+{
+
+    ViewBag.Title = "Contact us";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+else
+{
+    ViewBag.Title = "Contact us";
+    Layout = "~/Views/Shared/_LayoutDashboard.cshtml";
+}
+
+
+<div class="col-sm-6">
+    <h3 class="blueHeading">Contact Us</h3>
+    <div class="clearfix"></div>
+    <div class="marginTop30px"></div>
+    <div class="loginForm registration">
+        <form action="/Home/Contact" method="post">
+            <p>
+
+                @Html.TextBoxFor(m => m.Person_Name, new { placeholder = "Name*", @class = "form-control" })
+                <span style="color:red"> @Html.ValidationMessageFor(m => m.Person_Name)</span>
+            </p>
+            <p>
+
+                @Html.TextBoxFor(m => m.Person_Email, new { placeholder = "Email Address*", @class = "form-control" })
+                <span style="color:red"> @Html.ValidationMessageFor(m => m.Person_Email)</span>
+            </p>
+            <p>
+
+                @Html.TextBoxFor(m => m.Person_Phn, new { placeholder = "Contact Number*", @class = "form-control" })
+                <span style="color:red"> @Html.ValidationMessageFor(m => m.Person_Phn)</span>
+            </p>
+            <p>
+
+                @Html.TextAreaFor(m => m.Meg, new { placeholder = "Message*", @class = "form-control" })
+                <span style="color:red"> @Html.ValidationMessageFor(m => m.Meg)</span>
+            </p>
+
+            <p class="text-right">
+                @*<a href="edit-profile.html" class="btn btn-primary">Send Message</a>*@
+                <input type="submit" value="Send Message" class="btn btn-primary" />
+                <!--<input type="submit" value="Register" class="btn btn-warning" />-->
+            </p>
+            <p>
+                <small><strong>* Required Fields</strong></small>
+            </p>
+        </form>
+
+    </div>
+</div>
+<div class="col-sm-6">
+    <h3 class="blueHeading">Address &amp; Directions</h3>
+    <div class="clearfix"></div>
+    <div class="marginTop30px"></div>
+    <div class="addressBox">
+        <p>
+            605 Pine Ave, Long Beach<br />
+            California, 92614<br />
+            United State<br />
+            <br />
+
+            <label>Telephone:</label> <span>+1 9492832948, +1 9384727323</span>
+        </p>
+    </div>
+
+    <div id="map">
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14016.969484254356!2d77.363564131962!3d28.562483819125877!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390ce5f25ac323b5%3A0xd496afa2bb8dd672!2sSector+49%2C+Noida%2C+Uttar+Pradesh!5e0!3m2!1sen!2sin!4v1475492756073" frameborder="0" style="border: 0" allowfullscreen></iframe>
+    </div>
+</div>

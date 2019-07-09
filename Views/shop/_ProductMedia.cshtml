@@ -1,0 +1,84 @@
+﻿@model IEnumerable<ViewModels.Commans.MediaViewModel>
+
+
+@if (Model.Count() > 0)
+{
+    int i = 0;
+    int j = 0;
+    <div class="main_image grayborder borderRadius5px padding50px text-center">
+        @foreach (var data in Model)
+        {
+            j++;
+            <div class="item">
+                @if (data.MediaType == "image" && j == 1)
+                {
+                    var imgPath = "http://localhost:40795/Content/images/Service_Offer_Photos/" + ViewBag.ServiceProviderId + "/" + data.Media_path;
+                    <a class="fancybox productPhoto" rel="productPhoto" href="@imgPath">
+                        <img src="@imgPath" class="img-responsive marginAuto" />
+                    </a>
+                }
+            </div>
+        }
+
+    </div>
+    <div class="productImagesList">
+        <div class="owl-carousel productMedia">
+            @foreach (var data in Model)
+            {
+                i++;
+                <div class="item">
+                    @if (data.MediaType == "image")
+                    {
+                        var imgPath = "http://localhost:40795/Content/images/Service_Offer_Photos/" + ViewBag.ServiceProviderId + "/" + data.Media_path;
+                        <img src="@imgPath" class="img-responsive" data-featured="@data.FeatureMedia" />
+                        <a class="fancybox hide" rel="productPhoto" href="@imgPath"></a>
+
+                    }
+                    else if (data.MediaType == "video")
+                    {
+                        var imgPath = "http://localhost:40795/Content/images/Service_Offer_Video/" + ViewBag.ServiceProviderId + "/" + data.Media_path;
+                        <video controls>
+                            <source src="@imgPath" />
+                        </video>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+}
+else
+{
+    <div class="main_image grayborder borderRadius5px padding50px text-center">
+        <img src="~/Content/images/no_image.jpg" class="img-responsive marginAuto" />
+    </div>
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.productMedia').owlCarousel({
+            loop: false,
+            margin: 20,
+            nav: true,
+            responsive: {
+                0: {
+                    items: 1,
+                    nav: true
+                },
+                480: {
+                    items: 1,
+                    nav: true
+                },
+                600: {
+                    items: 2,
+                    nav: true
+                },
+                1000: {
+                    items: 4,
+                    nav: true
+                }
+            }
+        });
+    });
+</script>
+
+

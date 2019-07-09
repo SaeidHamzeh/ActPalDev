@@ -1,0 +1,444 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+    @Scripts.Render("~/bundles/modernizr")
+
+    <link href="~/Content/assets/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/assets/css/owl.carousel.min.css" rel="stylesheet" />
+    <link href="~/Content/assets/css/style.css" rel="stylesheet" />
+    <link href="~/Content/assets/css/jquery.fancybox.css" rel="stylesheet" />
+    <link href="~/Content/assets/css/jquery.fancybox-thumbs.css" rel="stylesheet" />
+    <link href="~/Content/assets/css/jquery.fancybox-buttons.css" rel="stylesheet" />
+    <link href="~/Content/assets/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="~/Content/assets/css/bootstrap-datepicker.css" rel="stylesheet" />
+    <link href="~/Content/assets/css/animate.css" rel="stylesheet" />
+    <link href="~/Content/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="~/Content/assets/css/community_group.css" rel="stylesheet" />
+    
+    <script src="~/Content/js/jquery31.min.js"></script>
+    
+    <script src="~/Content/js/jquery.fancybox-buttons.js"></script>
+    <script src="~/Content/js/jquery.fancybox-media.js"></script>
+    <script src="~/Content/js/jquery.fancybox-thumbs.js"></script>
+    <script src="~/Content/js/jquery.fancybox.pack.js"></script>
+
+</head>
+
+<body style="overflow-x:hidden;">
+
+    <header class="container-fluid">
+        <section class="container">
+            <div class="row">
+                <div class="col-sm-4">
+                    <p class="contactInfor colorWhite nomargin text-uppercase text-light">Call US Free: <a href="tel:18007777889" class="colorWhite">1-800-777-7889</a></p>
+                </div>
+                <div class="col-sm-8">
+                    <ul class="pull-right">
+                        <li><a href="/shop/">Shop</a></li>
+                        <li><a href="/services/">Services</a></li>
+                        <li><a href="#">Request</a></li>
+                        <li><a href="#">Become A Service Provider</a></li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </header>
+
+    <header class="container-fluid bottomHeader">
+        <section class="container">
+            <div class="row">
+                <div class="col-sm-4 col-md-3 padding20pxTB">
+                    <a href="/" class="logo" style="margin-left:0"><img src="~/Content/assets/images/logo.png" alt="ACTPAL" /></a>
+                </div>
+                
+                <div class="col-sm-6 col-md-5 pull-right">
+                    @if (Session["UserID"] == null)
+                    {
+                    <ul class="cartPanel pull-right">
+                        <li><a href="#">Cart <img src="~/Content/assets/icons/cart-white-icon.png"></a></li>
+                        <li><a href="/Account?url=@Request.RawUrl">Sign Up / Login</a></li>
+                    </ul>
+                    }
+                    else
+                    {
+                    <ul class="cartPanel pull-right">
+                        <li>
+                            <a href="/">
+                                <i class="fa fa-envelope"></i>
+                                <i id="newMessage" class="badge redBG countCircleHeader">0</i>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="~/User/notifications">
+                                <i class="fa fa-bell"></i>
+                                <i id="totPenNotification" class="badge redBG countCircleHeader">0</i>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a class="adduser dropdown-toggle" data-toggle="dropdown" href="#">
+                                <i><img src="~/Content/assets/icons/user_request_icon.png"></i>
+                                <i id="totPenReqcount" class='badge countCircleHeader redBG'>0</i>
+                            </a>
+                            <ul class="dropdown-menu headerDropDown nopadding">
+                                <li>
+                                    <span class="friendUserImg"><img src="~/Content/assets/images/Adv-images.png" /></span>
+                                    <span class="friendUserName">Gaurav sharma</span>
+                                    <span>
+                                        <button type="button">Accect</button>
+                                        <button type="button" class="grayBG">Reject</button>
+                                    </span>                                    
+                                </li>   
+                                <li>
+                                    <span class="friendUserImg"><img src="~/Content/assets/images/Adv-images.png" /></span>
+                                    <span class="friendUserName">Gaurav sharma</span>
+                                    <span>
+                                        <button type="button">Accect</button>
+                                        <button type="button" class="grayBG">Reject</button>
+                                    </span>
+                                </li>                                
+                            </ul>
+                        </li>
+                        <li class="currentUser dropdown" id="currentUserBox">
+                            <a class="accountBtn dropdown-toggle" data-toggle="dropdown">
+                                <input type="hidden" value="@Session["UserID"]" id="userId" />
+                                <input type="hidden" value="@Session["UserName"]" id="userName" />
+                                <img src="@Session["ProfilePic"].ToString()" alt='user' class="img-responsive profilepic nomargin" data-userid="@Session["UserId"]" /> @Session["UserName"].ToString() <span class="caret"></span>
+                            </a>
+                            <div class="loginForm logoutBox dropdown-menu">
+                                @Html.Action("_my_account_dropdown","home")
+                            </div>
+                           
+                        </li>
+
+                    </ul>
+                    }
+                </div>
+            </div>
+        </section>
+    </header>
+
+    <section class="container-fluid marginTop30px">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 col-lg-3 profileSection userSection">
+                    <div class="userProfile">
+                        <div class="userImage">
+                            <a href="/User/Edit" class="editBtn" title="Edit Profile">Edit</a>
+                            <a id="photoUpload" title="Photo Change">
+                                <div class="statusBox">
+                                    @if (Session["LoginStatus"].ToString() == "1" || Session["LoginStatus"].ToString() == "0")
+                                    {
+                                    <span class="currStatus available"></span>
+                                    <ul class="allStatus">
+                                        <li class="available active" data-status="1"> Available</li>
+                                        <li class="away" data-status="2"> Away</li>
+                                        <li class="doNotDisturb" data-status="3"> Do Not Disturb</li>
+                                        <li class="offline" data-status="4"> Offline</li>
+                                    </ul>
+                                    }
+                                    else if (Session["LoginStatus"].ToString() == "2")
+                                    {
+                                    <span class="currStatus away"></span>
+                                    <ul class="allStatus">
+                                        <li class="available" data-status="1"> Available</li>
+                                        <li class="away active" data-status="2"> Away</li>
+                                        <li class="doNotDisturb" data-status="3"> Do Not Disturb</li>
+                                        <li class="offline" data-status="4"> Offline</li>
+                                    </ul>
+                                    }
+                                    else if (Session["LoginStatus"].ToString() == "3")
+                                    {
+                                    <span class="currStatus doNotDisturb"></span>
+                                    <ul class="allStatus">
+                                        <li class="available" data-status="1"> Available</li>
+                                        <li class="away" data-status="2"> Away</li>
+                                        <li class="doNotDisturb active" data-status="3"> Do Not Disturb</li>
+                                        <li class="offline" data-status="4"> Offline</li>
+                                    </ul>
+                                    }
+                                    else if (Session["LoginStatus"].ToString() == "4")
+                                    {
+                                    <span class="currStatus offline"></span>
+                                    <ul class="allStatus">
+                                        <li class="available" data-status="1"> Available</li>
+                                        <li class="away" data-status="2"> Away</li>
+                                        <li class="doNotDisturb" data-status="3"> Do Not Disturb</li>
+                                        <li class="offline active" data-status="4"> Offline</li>
+                                    </ul>
+                                    }
+                                </div>
+                                <img id="imgPreview" class="img-responsive profilepic nomargin" data-userid="@Session["UserId"]" src="@Session["ProfilePic"].ToString()" />
+                            </a>
+                            <h3 class="text-center colorWhite">@Session["UserName"].ToString()</h3>
+                        </div>
+                        <div class="userName">
+
+                        </div>
+
+                        <ul class="profileLinks">
+                            <li>@Html.ActionLink("Requests", "index", "User")</li>
+                            <li>@Html.ActionLink("Achivements", "achivements", "User")</li>
+                            <li>@Html.ActionLink("Friends", "friends", "User")</li>
+                            <li>@Html.ActionLink("Photos", "gallery", "User")</li>
+                            <li>@Html.ActionLink("All Members", "all_members", "User")</li>
+                            <li>@Html.ActionLink("Community", "index", "community")</li>
+                            @{string invCount = Html.Action("getNewInvitionCountByMemId", "community").ToString();}
+                            <li>
+                                <a href="/community/groups">
+                                    Groups @if (invCount != "0")
+                                    { <span class="invCount badge pull-right">@invCount</span>}
+                                </a>
+                            </li>
+                            <li><a href="/community/favourite_groups">Favourite Groups</a></li>
+                            <li>@Html.ActionLink("My Talent", "index", "my_talent")</li>
+                            <li>@Html.ActionLink("Other Talent", "talent_post", "my_talent")</li>
+                            <li><a href="javascript:void(0)" onclick="openWindow('/User/live_support'); return false">Live Support Chat</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col-md-8 col-lg-9">
+                    @RenderBody()
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="container-fluid footerTop marginTop30px">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-3">
+                    <div class="bussInfo">
+                        <img src="~/Content/assets/icons/cart-icon.png" alt="" />
+                        <h5>FREE SHIPPING</h5>
+                        <p>Free Shipping on World wide Order Over $99.</p>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="bussInfo">
+                        <img src="~/Content/assets/icons/trusted-icons.png" alt="" />
+                        <h5>Trusted Pay</h5>
+                        <p>100% Payment Protection & Easy Return</p>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="bussInfo">
+                        <img src="~/Content/assets/icons/secure_payment.png" alt="" />
+                        <h5>Secured Payment</h5>
+                        <p>All Major Credit & Debit Cards Accepted</p>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="bussInfo">
+                        <img src="~/Content/assets/icons/shop-on-app.png" alt="" />
+                        <h5>Shop on app</h5>
+                        <p>Just Dowload our App & Shop With Best Offers!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="container-fluid newsLetters">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-2">
+                    <span class="text-uppercase newsLettersContent">SIGNUP to NEWSLETTER</span>
+                </div>
+                <div class="col-sm-5">
+                    <div class="searchPanal">
+                        <form action="">
+                            <input type="text" name="s" class="form-control" placeholder="Enter Your Email Address">
+                            <button type="submit">SUBMIT</button>
+                        </form>
+                    </div>
+                </div>
+                <div class="col-sm-5">
+                    <ul class="ul-table socialMedia">
+                        <li>Keep in touch</li>
+                        <li><a href="#"><img src="~/Content/assets/icons/social-white-twitter.png" alt="" /></a></li>
+                        <li><a href="#"><img src="~/Content/assets/icons/social-white-facebook.png" alt="" /></a></li>
+                        <li><a href="#"><img src="~/Content/assets/icons/social-white-intagram.png" alt="" /></a></li>
+                        <li><a href="#"><img src="~/Content/assets/icons/social-white-pinterest.png" alt="" /></a></li>
+                        <li><a href="#"><img src="~/Content/assets/icons/social-white-vimeo.png" alt="" /></a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="container-fluid topFooter">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-3">
+                    <h3><img src="~/Content/assets/images/black-logo.png" alt="" /></h3>
+                    <p>Many say exploration is part of our dest but it’s actually our duty to future and their.</p>
+                    <p><strong>Address:</strong> 868 Fake Street, New Delhi</p>
+                    <p><strong>Phone:</strong> <a href="tel:+919036748976">+91 90367 48976</a></p>
+                    <p><strong>Email:</strong> <a href="mailto:info@sactpal.com">info@sactpal.com</a></p>
+                </div>
+
+                <div class="col-sm-3">
+                    <h3>Company</h3>
+                    <ul>
+                        <li><a href="#">Discount Voucher</a></li>
+                        <li><a href="#">Spring Collection</a></li>
+                        <li><a href="#">Trending</a></li>
+                        <li><a href="#">Best Seller</a></li>
+                        <li><a href="#">Special Deals</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-sm-3">
+                    <h3>Policy Info</h3>
+                    <ul>
+                        <li><a href="#">Order &amp; Returns</a></li>
+                        <li><a href="#">Advance Search</a></li>
+                        <li><a href="#">Help &amp; FAQs</a></li>
+                        <li><a href="#">Consultant</a></li>
+                        <li><a href="#">Store Location</a></li>
+                    </ul>
+                </div>
+                <div class="col-sm-3">
+                    <h3>My Account</h3>
+                    <ul>
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Delivery Information</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Term &amp; Conditions</a></li>
+                        <li><a href="#">Custom Links</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <footer class="container-fluid footerBottom">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-6">
+                    <p>&copy; Copyright - actpal. all rights reserved.</p>
+                </div>
+                <div class="col-sm-6">
+                    <p class="text-right nomargin" style="position:relative;top:-10px;"><img src="~/Content/assets/icons/payment-method.png" alt="" /></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <div id="notification" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Notification</h4>
+                </div>
+                <div class="modal-body">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="modal fade" id="changeUserProfile" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header blueHeading">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Please select your profile picture</h4>
+                </div>
+                <div class="modal-body">
+                    <input type="file" value="photo" onchange="" name="photo" id="imageFile">
+                    <h4 class="uploadMsg"></h4>
+                </div>
+                <div class="modal-footer">
+                    <a onclick="readImageURL()" id="uploadProfile" class="btn btn-primary">Ok</a>
+                    <button type="button" class="btn" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="ratingGiven" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header blueHeading">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Notification</h4>
+                </div>
+                <div class="modal-body">
+                    <h4>Please Submit Rating</h4>
+                    <input type="hidden" value="" id="reqHisHd" />
+                    <span class="ratingStars forRatingGiven">
+                        <span title="1" data-value="1"></span>
+                        <span title="2" data-value="2"></span>
+                        <span title="3" data-value="3"></span>
+                        <span title="4" data-value="4"></span>
+                        <span title="5" data-value="5"></span>
+                    </span>
+                </div>
+                <div class="modal-footer">
+                    <a class="btn btn-primary" onclick="ratingSubmit()">Ok</a>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        function openWindow(url) {
+            var myWindow = window.open(url, "", "width=350,height=400");
+        }
+    </script>
+
+    <div class="modal fade" id="confirmBox" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header blueHeading">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Confirm</h4>
+                </div>
+                <div class="modal-body">
+                    <h4></h4>
+                </div>
+                <div class="modal-footer">
+                    <button id="confirmResponse" class="btn btn-primary">Ok</button>
+                    <button id="rejectResponse" type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @RenderSection("scripts", required: false)
+
+    <script src="~/Content/Scripts/jquery.signalR-2.2.1.min.js"></script>
+    <script src="/signalr/hubs"></script>
+    <script src="~/Content/js/Chat_Scripts.js"></script>
+    <script src="~/Content/assets/js/owl.carousel.min.js"></script>
+    <script src="~/Content/assets/js/bootstrap.min.js"></script>
+    <script src="~/Content/assets/js/script.js"></script>
+    <script src="~/Content/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+    <script src="~/Content/js/Mem_gallery.js"></script>
+    <script src="~/Content/js/GroupComments.js"></script>
+    <script src="~/Content/js/friend_section.js"></script>    
+    <script src="~/Content/js/post_and_comment.js"></script>
+    <script src="~/Content/js/Request_Files_Event.js"></script>
+
+    <script src="~/Content/Scripts/MicrosoftAjax.js"></script>
+    <script src="~/Content/Scripts/respond.min.js"></script>    
+    <script src="~/Content/Scripts/UtilityUser.js"></script>
+</body>
+</html>
+

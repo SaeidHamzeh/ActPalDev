@@ -1,0 +1,123 @@
+﻿@model IEnumerable<ViewModels.RequestDetailViewModel>
+
+    <table class="table nomargin">
+        <caption class="blueHeading" style="display:table-caption;margin:0px;float:none;">Option List</caption>
+        <thead>
+            <tr>
+                <th></th>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Date</th>
+                <th>Cost</th>
+            </tr>
+        </thead>
+        <!--Please mention here all fields name and show the main 4 fields-->
+
+        <tbody>
+            @if (Model.Count() > 0)
+            {
+                foreach (var item in Model)
+                {
+                    <tr>
+                        <td><input type='radio' data-id="@item.Request_Details_ID" data-catId="@item.Service_Category_Id" name="selectOpt" /></td>
+                        <td style="min-width:100px">@item.Request_Title</td>
+                        <td>@item.Request_Details_Title</td>
+                        <td>@item.Request_Date.ToString("dd/MM/yyyy")</td>
+                        <td>@item.Request_Cost</td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="5">No record Found</td>
+
+                </tr>
+            }
+
+        </tbody>
+
+    </table>
+    <div class="paginationBox searchRequestPagin col-sm-12">
+        @if (ViewBag.totalpages > 1)
+        {
+            <ul class="pagination pull-left nomargin">
+                @if (ViewBag.CurrentPage != 1)
+                {
+                    <li><a href="javascript:void(0)" data-page="1"><span aria-hidden="true">&laquo;</span></a></li>
+                    <li><a href="javascript:void(0)" data-page="@(ViewBag.CurrentPage-1)"><span aria-hidden="true">&lsaquo;</span></a></li>
+                }
+                @if (ViewBag.totalpages > 1)
+                {
+                    var i = 1; var last = 5;
+                    if (ViewBag.CurrentPage > 3)
+                    {
+                        i = ViewBag.CurrentPage - 2;
+                        last = ViewBag.CurrentPage + 2;
+                    }
+                    if (last > ViewBag.totalpages)
+                    {
+                        last = ViewBag.totalpages;
+                    }
+
+                    for (; i <= last; i++)
+                    {
+                        if (i == ViewBag.CurrentPage)
+                        {
+                            <li class="active"><a href="javascript:void(0)" data-page="@i">@i</a></li>
+                        }
+                        else
+                        {
+                            <li><a href="javascript:void(0)" data-page="@i">@i</a></li>
+                        }
+
+                    }
+                }
+                @if (ViewBag.totalpages > ViewBag.CurrentPage)
+                {
+                    <li>
+                        <a href="javascript:void(0)" data-page="@(ViewBag.CurrentPage+1)">
+                            <span aria-hidden="true">&rsaquo;</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0)" data-page="@ViewBag.totalpages">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                }
+            </ul>
+
+            <ul class="pull-left nomargin" style="list-style:none;padding: 0 0 0 10px;">
+                <li>
+                    <input type="hidden" value="@ViewBag.pageSize" id="pageSize" />
+                    <select name="" class="perPageDropdown">
+                        <option>10</option>
+                        <option>20</option>
+                        <option>50</option>
+                    </select>
+                    select per page
+                </li>
+            </ul>
+        }
+        <p class="pull-right nomargin">@ViewBag.CurrentPage-@ViewBag.totalpages of @ViewBag.totalPost items</p>
+    </div>
+
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("body").on('change', '.refineBox select.form-control, .refineBox input', function () {
+            $(".loader-Class").css("display","block");
+            setTimeout(function () {
+                $(".refineBox button[type='submit']").trigger('click');
+            }, 500);
+
+            setTimeout(function () {
+                $(".loader-Class").hide();
+            }, 1000);
+            
+        });
+       
+    });
+</script>

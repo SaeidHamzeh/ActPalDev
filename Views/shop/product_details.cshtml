@@ -1,0 +1,246 @@
+﻿@model ViewModels.Products.ProductViewModels
+
+@if (Session["UserID"] == null)
+{
+    ViewBag.Title = "Product Details";
+    Layout = "~/Views/Shared/_Shop_Layout.cshtml";
+}
+else
+{
+    ViewBag.Title = "Product Details";
+    Layout = "~/Views/Shared/_Shop_Dashboard_Layout.cshtml";
+}
+
+
+<section class="container-fluid margin25pxTB">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-5">
+                <input type="hidden" value="@Model.ID" name="productId" />
+                <input type="hidden" value="@Model.ServiceProvider_ID" name="ServiceProviderId" />
+                <div class="mediaBox">
+                    @Html.Action("_ProductMedia", "shop", new { productId = Model.ID, mediaType = "image", serviceProviderid = Model.ServiceProvider_ID, ColorId = 0 })
+                </div>
+            </div>
+
+            <div class="col-sm-6 col-sm-offset-1">
+                <h2>@Model.Name</h2>
+                <div class="priceBox">
+                    @Html.Action("_product_price_details", "shop", new { productId = Model.ID, colorId = Model.ColorId, sizeId = Model.sizeId })
+                </div>
+                <div class="ratingStars">
+                    <strong>Rating</strong>
+                    @Html.Action("_average_rating", "shop", new { ProductId = Model.ID })
+                </div>
+
+                <div class="productShortSummary padding20pxTB">
+                    <p>
+                        @Model.ShortSummary
+                    </p>
+                </div>
+                <div class="socialReport marginB30Only">
+                    <ul class="list-inline widthAuto noborder nopadding">
+                        @{
+                            string likeData = Html.Action("getTotalLikeByProdId", new { ProductId = Model.ID }).ToString();
+                            string[] likeD = likeData.Split('_');
+                        }
+                        <li class="addLikeProduct" data-productid="@Model.ID"><i class="fa fa-thumbs-up"></i> @likeD[0] </li>
+                        <li><i class="fa fa-comment"></i> @Html.Action("_get_TotalCommentOnProduct", new { ProductId = Model.ID })</li>
+                        <li><i class="fa fa-eye"></i> 25 </li>
+                    </ul>
+                </div>
+                <div class="quantityManager marginB30Only">
+                    <div id="LeftQuantity" class="hide">
+                        @Html.Action("_product_quantity_details", "shop", new { productId = Model.ID, ColorId = Model.ColorId, SizeId = Model.sizeId })
+                    </div>
+                    <ul class="list-inline widthAuto noborder nopadding">
+                        <li><button class="btn less"><i class="fa fa-minus"></i></button></li>
+                        <li><input type="number" name="quantity" min="1" value="1" max="@Html.Action("_product_quantity_details", "shop", new { productId = Model.ID, ColorId = Model.ColorId,SizeId=Model.sizeId })" class="text-center" /></li>
+                        <li><button class="btn increase"><i class="fa fa-plus"></i></button></li>
+                    </ul>
+                </div>
+
+                <div class="colorBox">
+                    @Html.Action("_product_color_details", "shop", new { productId = Model.ID, selected = Model.ColorId })
+                </div>
+
+                <div class="sizeBox marginB30Only">
+                    @Html.Action("_product_Size_details", "shop", new { productId = Model.ID, ColorId = Model.ColorId, selected = Model.sizeId })
+                </div>
+
+                <div class="productEventsButton marginB30Only">
+                    <ul class="list-inline widthAuto noborder nopadding">
+                        <li><button class="btn BtnCssyellow AddInCart">Add to CART</button></li>
+                        <li><button class="btn BtnCssyellow AddInWishlist">Wishlist</button></li>
+                        <li><a href="/shop/" class="btn BtnCssyellow">Go back to shopping</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="container-fluid productDetails">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div id="productDetails" class="tab-pane fade in active">
+                    <h3>Product Details</h3>
+                    @Html.Raw(Model.Description)
+                </div>
+            </div>
+            <div class="col-sm-12">
+                @Html.Action("_view_service_provider", "service_provider", new { ServiceProvider_Id = Model.ServiceProvider_ID })
+            </div>
+        </div>
+    </div>
+</section>
+
+@Html.Action("_similar_products", "shop", new { catId = Model.CategoryId, ctype ="cat"})
+
+<section class="container-fluid reviewAndDiscussion">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <h3>Review &amp; Rating <span class="pull-right"><button class="btn BtnCssyellow" type="button" data-toggle="modal" data-target="#postRating">POST A REVIEW</button></span></h3>
+                <div id="userRatingSection">
+                    @Html.Action("_product_reviews", "shop", new { id = Model.ID })
+                </div>
+            </div>
+            <div class="col-sm-12">
+                <h3>Question &amp; Answer <span class="pull-right"><button class="btn BtnCssyellow" type="button" data-toggle="modal" data-target="#postQuestion">POST A QUESTION</button></span></h3>
+                <div id="updateQuestionAnswer">
+                    @Html.Action("_product_queries", "shop", new { productId = Model.ID })
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- Modal -->
+<div id="postQuestion" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Post A Question</h4>
+            </div>
+            @if (Session["UserID"] != null)
+            {
+                using (Ajax.BeginForm("_add_product_question", "shop", new AjaxOptions { HttpMethod = "POST", OnBegin = "_addProductQuestionBegin", OnSuccess = "_addProductQuestionSuccess", OnFailure = "_addProductQuestionFailure" }))
+                {
+                    <div class="modal-body">
+                        <label>Question</label>
+                        <span>
+                            <input type="hidden" name="ProductId" value="@Model.ID" />
+                            <textarea class="form-control" name="Question" rows="5"></textarea>
+                        </span>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn BtnCssyellow">POST</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="modal-body">
+                    <span><a href='/Account'>Click Here</a> and Login Please!</span>
+                </div>
+                <div class="modal-footer">
+
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                </div>
+            }
+        </div>
+
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    $(".fancybox").fancybox();
+
+    $(document).ready(function () {
+        $(".mediaBox").on("click", ".productMedia .owl-item", function () {
+            var imgUrl = $(this).find("img").attr("src");
+            $(".main_image img").attr("src", imgUrl);
+            $(".productPhoto").attr("href", imgUrl);
+        });
+
+
+        $(".colorBox span").click(function () {
+            var productId = $('input[name="productId"]').val();
+            var ColorId = $(this).attr('data-id');
+            var serviceProviderId = $("input[name='ServiceProviderId']").val();
+            $(this).addClass("active").siblings().removeClass("active");
+            $(".sizeBox").load('@Url.Action("_product_Size_details", "shop")?productId=' + productId + '&ColorId=' + ColorId);
+
+            $(".mediaBox").load('@Url.Action("_ProductMedia", "shop")?productId=' + productId + '&mediaType=image&serviceProviderid=' + serviceProviderId + '&ColorId=' + ColorId);
+
+            setTimeout(function () {
+                $(".sizeBox").find("span:first-child").click();
+            }, 400)
+        });
+
+        $(".sizeBox").on("click", "span", function () {
+            var productId = $('input[name="productId"]').val();
+            var ColorId = $(".colorBox span.active").attr('data-id');
+            var SizeId = $(this).attr('data-id');
+            if (ColorId == undefined) {
+                ColorId = 0;
+            }
+            $(".priceBox").load('@Url.Action("_product_price_details", "shop")?productId=' + productId + '&ColorId=' + ColorId + '&sizeId=' + SizeId);
+            var data = {'productId': productId, 'ColorId': ColorId, 'SizeId': SizeId };
+            $.ajax({
+                url: "/shop/_product_quantity_details",
+                type: 'POST',
+                data: data,
+                cache: false,
+                success: function (result) {
+                    $("#LeftQuantity").text(result);
+                    $("input[name='quantity']").attr("max",result);
+                }
+            });
+
+            
+            $(this).addClass("active").siblings().removeClass("active");
+        });
+    });
+
+
+
+    function _addProductQuestionSuccess(data) {
+        var productId = $("input[name='productId']").val();
+        if (data == "1" || data == "2") {
+            $("#updateQuestionAnswer").load('@Url.Action("_product_queries", "shop")?productId=' + productId);
+            $("#postQuestion button[type='submit']").prop("disabled", false);
+            $("#postQuestion textarea[name='Question']").val("");
+            $("#postQuestion").modal("hide");
+        }
+    }
+
+    function _addProductQuestionBegin() {
+        $("#postQuestion button[type='submit']").prop("disabled", true);
+    }
+
+    function _addProductQuestionFailure(data) {
+
+    }
+
+
+    function OnFailureAnswer(data) {
+        console.log(data);
+    }
+
+    function OnSuccessAnswer(data) {
+        var productId = $("input[name='productId']").val();
+        if (data == "1" || data == "2") {
+            $("#updateQuestionAnswer").load('@Url.Action("_product_queries", "shop")?productId=' + productId);
+        } else {
+
+        }
+    }
+</script>

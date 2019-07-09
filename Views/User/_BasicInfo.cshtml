@@ -1,0 +1,195 @@
+﻿@model Models.UserProfileModel
+
+
+@using (Ajax.BeginForm("BasicInfo", "User", null, new AjaxOptions() { HttpMethod = "POST", LoadingElementId = "loadingbasic", UpdateTargetId = "basicInfo-body" }))
+{
+    @Html.HiddenFor(u => u.Mem_ID)
+    <div id="loadingbasic" class="loader-Class" style="display:none;color:red"></div>
+    <div class="row">
+        <div class="col-sm-8 sm-nopadding">
+            <label class="col-sm-4">First Name</label>
+            <span class="col-sm-8">
+                @Html.TextBoxFor(u => u.Mem_Name, new { @class = "form-control" })
+                <span>@Html.ValidationMessageFor(u => u.Mem_Name)</span>
+            </span>
+        </div>
+        <div class="col-sm-4">
+            <div class="options">
+                <select class='form-control'>
+                    <option>Everyone</option>
+                    <option>Only Friends</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-8 sm-nopadding">
+            <label class="col-sm-4">Last Name</label>
+            <span class="col-sm-8">
+                @Html.TextBoxFor(u => u.Mem_LName, new { @class = "form-control" })
+                <span>@Html.ValidationMessageFor(u => u.Mem_LName)</span>
+            </span>
+        </div>
+        <div class="col-sm-4">
+            <div class="options">
+                <select class='form-control'>
+                    <option>Everyone</option>
+                    <option>Only Friends</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-8 sm-nopadding">
+            <label class="col-sm-4">DOB</label>
+            <span class="col-sm-8">
+
+                @Html.TextBoxFor(u => u.Mem_DOB, new { @Value = Model.Mem_DOB.ToString().Replace("12:00:00 AM", ""), @class = "form-control dobPicker", @readonly = "true" })
+                <span>@Html.ValidationMessageFor(u => u.Mem_DOB)</span>
+            </span>
+        </div>
+        <div class="col-sm-4">
+            <div class="options">
+                <select class='form-control'>
+                    <option>Everyone</option>
+                    <option>Only Friends</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-8 sm-nopadding">
+            <label class="col-sm-4">Gender</label>
+            <span style="margin-top:7px;" class="col-sm-8">
+                @Html.RadioButtonFor(m => m.Mem_Gender, "Male")Male
+                @Html.RadioButtonFor(m => m.Mem_Gender, "Female")Female
+                @Html.RadioButtonFor(m => m.Mem_Gender, "Other")Other
+            </span>
+        </div>
+        <div class="col-sm-4">
+            <div class="options">
+                <select class='form-control'>
+                    <option>Everyone</option>
+                    <option>Only Friends</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-8 sm-nopadding">
+            <label class="col-sm-4">Address</label>
+            <span class="col-sm-8">
+                @Html.TextAreaFor(u => u.Mem_Address, new { @class = "form-control" })
+            </span>
+        </div>
+        <div class="col-sm-4">
+            <div class="options">
+                <select class='form-control'>
+                    <option>Everyone</option>
+                    <option>Only Friends</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    @*<div class="row">
+            <div class="col-sm-8">
+                <label class="col-sm-4">Address 2</label>
+                <span class="col-sm-8">
+                    <input type="text" class="form-control" />
+                </span>
+            </div>
+            <div class="col-sm-4">
+                <div class="options">
+                    <select class='form-control'>
+                        <option>Everyone</option>
+                        <option>Only Friends</option>
+                    </select>
+                </div>
+            </div>
+        </div>*@
+
+    <div class="row">
+        <div class="col-sm-8 sm-nopadding">
+            <label class="col-sm-4">Country</label>
+            <span id="CountryContainer" class="col-sm-8">
+                @Html.Action("CountryView", "CascadingDropDown", new { selectedValue = @Model.Mem_CountryID })
+            </span>
+
+        </div>
+        <div class="col-sm-4">
+            <div class="options">
+                <select class='form-control'>
+                    <option>Everyone</option>
+                    <option>Only Friends</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-8 sm-nopadding">
+            <label class="col-sm-4">State</label>
+
+            <span id="StateProvinceContainer" class="col-sm-8">
+                @Html.Action("StateProvinceView", "CascadingDropDown", new { countryID = @Model.Mem_CountryID, selectedValue = @Model.Mem_StateID })
+            </span>
+        </div>
+        <div class="col-sm-4">
+            <div class="options">
+                <select class='form-control'>
+                    <option>Everyone</option>
+                    <option>Only Friends</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-8 sm-nopadding">
+            <label class="col-sm-4">City</label>
+            <span id="CityContainer" class="col-sm-8">
+                @Html.Action("CityView", "CascadingDropDown", new { countryID = @Model.Mem_CountryID, stateprovinceID = @Model.Mem_StateID, selectedValue = @Model.Mem_CityID })
+            </span>
+        </div>
+        <div class="col-sm-4">
+            <div class="options">
+                <select class='form-control'>
+                    <option>Everyone</option>
+                    <option>Only Friends</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-8 sm-nopadding">
+            <label class="col-sm-4">ZipCode</label>
+            <span class="col-sm-8">
+                @Html.TextBoxFor(u => u.Mem_ZipCode, new { @class = "form-control" })
+            </span>
+        </div>
+        <div class="col-sm-4">
+            <div class="options">
+                <select class='form-control'>
+                    <option>Everyone</option>
+                    <option>Only Friends</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="row" style="height:26px">
+        <div class="col-sm-12">
+            <p class="saveButtonBox">
+                <input type="submit" class="btn btn-primary" value="Save All And Close" />
+                <a href="javascript:void(0)" class="btn btn-primary cancelGoBack">Cancel And Go Back</a>
+
+            </p>
+        </div>
+    </div>
+}

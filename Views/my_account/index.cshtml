@@ -1,0 +1,11 @@
+﻿
+@{
+    ViewBag.Title = "index";
+    Layout = "~/Views/Shared/_My_account.cshtml";
+}
+
+@if (Session["LoginStatus"] == null)
+{
+    Response.Redirect("/");
+}
+

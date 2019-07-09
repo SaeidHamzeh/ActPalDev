@@ -1,0 +1,17 @@
+﻿@model IEnumerable<ViewModels.Products.OrderViewModal>
+
+@if (Model.Count() > 0)
+{
+    foreach (var data in Model)
+    {
+        <div class="orderBox" id="@data.OrderId">
+            <div class="orderHeading">
+                ORDER ID <a href="/User/order_detail/@data.OrderId"> @data.OrderId</a> | ORDERED ON - <strong>@data.EntryDate.ToString("dd MMM yyyy")</strong>
+                <span class="pull-right"> <a href="#">TRACK ORDER</a></span>
+            </div>
+            <div class="orderDetail">
+                @Html.Action("_ordersDetail", "shop", new { OrderId = data.OrderId, AddressId=data.AddressId, EntryDate = data.EntryDate })
+            </div>
+        </div>
+    }
+}

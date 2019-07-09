@@ -1,0 +1,289 @@
+﻿
+.userImage {
+    background: url(/Content/assets/images/community_profile_bg.jpg) no-repeat;
+    background-size: cover;
+    padding: 10px 20px 20px;
+    text-align: center;
+}
+
+    .userImage #photoUpload {
+        display: inline-block;
+        margin: auto;
+    }
+
+    .userImage a.editBtn {
+        display: block;
+        text-align: right;
+        color: #fff;
+    }
+
+    .userImage #photoUpload img {
+        width: 146px;
+        height: 146px;
+    }
+
+
+.statusBox {
+    position: relative;
+}
+
+.currStatus {
+    position: absolute;
+    padding: 12px 20px;
+    border: 0px solid #ddd;
+    cursor: pointer;
+    right: 6px;
+    top: 0px;
+    z-index: 999;
+}
+
+    .currStatus:before {
+        left: 5px !important;
+        top: 5px !important;
+    }
+
+    .currStatus:after {
+        content: "\e114";
+        font-family: 'Glyphicons Halflings';
+        display: none;
+        position: absolute;
+        right: 2px;
+        top: 4px;
+        font-size: 12px;
+        cursor: pointer;
+    }
+
+.allStatus {
+    background: #fff;
+    position: absolute;
+    z-index: 999;
+    padding: 0px 40px 0px 40px;
+    border: 0px solid #ddd;
+    list-style: none;
+    margin-top: 25px;
+    height: 0px;
+    overflow: hidden;
+}
+
+    .allStatus.active {
+        padding: 10px 40px 10px 40px;
+        border: 1px solid #ddd;
+        height: auto;
+    }
+
+    .allStatus li {
+        position: relative;
+        padding: 4px 0;
+        cursor: pointer;
+    }
+
+        .allStatus li.active:after,
+        .countryIconName li.active:after {
+            content: "\e013";
+            font-family: 'Glyphicons Halflings';
+            display: block;
+            position: absolute;
+            right: -33px;
+            top: 3px;
+        }
+
+
+.available:before,
+.away:before,
+.dontDisturb:before,
+.doNotDisturb:before,
+.offline:before {
+    content: "";
+    display: block;
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border-radius: 100%;
+    -moz-border-radius: 100%;
+    -ms-border-radius: 100%;
+    -webkit-border-radius: 100%;
+    -o-border-radius: 100%;
+    left: -25px;
+    top: 6px;
+    border: 3px solid #fff;
+}
+
+.available:before {
+    background: #45d32a;
+}
+
+.away:before {
+    background: #f5a623;
+}
+
+.dontDisturb:before, .doNotDisturb:before {
+    background: #f5483f;
+}
+
+.offline:before {
+    background: #7f7f7f;
+}
+
+
+.profileLinks {
+    background: #f3faff;
+    padding: 20px 30px;
+}
+
+    .profileLinks li {
+        line-height: 28px;
+    }
+
+        .profileLinks li a {
+            color: #1e293c;
+            font-size: 16px;
+            text-decoration: none;
+        }
+
+.blueHeading {
+    margin: 0;
+    color:#fff;
+    padding: 15px 30px;
+    background: #e96300;
+    margin-bottom: 30px;
+}
+
+#groupListData .overlayer {
+    position: absolute;
+    top: 0%;
+    width: 100%;
+    left: 0;
+    padding: 10px;
+    height:100%;
+}
+
+#groupListData .groupImg {
+    position: relative;
+    margin-bottom:10px;
+}
+
+#groupListData .overlayer .makeFavourite {
+    color: #e96300;
+    font-size: 24px;
+}
+
+#groupListData .overlayer .inviteMember {
+    background: none;
+    color: #fff;
+    font-size: 20px;
+    border: 0;
+    padding: 0;
+}
+
+#groupListData .overlayer .topicCount {
+    color: #fff;
+    bottom: 9px;
+    position: absolute;
+    left: 11px;
+}
+
+
+.groupDetailBox {
+    border: 1px solid #ddd;
+    margin: 0 -10px;
+    padding: 8px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+    padding-bottom:0;
+    line-height:20px;
+    height:315px;
+}
+
+.groupDetailBox .actionBtn button{    
+    padding: 5px;
+    background: #858585;
+    margin-top: 11px;
+    border-color: #7b7a7a;
+    transition-duration:0.5s;
+    margin-bottom:15px;
+}
+
+    .groupDetailBox .actionBtn button.col-sm-6 {
+    width:46%;
+    }
+
+    .groupDetailBox .actionBtn button:hover {
+    background-color:#e96300;
+    border-color:#e96300;
+    }
+
+    .groupDetailBox .actionBtn button:last-child {
+    float:right;
+    margin-right:0;
+    }
+
+    
+.blackBtnCss{
+    background: #333;
+    border: 0;
+    border-radius: 0;
+    font-size: 15px;
+    padding: 8px 15px;
+    position: relative;
+    top: -3px;
+    right: -13px;
+    color:#fff;
+}
+
+    .blackBtnCss:hover,
+    .blackBtnCss:focus {
+        color:#fff;
+    }
+
+
+.communityBox {
+    border: 1px solid #ddd;
+    margin: 0;
+    padding: 8px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+    padding-bottom: 8px;
+    display: inline-block;
+    line-height: 20px;
+    width: 100%;
+}
+
+    .communityBox .groupImg {
+    float:left;
+    display:inline-block;
+    width:50%;
+    position:relative;
+    }
+
+.mainTitle a{
+    font-size:16px;
+    color:#1e293c;
+    line-height:22px;
+    display:block;
+    text-decoration:none !important;
+}
+
+.subTitle{
+    font-size:14px;
+    color:#858585;
+    line-height:22px;
+    display:block;
+}
+
+.badge.redBG {
+    background: #ff0000 !important;
+    padding: 5px 15px;
+    margin-left: 8px;
+    font-style:normal;
+}
+
+
+.communityBox  .overlayer {
+    position: absolute;
+    top: 20%;
+    width: 70%;
+    right: 30px;
+    color: #fff;
+    text-align: right;
+    left:auto !important;
+}

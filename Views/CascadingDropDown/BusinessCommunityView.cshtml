@@ -1,0 +1,6 @@
+﻿@model ViewModels.BusinessCommunityViewModel
+
+@{
+    Layout = null;
+}
+@Html.DropDownListFor(p => p.CommunityId, Model.BusinessCommIEnum, "--Business Community--", new { @id = "BusinessCommId", @class = "form-control", selected = @Model.CommunityId })

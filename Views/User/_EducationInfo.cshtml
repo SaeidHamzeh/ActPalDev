@@ -1,0 +1,133 @@
+﻿@model Models.UserEducationModel
+
+
+@using (Ajax.BeginForm("EducationInfo", "User", null, new AjaxOptions() { HttpMethod = "POST", LoadingElementId = "loadingeducation", UpdateTargetId = "EducationInfo-body" }))
+{
+    if (Model != null)
+    {
+        @Html.HiddenFor(u => u.Mem_ID)
+    }
+    else
+    {
+        <input type="hidden" name="Mem_ID" value="@Session["UserID"]" />
+
+    }
+
+    <div id="loadingeducation" class="loader-Class"></div>
+    <div class="row">
+        <div class="col-sm-8 sm-nopadding">
+            <label class="col-sm-4">Education</label>
+            <span class="col-sm-8">
+                @Html.TextBoxFor(u => u.Edu_description, new { @class = "form-control" })
+                <span>@Html.ValidationMessageFor(u => u.Edu_description)</span>
+            </span>
+        </div>
+        <div class="col-sm-4">
+            <div class="options">
+                <select class='form-control'>
+                    <option>Everyone</option>
+                    <option>Only Friends</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-8 sm-nopadding">
+            <label class="col-sm-4">Skill</label>
+            <span class="col-sm-8">
+                @Html.TextBoxFor(u => u.Skill_detail, new { @class = "form-control" })
+                <span>@Html.ValidationMessageFor(u => u.Skill_detail)</span>
+            </span>
+        </div>
+        <div class="col-sm-4">
+            <div class="options">
+                <select class='form-control'>
+                    <option>Everyone</option>
+                    <option>Only Friends</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-8 sm-nopadding">
+            <label class="col-sm-4">Schools</label>
+            <span class="col-sm-8">
+                @Html.TextBoxFor(u => u.Schools_detail, new { @class = "form-control" })
+                <span>@Html.ValidationMessageFor(u => u.Schools_detail)</span>
+            </span>
+        </div>
+        <div class="col-sm-4">
+            <div class="options">
+                <select class='form-control'>
+                    <option>Everyone</option>
+                    <option>Only Friends</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-8 sm-nopadding">
+            <label class="col-sm-4">Experience</label>
+            <span class="col-sm-8">
+                @Html.TextAreaFor(u => u.Experience_detail, new { @class = "form-control" })
+                <span>@Html.ValidationMessageFor(u => u.Experience_detail)</span>
+            </span>
+        </div>
+        <div class="col-sm-4">
+            <div class="options">
+                <select class='form-control'>
+                    <option>Everyone</option>
+                    <option>Only Friends</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-8 sm-nopadding">
+            <label class="col-sm-4">Certificate</label>
+            <span class="col-sm-8">
+                @Html.TextBoxFor(u => u.Certificate_detail, new { @class = "form-control" })
+                <span>@Html.ValidationMessageFor(u => u.Certificate_detail)</span>
+            </span>
+        </div>
+        <div class="col-sm-4">
+            <div class="options">
+                <select class='form-control'>
+                    <option>Everyone</option>
+                    <option>Only Friends</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-8 sm-nopadding">
+            <label class="col-sm-4">Interests</label>
+            <span class="col-sm-8">
+                @Html.TextBoxFor(u => u.Interests_detail, new { @class = "form-control" })
+                <span>@Html.ValidationMessageFor(u => u.Interests_detail)</span>
+            </span>
+        </div>
+        <div class="col-sm-4">
+            <div class="options">
+                <select class='form-control'>
+                    <option>Everyone</option>
+                    <option>Only Friends</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="row" style="height:26px">
+        <div class="col-sm-12">
+            <p class="saveButtonBox">
+                <input type="submit" class="btn btn-primary" value="Save All And Close" />
+                <a href="javascript:void(0)" class="btn btn-primary cancelGoBack">Cancel And Go Back</a>
+            </p>
+        </div>
+    </div>
+}

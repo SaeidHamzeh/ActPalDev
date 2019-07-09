@@ -1,0 +1,45 @@
+﻿
+@{
+    ViewBag.Title = "payment";
+    Layout = "~/Views/Shared/_Shop_Dashboard_Layout.cshtml";
+}
+
+
+<section class="container-fluid cart_page marginTop30px">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-9">
+                <h2>Payment Option</h2>
+                <div class="paymentMethodSection">
+                    <div class="paymentMethod">
+                        <input type="radio" id="COD" name="paymentMode" value="COD" />
+                        <label for="COD">Cash On Delivery</label>
+                    </div>
+                </div>
+                <div class="payNowButton">
+                    @using (Html.BeginForm("orderConfirm", "shop", FormMethod.Get, new { }))
+                    {
+                        <input type="hidden" value="@ViewBag.AddressId" name="addressId" />
+                        <input type="hidden" value="COD" name="paymentMode" />
+                        <button type="submit" class="btn BtnCssyellow completeOrder">Pay Now</button>
+                    }
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="cartBilling widget" style="margin-top: 66px;">
+                    <h4>Order Details</h4>
+                    @Html.Action("_order_calculation","shop")
+                   
+                    <div class="addressDetail paymentPageAddress">
+                        <h4><strong>Delivery Address</strong></h4>
+                         @Html.Action("_user_billing_selected_address", "shop", new { addressId = ViewBag.AddressId })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+

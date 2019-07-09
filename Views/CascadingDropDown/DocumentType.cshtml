@@ -1,0 +1,8 @@
+﻿@model ViewModels.DocumentTypeViewModel
+
+@{
+    Layout = null;
+}
+@Html.DropDownListFor(p => p.DocID, Model.DocIEnum, "Document Type", new { @id = "Document-DropdownID", @class = "form-control", selected = @Model.DocID })
+
+

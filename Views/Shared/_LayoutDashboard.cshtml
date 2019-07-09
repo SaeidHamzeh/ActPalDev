@@ -1,0 +1,446 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - My ChatSystem Home</title>
+
+    <link href="~/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/css/owl.carousel.min.css" rel="stylesheet" />
+    <link href="~/Content/css/animate.css" rel="stylesheet" />
+
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet" />
+
+    <link rel="stylesheet" href="~/Content/css/jquery.fancybox.css?v=2.1.6" type="text/css" media="screen" />
+    <link rel="stylesheet" href="~/Content/css/jquery.fancybox-buttons.css?v=1.0.5" type="text/css" media="screen" />
+    <link rel="stylesheet" href="~/Content/css/jquery.fancybox-thumbs.css?v=1.0.7" type="text/css" media="screen" />
+    <link href="~/Content/css/bootstrap-datepicker.css" rel="stylesheet" />
+
+
+    <script src="~/Content/js/jquery31.min.js"></script>
+    
+    <!-- Optionally add helpers - button, thumbnail and/or media -->
+
+    <script src="~/Content/js/jquery.fancybox.pack.js"></script>
+    <script src="~/Content/js/jquery.fancybox-buttons.js"></script>
+    <script src="~/Content/js/jquery.fancybox-media.js"></script>
+    <script src="~/Content/js/jquery.fancybox-thumbs.js"></script>
+    
+    <link href="~/Content/css/style.css" rel="stylesheet" />       
+
+    <script src="@Url.Content("~/Content/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Content/Scripts/UtilityUser.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Content/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+    <script src="~/Content/Scripts/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/Content/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+    <script src="~/Content/Scripts/MicrosoftAjax.js"></script>
+    <script src="~/Content/js/video.js"></script>
+    <script src="https://code.jquery.com/jquery-migrate-1.3.0.js"></script>
+    @Scripts.Render("~/bundles/jquery")   
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            $('body').on('click', ".allRegistrationGrid tr td input[type='radio']", function () {
+                $(".allRegistrationGrid tr td .addFriend").attr("disabled", true);
+                if ($(this).parent().parent().find('a').attr("disabled")) {
+                    $(this).parent().parent().find('a').attr("disabled", false);
+                } else {
+                    $(this).parent().parent().find('a').attr("disabled", true);
+                }
+
+            });
+
+            @if (TempData["contactmsg"] != null)
+            {
+                <text>$('#registerconfirm').modal('show'); </text>
+            }
+
+            @if (TempData["reqno"] != null)
+            {
+                <text>$('#registerconfirm').modal('show'); </text>
+            }
+            
+           
+        });
+
+        function failResPass(mess) {
+            $("#passRes .modal-body h4").text(mess);
+            $("#passRes").modal('show');
+            //window.location.href = window.location.href;
+        }
+
+    </script>
+</head>
+
+<body>
+    @if (Session["UserID"] == null) {
+        Response.Redirect("/");
+    }
+    
+
+    <header>
+        <section class="container-fluid topHeader">
+            <div class="col-sm-5">
+                <div class="logo">
+                    <a href="/">
+                        <img src="~/Content/images/logo.png" class="img-responsive" />
+                    </a>
+                </div>
+            </div>
+
+            <input type="hidden" value="@Session["UserID"]" id="userId" />
+            <div class="col-sm-6 pull-right impLinks beforeLogin">
+                <ul class="pull-right">
+                    <li>
+                        <a href="/">
+                            <img src="~/Content/images/home.png" alt="add user" />
+                        </a>
+                    </li>
+                    <li>
+                        <a href="~/User/notifications">
+                            <img src="~/Content/images/chat.png" alt="add user" />
+                            <i id="totPenNotification" class="badge"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a>
+                            <img src="~/Content/images/flog-icon.png" alt="add user" />
+                        </a>
+                        <div class="loginForm allStatusList">
+                            <ul>
+                                <li><a href="/User/request_status/?status=2">In Process</a></li>
+                                <li><a href="/User/request_status/?status=3">Confirmed</a></li>
+                                <li><a href="/User/request_status/?status=4">Closed</a></li>
+                                <li><a href="/User/request_status/?status=6">Rejected</a></li>
+                                <li><a href="/User/request_status/?status=5">Suspended</a></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <a  class="adduser">
+                            <img src="~/Content/images/user-icon.png" alt="add user" /> 
+                            <i id="totPenReqcount" class='badge'></i>
+                        </a>
+                        @{ Html.RenderAction("PendFriendReques", "User");}
+                    </li>
+                    <li class="currentUser" id="currentUserBox">
+                        <a  class="accountBtn nopadding">
+                            <img src="@Session["ProfilePic"].ToString()" alt='user' class="img-responsive profilepic" data-userid="@Session["UserId"]" />
+                        </a>
+                        <div class="loginForm logoutBox">
+                            <div class="userInfoLog">
+                                <div class="UserImg">
+                                    <a href="~/User/"><img src="@Session["ProfilePic"].ToString()" class="img-circle img-responsive profilepic" data-userid="@Session["UserId"]" /></a>
+                                </div>
+                                <div class="userName">
+                                    <h5 class="nomargin">@Session["UserName"].ToString()</h5>
+                                    <p class="userEmail"><small>@Session["UserEmail"]</small></p>
+                                    <p class="logButtons text-right">
+                                        @Html.ActionLink("Logout", "LogOut", "Account", null, new { @class = "btn btn-primary" })
+                                    </p>
+                                </div>
+                            </div>
+
+                        </div>
+                    </li>
+                    <li>
+                        <button class="userProileMob collapsed navbar-toggle" data-target="#bs-navbar" type="button"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
+                    </li>
+                </ul>
+            </div>
+        </section>
+    </header>
+    <div id="loadingreg" class="loader-Class"></div>
+    <section class="mainContainer userMasterPage">
+        <section class="container-fluid">
+
+            <div class="col-md-3 col-lg-2 profileSection userSection">
+                <div class="searchPanel">
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="requestDetailSearchText" placeholder="Search for..." />
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" id="requestDetailSearch" type="button"><i class="glyphicon glyphicon-search"></i></button>
+                        </span>
+                    </div>
+                    <!-- /input-group -->
+                </div>
+
+                <div class="userProfile">
+                    <div class="statusBox">
+
+                        @if (Session["LoginStatus"].ToString() == "1" || Session["LoginStatus"].ToString() == "0")
+                        {
+                            <span class="currStatus available"></span>
+                            <ul class="allStatus">
+                                <li class="available active" data-status="1"> Available</li>
+                                <li class="away" data-status="2"> Away</li>
+                                <li class="doNotDisturb" data-status="3"> Do Not Disturb</li>
+                                <li class="offline" data-status="4"> Offline</li>
+                            </ul>
+                        }
+                        else if (Session["LoginStatus"].ToString() == "2")
+                        {
+                            <span class="currStatus away"></span>
+                            <ul class="allStatus">
+                                <li class="available" data-status="1"> Available</li>
+                                <li class="away active" data-status="2"> Away</li>
+                                <li class="doNotDisturb" data-status="3"> Do Not Disturb</li>
+                                <li class="offline" data-status="4"> Offline</li>
+                            </ul>
+                        }
+                        else if (Session["LoginStatus"].ToString() == "3")
+                        {
+                            <span class="currStatus doNotDisturb"></span>
+                            <ul class="allStatus">
+                                <li class="available" data-status="1"> Available</li>
+                                <li class="away" data-status="2"> Away</li>
+                                <li class="doNotDisturb active" data-status="3"> Do Not Disturb</li>
+                                <li class="offline" data-status="4"> Offline</li>
+                            </ul>
+                        }
+                        else if (Session["LoginStatus"].ToString() == "4")
+                        {
+                            <span class="currStatus offline"></span>
+                            <ul class="allStatus">
+                                <li class="available" data-status="1"> Available</li>
+                                <li class="away" data-status="2"> Away</li>
+                                <li class="doNotDisturb" data-status="3"> Do Not Disturb</li>
+                                <li class="offline active" data-status="4"> Offline</li>
+                            </ul>
+                        }
+
+
+                    </div>
+
+                    <div class="userImage">
+
+                        <a id="photoUpload" title="Photo Change">
+                            <img id="imgPreview" class="img-responsive profilepic" data-userid="@Session["UserId"]" src="@Session["ProfilePic"].ToString()" />
+                        </a>
+
+                        
+                        <a href="/User/Edit" class="editBtn" title="Edit Profile"><i class="glyphicon glyphicon-edit"></i></a>
+                    </div>
+                    <div class="userName">
+                        <h3 class="text-center">@Session["UserName"].ToString()</h3>
+                    </div>
+
+                    <ul class="profileLinks">
+                        <li>@Html.ActionLink("Requests", "index", "User")</li>
+                        <li>@Html.ActionLink("Achivements", "achivements", "User")</li>
+                        <li>@Html.ActionLink("Friends", "friends", "User")</li>                        
+                        <li>@Html.ActionLink("Photos", "gallery", "User")</li>                        
+                        <li>@Html.ActionLink("All Members", "all_members", "User")</li>
+                        <li>@Html.ActionLink("Community", "index", "community")</li>
+                        @{string invCount = Html.Action("getNewInvitionCountByMemId", "community").ToString();}
+                        <li><a href="/community/groups">Groups @if (invCount != "0") { <span class="invCount badge pull-right">@invCount</span>}</a></li>
+                        <li><a href="/community/favourite_groups">Favourite Groups</a></li>                         
+                        <li>@Html.ActionLink("My Talent", "index", "my_talent")</li>
+                        <li>@Html.ActionLink("Other Talent", "talent_post", "my_talent")</li>
+                        <li><a href="javascript:void(0)" onclick="openWindow('/User/live_support'); return false">Live Support Chat</a></li>
+                    </ul>
+                </div>
+            </div>
+
+
+            <div class="col-md-8 contentSection">
+                @RenderBody()
+            </div>
+
+            <div class="col-md-2">
+                <section class="chatBoxes" id="chatBoxSec"></section>
+                <div id="friendListBox">
+                    @{ Html.RenderAction("_Chat", "User");}
+                </div>
+            </div>
+        </section>
+    </section>
+
+    <div class="clearfix"></div>
+    <footer class="container-fluid">
+        <article class="container">
+            <aside class="row">
+                <div class="col-sm-12 text-center">
+                    <ul>
+                        <li>@Html.ActionLink("About Us", "About", "Home")</li>
+                        <li><a href='#'>Career</a></li>
+                        <li>@Html.ActionLink("Contact Us", "Contact", "Home")</li>
+                    </ul>
+                    <p>&copy; 2017 Companyname.com. All Rights Reserved.</p>
+                </div>
+            </aside>
+        </article>
+    </footer>
+
+    <div class="modal fade" id="editProfileConfirm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header blueHeading">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Notification</h4>
+                </div>
+                <div class="modal-body">
+                    <h4>Are you sure you want to select this option</h4>
+                </div>
+                <div class="modal-footer">
+                    <a href="/user/" class="btn btn-primary">Ok</a>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="modelsuccessful" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header blueHeading">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Notification</h4>
+                </div>
+                <div class="modal-body">
+                    <h4>Your Data Has Been Successfully Saved.</h4>
+                </div>
+                <div class="modal-footer">
+                    <a href="" class="btn btn-primary">Ok</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="passRes" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header blueHeading">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Notification</h4>
+                </div>
+                <div class="modal-body">
+                    <h4></h4>
+                </div>
+                <div class="modal-footer">
+                    <a  data-dismiss="modal" class="btn btn-primary">Ok</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="confirmation" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header blueHeading">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Notification</h4>
+                </div>
+                <div class="modal-body">
+                    <h4>Are you sure you want to select this option</h4>
+                </div>
+                <div class="modal-footer">
+                    <a href="/home/index" class="btn btn-primary">Ok</a>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="confirmBox" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header blueHeading">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Confirm</h4>
+                </div>
+                <div class="modal-body">
+                    <h4></h4>
+                </div>
+                <div class="modal-footer">
+                    <button id="confirmResponse" class="btn btn-primary">Ok</button>
+                    <button id="rejectResponse" type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="loadinglogin" class="loader-Class"></div>
+    <div class="blackLayer">
+        <div class="closeBtn"><i class="glyphicon glyphicon-remove"></i></div>
+    </div>
+
+    <div class="modal fade" id="registerconfirm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header blueHeading">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Notification</h4>
+                </div>
+                <div class="modal-body">
+                    <h4>
+                        @if (TempData["reqno"] != null)
+                        {  @TempData["reqno"]
+                        }
+                    </h4>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Ok</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="changeUserProfile" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header blueHeading">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Please select your profile picture</h4>
+                </div>
+                <div class="modal-body">
+                    <input type="file" value="photo" onchange="" name="photo"  id="imageFile">
+                    <h4 class="uploadMsg"></h4>
+                </div>
+                <div class="modal-footer">
+                    <a onclick="readImageURL()" id="uploadProfile" class="btn btn-primary">Ok</a>
+                    <button type="button" class="btn" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="ratingGiven" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header blueHeading">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Notification</h4>
+                </div>
+                <div class="modal-body">
+                    <h4>Please Submit Rating</h4>
+                    <input type="hidden" value="" id="reqHisHd" />
+                    <span class="ratingStars forRatingGiven">
+                        <span title="1" data-value="1"></span>
+                        <span title="2" data-value="2"></span>
+                        <span title="3" data-value="3"></span>
+                        <span title="4" data-value="4"></span>
+                        <span title="5" data-value="5"></span>
+                    </span>
+                </div>
+                <div class="modal-footer">
+                    <a class="btn btn-primary" onclick="ratingSubmit()">Ok</a>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        function openWindow(url) {
+            var myWindow = window.open(url, "", "width=350,height=400");
+        }
+    </script>
+
+</body>
+</html>

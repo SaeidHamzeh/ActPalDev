@@ -1,0 +1,152 @@
+﻿@{
+    ViewBag.Title = "groups";
+    Layout = "~/Views/Shared/_Community_Group_Layout.cshtml";
+}
+
+<div class="row">
+    <div class="col-lg-12">
+        <h3 class="blueHeading">Favourite Groups</h3>
+    </div>
+    <div class="col-sm-12">
+        <div id="groupListData">
+            @Html.Action("_view_communities_groups", "community", new { fav = 1 })
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="inviteFriends" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="margin: 5px 10px;"><span aria-hidden="true">&times;</span></button>
+            <ul class="nav nav-tabs">
+                <li class="active"><a data-toggle="tab" href="#searchNewMembers">Search New Members</a></li>
+                <li><a data-toggle="tab" href="#memberList">Members Request Status</a></li>
+            </ul>
+
+            <div class="tab-content">
+                <div id="searchNewMembers" class="tab-pane fade in active">
+                    <div class="modal-header">
+                        <h4 class="modal-title"><input type="text" class="form-control" id="searchFriends" placeholder="Enter Friend Name or Email" /></h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="forInvitation">
+                            <input type="hidden" name="groupId" />
+                            <ul class="friendListAuto AutoComplete positionRel"></ul>
+                        </div>
+                    </div>
+                </div>
+                <div id="memberList" class="tab-pane fade">
+                    <div class="modal-body">
+                        <div id="groupMemberList">
+                            @Html.Action("_group_Members", "community")
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+
+
+<script>
+    $(document).ready(function () {
+        $("#searchFriends").keyup(function () {
+            //$(".friendListAuto li").remove();
+            var data1 = $(this).val();
+            var length = $(this).val().length;
+            var GrouId = $("#inviteFriends input[name='groupId']").val();
+            var dataL = $(".friendListAuto li").length;
+
+            $(".friendListAuto li").remove();
+
+            var data = "{'keyword':'" + data1 + "','groupId':" + GrouId + "}";
+            $.ajax({
+                type: "POST",
+                url: "/community/getAllMemberForGroup", // the URL of the controller action method
+                data: data, // optional data
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                success: function (result) {
+                    // alert(result);
+                    var prData = JSON.stringify(result);
+                    var serOffList = JSON.parse(prData);
+                    for (var i = 0; i < serOffList.length; i++) {
+                        $(".friendListAuto").append("<li class='autoItem' data-memId='" + serOffList[i].Mem_ID + "'>" + serOffList[i].Mem_name + "<span class='smallText'>" + serOffList[i].Email + "</span><button class='btn btn-primary btn-xs'>Invite</button></li>");
+                    }
+                },
+                Error: function (err) {
+                    alert(err);
+                }
+            });
+        });
+
+
+        $("body").on("click", ".inviteMember", function () {
+            var groupId = $(this).attr("data-groupId");
+            $(".friendListAuto li").remove();
+            $("#inviteFriends input[name='groupId']").val(groupId);
+            $("#groupMemberList").load('@Url.Action("_group_Members", "community")?groupId=' + groupId);
+            $("#inviteFriends").modal("show");
+        });
+
+        $(".friendListAuto").on("click", "li button", function () {
+            var Memid = $(this).parent().attr("data-memid");
+            var groupId = $("#inviteFriends input[name='groupId']").val();
+            $("#addGroupMem input[name='memId']").val(Memid);
+            $("#addGroupMem input[name='groupId']").val(groupId);
+
+            setTimeout(function () {
+                if ($("#addGroupMem input[name='memId']").val() != 0 && $("#addGroupMem input[name='groupId']").val() != 0) {
+                    $("#addGroupMember").click();
+                } else {
+                    alert("Data not exist");
+                }
+            }, 100);
+        })
+
+        $("body").on("click", ".editGroup", function () {
+            $(".loader-Class").addClass("show");
+            var GroupId = $(this).attr("data-groupid");
+            var GroupName = $(this).parent().parent().find("td").eq(0).text().trim();
+            var CommName = $(this).parent().parent().find("td").eq(2).text();
+            var CommOpt = "option:contains('" + CommName + "')";
+
+            $("input[name='groupId']").val(GroupId);
+            $("input[name='groupName']").val(GroupName);
+            $("#MemberComm option").attr("selected", false);
+            $("#MemberComm").find(CommOpt).attr("selected", "selected");
+            $(".loader-Class").removeClass("show");
+        });
+
+    });
+
+    function success(data) {
+        if (data == "-1") {
+            $(".requiredField").addClass("show");
+        }
+        else if (data != 3) {
+            $(".requiredField").removeClass("show");
+            $('#groupListData').load('@Url.Action("_view_communities_groups", "community")');
+            $("select").val("-1");
+            $("input[type='text']").val("");
+            $("input[type='hidden']").val(0);
+        }
+    }
+
+    function failure(data) {
+        $(".requiredField").removeClass("show");
+        $(".requiredField").addClass("show");
+    }
+
+    function successSent(data) {
+        if (data == 1) {
+            var Memid = $("#addGroupMem input[name='memId']").val();
+            $(".friendListAuto").find("li[data-memid='" + Memid + "'] button").text("Sent Invitation");
+        }
+    }
+
+
+</script>

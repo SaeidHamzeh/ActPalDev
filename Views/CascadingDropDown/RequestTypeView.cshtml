@@ -1,0 +1,7 @@
+﻿@model ViewModels.RequestTypeViewModel
+
+@{
+    Layout = null;
+}
+
+@Html.DropDownListFor(p => p.Request_Type_Id, Model.RequestTypeIEnum, new { @id = "reqType", @class = "form-control" })

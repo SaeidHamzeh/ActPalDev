@@ -1,0 +1,85 @@
+﻿@using (Html.BeginForm("_addtalentPost", "my_talent", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="userDetail">
+                    <img src="@Session["ProfilePic"].ToString()" alt='user' class="img-responsive profilepic nomargin" />
+                </div>
+                <div class="postDescription">
+                    <input type="hidden" value="0" name="talentPostId" />
+                    <p><textarea rows="6" class="form-control" name="description" placeholder="Enter Your Post"></textarea></p>
+                    <div class="sendFilesOnComments" style="position:static;">
+                        <ul>
+                            <li>
+                                <input type="file" class="form-control hide" multiple name="TalentMedia" id="talentImages_Vidoe" />
+                                <label for="talentImages_Vidoe"><i class="fa fa-upload"></i> Photo/Video</label>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <input type="submit" class="btn BtnCssyellow" value="Add Post" />
+    </div>
+}
+
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("input[name='TopicImages']").unbind().on("change", function (e) {
+            $(this).parent().find(".errorMsg").remove();
+            var curr = $(this);
+            var input = $(this)[0];
+            var count = $(this)[0].files.length
+
+            if (count < 5) {
+                var fileSize = 0;
+                for (var i = 0; i < count; i++) {
+                    if (input.files && input.files[i]) {
+                        var reader = new FileReader();
+                        reader.onload = function (e) {
+                            //curr.parent().append("<img style='width:100px;height:100px;' src=" + e.target.result + " />");
+                        };
+                        reader.readAsDataURL(input.files[i]);
+                    }
+                    fileSize = fileSize + input.files[i].size;
+                }
+                $(this).attr("data-fileSize", fileSize / (1024 * 1024));
+            } else {
+                $(this).val("");
+                $(this).parent().append("<span class='errorMsg'>You Can upload Maximum 10 images, Please select again!</span>");
+            }
+        });
+
+        $("input[name='TopicVideos']").unbind().on("change", function (e) {
+            $(this).parent().find(".errorMsg").remove();
+
+            var curr = $(this);
+            var input = $(this)[0];
+            var count = $(this)[0].files.length
+
+            var fileSize = 0;
+            for (var i = 0; i < count; i++) {
+                fileSize = fileSize + input.files[i].size;
+            }
+            /*==file size in mb==*/
+            var allFileSize = fileSize / (1024 * 1024);
+            $(this).attr("data-fileSize", allFileSize);
+            if (allFileSize > 51) {
+                $(this).parent().find(".errorMsg").remove();
+                $(this).parent().append("<span class='errorMsg'>Video size(" + Math.floor(allFileSize) + ") is to big</span>");
+                $(this).attr("type", "text");
+                $(this).attr("type", "file");
+                // $(id).parent().removeClass("active");
+            } else {
+                $(this).parent().find(".errorMsg").remove();
+                curr.parent().addClass("active");
+            }
+        });
+    });
+</script>
+

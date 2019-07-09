@@ -1,0 +1,7 @@
+﻿@model ViewModels.CityViewModel
+
+@{
+    Layout = null;
+}
+
+@Html.DropDownListFor(p => p.Mem_CityID, Model.CityIEnum, "Select a City", new { @id = "City-DropdownID1", @class = "form-control", selected = @Model.Mem_CityID })

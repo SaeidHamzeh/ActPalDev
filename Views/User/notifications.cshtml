@@ -1,0 +1,191 @@
+﻿@model IEnumerable<ViewModels.RequestNotificationViewModel>
+
+@{
+    ViewBag.Title = "Notification";
+    Layout = "~/Views/Shared/_User_Layout.cshtml";
+}
+
+<div class="row">
+    <div class="col-sm-10 col-sm-offset-1">
+        @if (Model.Count() > 0)
+        {
+            string prev = "", next = "";
+            <div class="notificationBox">
+
+                @foreach (var item in Model)
+                {
+                    prev = next;
+                    next = item.Request_Log_Date.ToString("ddd - dd MMM yyyy");
+                    if (prev != next) { 
+                    <h5>@item.Request_Log_Date.ToString("ddd - dd MMM yyyy")</h5>
+                    }
+
+                    <div class="notificationListBox @item.className">
+                        @if (item.Request_His_Log_Status == 2)
+                        {
+                            <div class="notificationDetailBox ">
+                                <div class="notiImage">
+                                    <img src="~/Content/images/congratulation-icon.png" alt="" />
+                                </div>
+                                <div class="notiDetail">
+                                    <p class="text-right"><small>@item.Request_Log_Date.ToString("HH:mm")</small></p>
+                                    <p>Congratulation; Request number @item.RN_number- @item.Request_Title <strong>In Process</strong>, Please click below link to see more details.</p>
+                                    <br />
+                                    <p><a href="/Home/request_status/?@item.Url" class="btn btn-primary">More Info</a></p>
+                                </div>
+                            </div>
+                        }
+                        else if (item.Request_His_Log_Status == 3)
+                        {
+                            <div class="notificationDetailBox ">
+                                <div class="notiImage">
+                                    <img src="~/Content/images/congratulation-icon.png" alt="" />
+                                </div>
+                                <div class="notiDetail">
+                                    <p class="text-right"><small>@item.Request_Log_Date.ToString("HH:mm")</small></p>
+                                    <p>Congratulation; Request number @item.RN_number- @item.Request_Title <strong>Confirmed</strong>, Please click below link to see more details.</p>
+                                    <br />
+                                    <p><a href="/Home/request_status/?@item.Url" class="btn btn-primary">More Info</a></p>
+                                </div>
+                            </div>
+                        }
+                        else if (item.Request_His_Log_Status == 4)
+                        {
+                            <div class="notificationDetailBox ">
+                                <div class="notiImage">
+                                    <img src="~/Content/images/congratulation-icon.png" alt="" />
+                                </div>
+                                <div class="notiDetail">
+                                    <p class="text-right"><small>@item.Request_Log_Date.ToString("HH:mm")</small></p>
+                                    <p>Congratulation; Request number @item.RN_number- @item.Request_Title <strong>Closed</strong>, Please click below link to see more details.</p>
+                                    <br />
+                                    <p><a href="/Home/request_status/?@item.Url" class="btn btn-primary">More Info</a></p>
+                                </div>
+                            </div>
+                        }
+                        else if (item.Request_His_Log_Status == 5)
+                        {
+                            <div class="notificationDetailBox">
+                                <div class="notiImage">
+                                    <img src="~/Content/images/suspended.png" alt="" />
+                                </div>
+                                <div class="notiDetail">
+                                    <p class="text-right"><small>@item.Request_Log_Date.ToString("HH:mm")</small></p>
+                                    <p>Sorry; Request number @item.RN_number- @item.Request_Title <strong>Suspended</strong> because more information required., Please click below link to see more details.</p>
+                                    <br />
+                                    <p><a href="/Home/request_status/?@item.Url" class="btn btn-primary">More Info</a></p>
+                                </div>
+                            </div>
+                        }
+                        else if (item.Request_His_Log_Status == 6)
+                        {
+                            <div class="notificationDetailBox">
+                                <div class="notiImage">
+                                    <img src="~/Content/images/rejected.png" alt="" />
+                                </div>
+                                <div class="notiDetail">
+                                    <p class="text-right"><small>@item.Request_Log_Date.ToString("HH:mm")</small></p>
+                                    <p>Sorry; Request number @item.RN_number- @item.Request_Title <strong>Rejected</strong> because location has not been found. Please review below link.</p>
+                                    <br />
+                                    <p><a href="/Home/request_status/?@item.Url" class="btn btn-primary">More Info</a></p>
+                                </div>
+                            </div>
+                        }else{
+                        <div class="notificationDetailBox">
+                                <div class="notiImage">
+                                    <img src="~/Content/images/rejected.png" alt="" />
+                                </div>
+                                <div class="notiDetail">
+                                    <p class="text-right"><small>@item.Request_Log_Date.ToString("HH:mm")</small></p>
+                                    <p>Sorry; Request number @item.RN_number- @item.Request_Title <strong>@item.Request_His_Log_Status</strong> because location has not been found. Please review below link.</p>
+                                    <br />
+                                    <p><a href="/Home/request_status/?@item.Url" class="btn btn-primary">More Info</a></p>
+                                </div>
+                            </div>
+                        }
+
+                    </div>
+
+
+                }
+            </div>
+        }
+        else { 
+        <div class="notificationBox">
+            <h2 class="text-center">No Record Found</h2>
+        </div>
+        }
+
+        
+        <div class="paginationBox col-sm-12">
+            @if (ViewBag.totalpages > 1)
+            {
+                <ul class="pagination personalReqPage pull-left nomargin">
+                    @if (ViewBag.CurrentPage != 1)
+                    {
+                        <li><a href="javascript:void(0)" data-page="1"><span aria-hidden="true">&laquo;</span></a></li>
+                        <li><a href="javascript:void(0)" data-page="@(ViewBag.CurrentPage-1)"><span aria-hidden="true">&lsaquo;</span></a></li>
+                    }
+                    @if (ViewBag.totalpages > 1)
+                    {
+                        var i = 1; var last = 5;
+                        if (ViewBag.CurrentPage > 3)
+                        {
+                            i = ViewBag.CurrentPage - 2;
+                            last = ViewBag.CurrentPage + 2;
+                        }
+                        if (last > ViewBag.totalpages)
+                        {
+                            last = ViewBag.totalpages;
+                        }
+
+                        for (; i <= last; i++)
+                        {
+                            if (i == ViewBag.CurrentPage)
+                            {
+                                <li class="active"><a data-page="@i">@i</a></li>
+                            }
+                            else
+                            {
+                                <li><a data-page="@i">@i</a></li>
+                            }
+
+                        }
+                    }
+                    @if (ViewBag.totalpages > ViewBag.CurrentPage)
+                    {
+                        <li>
+                            <a href="javascript:void(0)" data-page="@(ViewBag.CurrentPage+1)">
+                                <span aria-hidden="true">
+                                    &rsaquo;
+                                </span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0)" data-page="@ViewBag.totalpages">
+                                <span aria-hidden="true">
+                                    &raquo;
+                                </span>
+                            </a>
+                        </li>
+                    }
+                </ul>
+           
+            <ul class="pull-left nomargin" id="allOptionList" style="list-style:none;padding: 0 0 0 10px;">
+                <li>
+                    <input type="hidden" value="@ViewBag.pageSize" id="pageSize" />
+                    <select class="perPageDropdown">
+                        <option value="10">10</option>
+                        <option value="20">20</option>
+                        <option value="50">50</option>
+                    </select>
+                    select per page
+                </li>
+            </ul>
+            }
+            <p class="pull-right nomargin">@ViewBag.CurrentPage-@ViewBag.totalpages of @ViewBag.totalPost items</p>
+                
+        </div>
+
+    </div>
+</div>

@@ -1,0 +1,54 @@
+﻿@model ViewModels.UserContactViewModel
+
+
+@using (Ajax.BeginForm("ContactInfo", "User", null, new AjaxOptions() { HttpMethod = "POST", LoadingElementId = "contactloading", UpdateTargetId = "ContactInfo-body" }))
+{
+    @Html.HiddenFor(u => u.Mem_ID)
+
+    <div id="contactloading" class="loader-Class"></div>
+    <div class="row">
+        <div class="col-sm-8 sm-nopadding">
+            <label class="col-sm-4">Phone No.</label>
+            <span class="col-sm-8">
+                @Html.TextBoxFor(u => u.Mem_Tel, new { @class = "form-control" })
+                <span>@Html.ValidationMessageFor(u => u.Mem_Tel)</span>
+            </span>
+        </div>
+        <div class="col-sm-4">
+            <div class="options">
+                <select class='form-control'>
+                    <option>Everyone</option>
+                    <option>Only Friends</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-8 sm-nopadding">
+            <label class="col-sm-4">Fax</label>
+            <span class="col-sm-8">
+                @Html.TextBoxFor(u => u.Mem_Fax, new { @class = "form-control" })
+                <span>@Html.ValidationMessageFor(u => u.Mem_Fax)</span>
+            </span>
+        </div>
+        <div class="col-sm-4">
+            <div class="options">
+                <select class='form-control'>
+                    <option>Everyone</option>
+                    <option>Only Friends</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row" style="height:26px">
+        <div class="col-sm-12">
+            <p class="saveButtonBox">
+                <input type="submit" class="btn btn-primary" value="Save All And Close" />
+                <a href="javascript:void(0)" class="btn btn-primary cancelGoBack">Cancel And Go Back</a>
+            </p>
+        </div>
+    </div>
+}

@@ -1,0 +1,135 @@
+﻿@model IEnumerable<ViewModels.RequestDetailViewModel>
+
+@if (Model.Count() > 0)
+{
+    foreach (var item in Model)
+    {
+        <div class="container-fluid ">
+            <div class="searchResult" id="addTravelDetail">
+                <div class="row formFieldsBox">
+                    <div class="col-md-6">
+                        <input type="hidden" value="3" name="Service_Category_Id" />
+                        <input type="hidden" value="@item.Request_Details_ID" id="reqTypeID" />
+                        <div class="formRow"><label>Service Name :</label><span><input type="text" readonly name="Category" value="@item.Request_Title" class="form-control" /></span></div>
+                        <div class="formRow"><label>Departure Date :</label><span><input type="text" readonly name="departure_date" value="@item.Request_Date_From" id="fromDate" class="form-control" /></span></div>
+                        <div class="formRow"><label>Return :</label><span><input type="text" readonly name="return_date" value="@item.Request_Date_To" class="form-control" /></span></div>
+                        <div class="formRow"><label>Destination :</label><span><input type="text" readonly name="destination" value="@item.Request_Destination" class="form-control" /></span></div>
+                        <div class="formRow"><label>Number of Rooms :</label><span><input type="number" readonly value="@item.Num_of_Room" min="0" name="num_rooms" class="form-control" /></span></div>
+                        <div class="formRow">
+                            <label>Country :</label>
+                            <span>
+                                <input type="text" class="form-control" readonly value="@item.CountryName" />
+                            </span>
+                        </div>
+                        <div class="formRow">
+                            <label>State :</label>
+                            <span>
+                                <input type="text" class="form-control" readonly value="@item.StateName" />
+                            </span>
+                        </div>
+                        <div class="formRow">
+                            <label>City :</label>
+                            <span>
+                                <input type="text" class="form-control" readonly value="@item.CityName" />
+                            </span>
+                        </div>
+                        <div class="formRow">
+                            <label>Service Type :</label>
+                            <span>
+                                <input type="text" name="serviceType" readonly value="@item.Request_Type" class="form-control" />
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="formRow"><label>Number Of Adult :</label><span><input type="number" readonly value="@item.Num_of_Adult" min="1" name="num_adult" class="form-control" /></span></div>
+                        <div class="formRow"><label>Number Of Children :</label><span><input type="number" readonly value="@item.Num_of_Children" min="0" name="num_children" class="form-control" /></span></div>
+                        <div class="formRow">
+                            <label>Package Price :</label>
+
+                            <div class="input-group">
+                                <div class="input-group-addon"><i class="fa fa-usd" aria-hidden="true"></i></div>
+                                <input type="number" name="cost" value="@item.Request_Cost" readonly class="form-control" />
+                            </div>
+                        </div>
+                        
+                        <div class="formRow">
+                            <label>Include Flight :</label>
+                            <span>@(@item.Include_Flight == 1 ? "Yes" : "No")</span>
+                        </div>
+                        <div class="formRow">
+                            <label>Specification :</label><span>
+                                                              <textarea class="form-control" readonly data-validation="optional" name="specification">@item.Specification</textarea>
+                            </span>
+                        </div>
+                        <div class="formRow">
+                            <label>Description :</label><span>
+                                                            <textarea class="form-control" readonly name="description">@item.Request_Desc</textarea>
+                            </span>
+                        </div>
+                        @*<div class="formRow">
+                            <label>Service Url :</label><span>
+                                                            <input type="text" class="form-control" readonly data-validation="optional" value="@item.Request_URL" name="serviceUrl" />
+                            </span>
+                        </div>*@
+                    </div>
+                </div>
+
+                @{
+        if (item.Request_photo != null)
+        {
+            <div class="row formFieldsBox">
+                <div class="videoList col-md-12">
+                    <div class="owl-carousel reqMovies owl-theme" id="travelPhoto">
+                        @{
+            var img = item.Request_photo.Split(',');
+            for (var i = 0; i < img.Length; i++)
+            {
+                var imgUrl = img[i].Split('#');
+                var imgId = imgUrl[0];
+                var imgPath = "http://serviceprovider.publickin.com" + imgUrl[1];
+                <div class="item">
+                    <img src="@imgPath" class="img-responsive" />
+                    <div class="overLayerFunction">
+                        <a class="fancybox" rel="memberPhoto" href="@imgPath"><i class="fa fa-search-plus"></i></a>
+                    </div>
+                </div>
+            }
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+                }
+
+                @{
+        if (item.Request_movie != null)
+        {
+            <div class="row formFieldsBox">
+                <div class="clearfix"></div>
+                <div class="videoList">
+                    <div class="owl-carousel reqMovies owl-theme" id="travelVideo">
+                        @{
+            var vid = item.Request_movie.Split(',');
+            for (var i = 0; i < vid.Length; i++)
+            {
+                var vidUrl = vid[i].Split('#');
+                var vidId = vid[0];
+                var vidPath = "http://serviceprovider.publickin.com" + vidUrl[1];
+                <div class="item">
+                    <video width="320" height="230"><source src="@vidPath">Your browser does not support the video tag.</video>
+                       <div class="overLayerFunction">
+                           <span class="playVideoIcon" data-video="@vidPath"><i class="fa fa-play"></i></span>
+                           <a href="@vidPath" download="" target="_blank"><i class="fa fa-download"></i></a>
+                    </div>
+                </div>
+            }
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+                }
+            </div>
+        </div>
+    }
+}

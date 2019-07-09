@@ -1,0 +1,56 @@
+﻿@if (Session["UserID"] == null)
+{
+    ViewBag.Title = "Product Details";
+    Layout = "~/Views/Shared/_Shop_Layout.cshtml";
+}
+else
+{
+    ViewBag.Title = "Product Details";
+    Layout = "~/Views/Shared/_Shop_Dashboard_Layout.cshtml";
+}
+
+
+<section class="container-fluid cart_page marginTop30px">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-3">
+                @Html.Action("_product_filter", "shop", new { categoryId = ViewBag.catId,catType=ViewBag.ctype })
+            </div>
+            <div class="col-sm-9">
+                <h4 class="categoryDataSort">
+                    <input type="hidden" value="@ViewBag.category" name="categoryName" />
+                    <input type="hidden" value="@ViewBag.catId" name="catId" />
+                    <input type="hidden" value="@ViewBag.ctype" name="ctype" />
+                    @ViewBag.category - @ViewBag.totalRecords Items <span class="pull-right">
+                        Sort By:
+                        <select name="sortBy">
+                            <option value="-1">--Choose An Option--</option>
+                            <option value="popularity">Popularity</option>
+                            <option value="lowtohigh">Price -Low to High</option>
+                            <option value="hightolow">Price -High to Low</option>
+                            <option value="newest">Newest First</option>
+                        </select>
+                    </span>
+                </h4>
+
+                <div id="categoryProduct">
+                    @Html.Action("_category_wise_products", "shop", new { id = ViewBag.category, catId = ViewBag.catId, ctype = ViewBag.ctype, sortBy = "" })
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".categoryDataSort select[name='sortBy']").change(function () {
+            var categoryName = $("input[name='categoryName']").val();
+            var catId = $("input[name='catId']").val();
+            var ctype = $("input[name='ctype']").val();
+            var sortBy = $(this).val();
+
+            $("#categoryProduct").load('@Url.Action("_category_wise_products", "shop")?id=' + categoryName + '&catId=' + catId + '&ctype=' + ctype + '&sortBy=' + sortBy);
+        });
+    });
+</script>

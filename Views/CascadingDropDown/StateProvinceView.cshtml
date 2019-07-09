@@ -1,0 +1,21 @@
+﻿@model ViewModels.StateProvinceViewModel
+
+@{
+    Layout = null;
+}
+@Html.DropDownListFor(p => p.Mem_StateID, Model.StateProvinceIEnum, "Select a State", new { @id = "StateProvince-DropDownID", @class = "form-control",selected=@Model.Mem_StateID  })
+<script type="text/javascript">
+    $(function () {
+        // Populate City
+        $('#StateProvince-DropDownID').change(function () {
+            $("#loadingreg").addClass("show");
+            var selectedCountryID = $('#Country-DropdownID option:selected').val();
+            //var optionSelected = $('#StateProvince-DropDownID option:selected').text();
+            var selectedStateProvinceID = this.value;
+
+            $('#CityContainer').load('@Url.Action("CityView")?countryID=' + selectedCountryID + '&stateprovinceID=' + selectedStateProvinceID);
+
+            $("#loadingreg").removeClass("show");
+        });
+    });
+</script>

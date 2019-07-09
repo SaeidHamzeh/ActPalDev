@@ -1,0 +1,7 @@
+﻿@model ViewModels.SourceViewModel
+
+@{
+    Layout = null;
+}
+
+@Html.DropDownListFor(p => p.Source_Id, Model.SourceIEnum,  new { @id = "reqSource", @class = "form-control" })

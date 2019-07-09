@@ -1,0 +1,136 @@
+﻿@model IEnumerable<ViewModels.BusinessCommunityViewModel>
+
+
+                @if (Model.Count() > 0)
+                {
+                    foreach (var item in Model)
+                    {
+                        <div class="col-sm-6">
+                            <div class="communityBox">
+                                <div class="groupImg">
+                                    <img src="~/Content/assets/images/group_default_img.png" />
+                                    <div class="overlayer">
+                                        Groups - <span class="badge redBG">@item.GroupCount</span>
+                                    </div>
+                                </div>
+
+                                <div class="communityContent">
+                                    <p class="mainTitle"><a href="~/community/groups?commId=@item.CommunityId">@item.BusinessCommunity</a></p>
+                                    <p class="subTitle">@item.IndustryName</p>
+                                    <p class="subTitle">@item.BusinessType</p>
+                                    <span><a href="#" class="btn btnCss  BtnCssyellow btnMedium text-upppercase">Edit</a> <a href="#" class="btn BtnCssyellow btnMedium text-upppercase">Delete</a></span>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="3">No record Found</td>
+                    </tr>
+                }
+
+           
+        <div class="paginationBox  col-sm-12" id="allOptionList">
+            @if (ViewBag.totalpages > 1)
+            {
+                <ul class="pagination personalReqPage pull-left nomargin">
+                    @if (ViewBag.CurrentPage != 1)
+                    {
+                        <li><a href="javascript:void(0)" data-page="1"><span aria-hidden="true">&laquo;</span></a></li>
+                        <li><a href="javascript:void(0)" data-page="@(ViewBag.CurrentPage-1)"><span aria-hidden="true">&lsaquo;</span></a></li>
+                    }
+                    @if (ViewBag.totalpages > 1)
+                    {
+                        var i = 1; var last = 5;
+                        if (ViewBag.CurrentPage > 3)
+                        {
+                            i = ViewBag.CurrentPage - 2;
+                            last = ViewBag.CurrentPage + 2;
+                        }
+                        if (last > ViewBag.totalpages)
+                        {
+                            last = ViewBag.totalpages;
+                        }
+
+                        for (; i <= last; i++)
+                        {
+                            if (i == ViewBag.CurrentPage)
+                            {
+                                <li class="active"><a href="javascript:void(0)" data-page="@i">@i</a></li>
+                            }
+                            else
+                            {
+                                <li><a href="javascript:void(0)" data-page="@i">@i</a></li>
+                            }
+
+                        }
+                    }
+                    @if (ViewBag.totalpages > ViewBag.CurrentPage)
+                    {
+                        <li>
+                            <a href="javascript:void(0)" data-page="@(ViewBag.CurrentPage+1)">
+                                <span aria-hidden="true">&rsaquo;</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0)" data-page="@ViewBag.totalpages">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                    }
+                </ul>
+
+                <ul class="pull-left nomargin" style="list-style:none;padding: 0 0 0 10px;">
+                    <li>
+                        <input type="hidden" value="@ViewBag.pageSize" id="pageSize" />
+                        <select name="" class="perPageDropdown">
+                            <option>10</option>
+                            <option>20</option>
+                            <option>50</option>
+                        </select>
+                        select per page
+                    </li>
+                </ul>
+            }
+            <p class="pull-right nomargin">@ViewBag.CurrentPage-@ViewBag.totalpages of @ViewBag.TotalRows items</p>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".removeCommunity").click(function (e) {
+            var curr = $(this);
+            var commid = curr.attr("data-commid");
+            var status = curr.attr("data-commStatus");
+            if (status == 1) {
+                status = 0;
+            } else {
+                status = 1;
+            }
+            var data = "{'CommId':" + commid + ",'status':" + status + "}";
+
+            $("#loadingreg").addClass("show");
+            $.ajax({
+                type: "POST",
+                url: "/community/_updateMemCommunityStatus", // the URL of the controller action method
+                data: data, // optional data
+                dataType: "text",
+                contentType: "application/json; charset=utf-8",
+                success: function (result) {
+                    if (result == "0") {
+                        curr.find("i").removeClass("glyphicon-remove").addClass("glyphicon-ok");
+                    } else {
+                        curr.find("i").removeClass("glyphicon-ok").addClass("glyphicon-remove");
+                    }
+                    $("#loadingreg").removeClass("show");
+                },
+                Error: function (err) {
+                    alert(err);
+                }
+            });
+        });
+    });
+</script>

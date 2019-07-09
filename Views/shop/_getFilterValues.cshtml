@@ -1,0 +1,18 @@
+﻿@model IEnumerable<ViewModels.Products.FilterValuesViewModel>
+
+@if (Model.Count() > 0)
+{
+    <ul>
+        @foreach (var data in Model)
+        {
+            var filValue = data.FilterValue.Split(',');
+            foreach (var val in filValue)
+            {
+                <li>
+                    <input type="checkbox" />
+                    <label>@val</label>
+                </li>
+            }
+        }
+    </ul>
+}

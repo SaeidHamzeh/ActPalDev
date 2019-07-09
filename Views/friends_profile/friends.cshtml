@@ -1,0 +1,73 @@
+﻿@if (@Session["UserID"] == null)
+{
+    Response.Redirect("/");
+}
+else
+{
+    ViewBag.Title = "Friends Page";
+    Layout = "~/Views/Shared/_LayoutFriends.cshtml";
+}
+
+<script>
+    var pageSize = 15;
+    var pageIndex = 0;
+    var category = '';
+
+    $(document).ready(function () {
+        //GetData();        
+
+        //$(".more").click(function () {
+        //    GetData();
+        //});
+        
+        //$('#searchfriend').keyup(function () {
+        //    pageIndex = 0;
+        //    $(".mutualFriends").html('');
+        //    GetData();
+        //});
+
+
+        $(function () {
+            $('.AllFriends').click(function () {
+                $('.contentSection').load(this.href);
+                return false;
+            });
+
+        });
+    });
+
+</script>
+<div class="clearfix"></div>
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="blueHeading">
+            <h3 class="friendsBox">Friends</h3>
+        </div>
+        <div class="clearfix"></div>
+        <p class="frndsCounts marginTop30px">
+            <label>All Friends <i class="badge">@ViewBag.allfrnCount</i></label>
+            <label><a href="#">Birthdays <i class="badge">@ViewBag.commingbirthday</i></a></label>
+            <label><a href="#">New Posts <i class="badge">3</i></a></label>
+
+            <label class="frndBoxSearch">
+                <span class="input-group">                    
+                    <input type="text" class="form-control" id="searchfriend" placeholder="Search Friend" />
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" type="button"><i class="glyphicon glyphicon-search"></i></button>
+                    </span>
+                </span>
+            </label><!-- /input-group -->
+
+        </p>
+        <hr />
+    </div>
+
+
+    <div class="col-lg-12">
+        @Html.Action("AllFriends")
+    </div>
+    <div style="text-align:center">
+        @*<a class="more" href="#">More</a>*@
+    </div>
+</div>

@@ -1,0 +1,494 @@
+﻿@model IEnumerable<ViewModels.GroupViewModel>
+
+
+@if (Model.Count() > 0)
+{
+    foreach (var item in Model)
+    {
+        <div class="col-sm-3">
+            <div class="groupDetailBox">
+                <div class="groupImg">
+                    <img src="~/Content/assets/images/group_default_img.png" />
+                    <div class="overlayer">
+                        @if (Session["UserId"].ToString() != item.Mem_Id.ToString())
+                        {
+                            // 4 - Pending, 1-Accept, 2-Reject, 3-Exit
+                            if (item.ReqStatus == 4)
+                            {
+
+                            }
+                            else if (item.ReqStatus == 1)
+                            {
+                                <span class="makeFavourite @(item.Favourite>0?"active":"")" data-groupid="@item.GroupId"><i class="fa fa-heart"></i></span>
+                            }
+                        }
+                        else
+                        {
+                            <span class="makeFavourite @(item.Favourite>0?"active":"")" data-groupid="@item.GroupId"><i class="fa fa-heart"></i></span>
+                        }
+                        <span class="pull-right"><button class='inviteMember' data-groupid="@item.GroupId"><i class="fa fa-share-alt"></i></button></span>
+                        <span class="topicCount">Topic Count  <span class="badge">@item.TopicCount</span></span>
+                    </div>
+                </div>
+                <div class="createdDate">
+                    Created On - @item.EntryDate.ToString("dd MMM yyyy")
+                </div>
+                <div class="">
+                    @if (Session["UserId"].ToString() != item.Mem_Id.ToString())
+                    {
+                        // 4 - Pending, 1-Accept, 2-Reject, 3-Exit
+                        if (item.ReqStatus == 4 || item.ReqStatus == 5 || item.ReqStatus == 6)
+                        {
+                            @item.CommunityGroup
+                        }
+                        else if (item.ReqStatus == 1)
+                        {
+                            <a href="~/community/group_profile?grId=@item.GroupId" data-groupid="@item.GroupId" data-groupmemid="@item.Mem_Id" data-groupimg="@item.GroupImg" class="groupDetail">@item.CommunityGroup</a>
+                        }
+                    }
+                    else
+                    {
+                        <a href="~/community/group_profile?grId=@item.GroupId" data-groupid="@item.GroupId" data-groupmemid="@item.Mem_Id" data-groupimg="@item.GroupImg" class="groupDetail">@item.CommunityGroup</a>
+                    }
+                </div>
+
+                <p>@item.CommunityName <br /><small>Community</small></p>
+                <div class="memberDetail">
+                    <img src="" />
+                    @(Session["UserId"].ToString() == item.Mem_Id.ToString() ? "" : item.Mem_Name)
+                </div>
+
+                <div class="row actionBtn">
+                    <div class="col-sm-12">
+                        <p>
+                            @if (Session["UserId"].ToString() != item.Mem_Id.ToString())
+                            {
+                                // 4 - Pending, 1-Accept, 2-Reject, 3-Exit
+                                if (item.ReqStatus == 4)
+                                {
+                                    <button class='btn btn-primary btn-xs groupStatusUpdate col-sm-6' data-groupid="@item.GroupId" data-grmemid="@item.GrMemId" data-updatestatus="1">Accept</button>
+                                    <button class='btn btn-primary btn-xs groupStatusUpdate col-sm-6' data-groupid="@item.GroupId" data-grmemid="@item.GrMemId" data-updatestatus="2">Decline</button>
+                                }
+                                else if (item.ReqStatus == 1)
+                                {
+                                    <button class='btn btn-primary btn-xs groupStatusUpdate col-sm-6' data-groupid="@item.GroupId" data-grmemid="@item.GrMemId" data-updatestatus="3">Exit</button>
+                                    <button class='btn btn-primary btn-xs groupStatusUpdate col-sm-6' data-groupid="@item.GroupId" data-grmemid="@item.GrMemId" data-updatestatus="5">Block</button>
+                                }
+                                else if (item.ReqStatus == 5)
+                                {
+                                    <button class='btn btn-primary btn-xs groupStatusUpdate col-sm-12' data-groupid="@item.GroupId" data-grmemid="@item.GrMemId" data-updatestatus="1">Unblock</button>
+                                }
+                                else if (item.ReqStatus == 6)
+                                {
+                                    <text>Blocked By Admin</text>
+                                }
+                            }
+                            else
+                            {
+                                <button class='btn btn-primary btn-xs editGroup col-sm-6' data-groupid="@item.GroupId">Edit</button>
+                                <button class='btn btn-primary btn-xs updateGroupStatus col-sm-6' data-groupid="@item.GroupId" data-status="@item.Status">
+                                    @(item.Status == 1 ? "Deactivate" : "Activate")
+                                </button>
+                            }
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}
+else
+{
+    <tr>
+        <td colspan="3">No record Found</td>
+    </tr>
+}
+
+
+<div class="paginationBox  col-sm-12" id="allOptionList">
+    @if (ViewBag.totalpages > 1)
+    {
+        <ul class="pagination personalReqPage pull-left nomargin">
+            @if (ViewBag.CurrentPage != 1)
+            {
+                <li><a href="javascript:void(0)" data-page="1"><span aria-hidden="true">&laquo;</span></a></li>
+                <li><a href="javascript:void(0)" data-page="@(ViewBag.CurrentPage-1)"><span aria-hidden="true">&lsaquo;</span></a></li>
+            }
+            @if (ViewBag.totalpages > 1)
+            {
+                var i = 1; var last = 5;
+                if (ViewBag.CurrentPage > 3)
+                {
+                    i = ViewBag.CurrentPage - 2;
+                    last = ViewBag.CurrentPage + 2;
+                }
+                if (last > ViewBag.totalpages)
+                {
+                    last = ViewBag.totalpages;
+                }
+
+                for (; i <= last; i++)
+                {
+                    if (i == ViewBag.CurrentPage)
+                    {
+                        <li class="active"><a href="javascript:void(0)" data-page="@i">@i</a></li>
+                    }
+                    else
+                    {
+                        <li><a href="javascript:void(0)" data-page="@i">@i</a></li>
+                    }
+
+                }
+            }
+            @if (ViewBag.totalpages > ViewBag.CurrentPage)
+            {
+                <li>
+                    <a href="javascript:void(0)" data-page="@(ViewBag.CurrentPage+1)">
+                        <span aria-hidden="true">&rsaquo;</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="javascript:void(0)" data-page="@ViewBag.totalpages">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            }
+        </ul>
+
+        <ul class="pull-left nomargin" style="list-style:none;padding: 0 0 0 10px;">
+            <li>
+                <input type="hidden" value="@ViewBag.pageSize" id="pageSize" />
+                <select name="" class="perPageDropdown">
+                    <option>10</option>
+                    <option>20</option>
+                    <option>50</option>
+                </select>
+                select per page
+            </li>
+        </ul>
+    }
+    <p class="pull-right nomargin">@ViewBag.CurrentPage-@ViewBag.totalpages of @ViewBag.TotalRows items</p>
+</div>
+    </div>
+</div>
+
+@using (Ajax.BeginForm("makeSessionForGroup", "community", new AjaxOptions { OnSuccess = "linkSuccess", OnFailure = "failure", HttpMethod = "POST", LoadingElementId = "loadingreg" }, new { @id = "clickLink" }))
+{
+    <input type="hidden" name="groupMemId" />
+    <input type="hidden" name="groupId" />
+    <input type="hidden" name="groupImg" />
+    <input type="hidden" name="groupName" />
+    <input type="submit" value="" class="hide" />
+}
+
+@using (Ajax.BeginForm("_add_Group_Member", "community", new AjaxOptions { OnSuccess = "successSent", OnFailure = "failure", HttpMethod = "POST", LoadingElementId = "loadingreg" }, new { @class = "hide", @id = "addGroupMem" }))
+{
+    <input type="hidden" name="memId" value="0" />
+    <input type="hidden" name="groupId" value="0" />
+    <input type="submit" value="Save" id="addGroupMember" />
+}
+
+<div class="modal fade" id="inviteFriends" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="margin: 5px 10px;"><span aria-hidden="true">&times;</span></button>
+            <ul class="nav nav-tabs">
+                <li class="active"><a data-toggle="tab" href="#searchNewMembers">Invite Members</a></li>
+                <li><a data-toggle="tab" href="#memberList">Group Members</a></li>
+            </ul>
+
+            <div class="tab-content">
+                <div id="searchNewMembers" class="tab-pane fade in active">
+                    <div class="modal-header">
+                        <h4 class="modal-title"><input type="text" class="form-control" id="searchFriends" placeholder="Enter Friend Name or Email" /></h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="forInvitation">
+                            <input type="hidden" name="groupId" />
+                            <ul class="friendListAuto AutoComplete positionRel"></ul>
+                        </div>
+                    </div>
+                </div>
+                <div id="memberList" class="tab-pane fade">
+                    <div class="modal-body">
+                        <div id="groupMemberList">
+                            @Html.Action("_group_Members", "community")
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+
+
+<script>
+    $(document).ready(function () {
+        $("#searchFriends").keyup(function () {
+            //$(".friendListAuto li").remove();
+            var data1 = $(this).val();
+            var length = $(this).val().length;
+            var GrouId = $("#inviteFriends input[name='groupId']").val();
+            var dataL = $(".friendListAuto li").length;
+
+            $(".friendListAuto li").remove();
+
+            var data = "{'keyword':'" + data1 + "','groupId':" + GrouId + "}";
+            $.ajax({
+                type: "POST",
+                url: "/community/getAllMemberForGroup", // the URL of the controller action method
+                data: data, // optional data
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                success: function (result) {
+                    // alert(result);
+                    var prData = JSON.stringify(result);
+                    var serOffList = JSON.parse(prData);
+                    for (var i = 0; i < serOffList.length; i++) {
+                        $(".friendListAuto").append("<li class='autoItem' data-memId='" + serOffList[i].Mem_ID + "'>" + serOffList[i].Mem_name + "<span class='smallText'>" + serOffList[i].Email + "</span><button class='btn btn-primary btn-xs'>Invite</button></li>");
+                    }
+                },
+                Error: function (err) {
+                    alert(err);
+                }
+            });
+        });
+
+
+        $("body").on("click", ".inviteMember", function () {
+            var groupId = $(this).attr("data-groupId");
+            $(".friendListAuto li").remove();
+            $("#inviteFriends input[name='groupId']").val(groupId);
+            $("#groupMemberList").load('@Url.Action("_group_Members", "community")?groupId=' + groupId);
+            $("#inviteFriends").modal("show");
+        });
+
+        $(".friendListAuto").on("click", "li button", function () {
+            var Memid = $(this).parent().attr("data-memid");
+            var groupId = $("#inviteFriends input[name='groupId']").val();
+            $("#addGroupMem input[name='memId']").val(Memid);
+            $("#addGroupMem input[name='groupId']").val(groupId);
+
+            setTimeout(function () {
+                if ($("#addGroupMem input[name='memId']").val() != 0 && $("#addGroupMem input[name='groupId']").val() != 0) {
+                    $("#addGroupMember").click();
+                } else {
+                    alert("Data not exist");
+                }
+            }, 100);
+        })
+
+        $("body").on("click", ".editGroup", function () {
+            $(".loader-Class").addClass("show");
+            var GroupId = $(this).attr("data-groupid");
+            var GroupName = $(this).parent().parent().find("td").eq(0).text().trim();
+            var CommName = $(this).parent().parent().find("td").eq(2).text();
+            var CommOpt = "option:contains('" + CommName + "')";
+
+            $("input[name='groupId']").val(GroupId);
+            $("input[name='groupName']").val(GroupName);
+            $("#MemberComm option").attr("selected", false);
+            $("#MemberComm").find(CommOpt).attr("selected", "selected");
+            $(".loader-Class").removeClass("show");
+        });
+
+
+    });
+
+    function success(data) {
+        if (data == "-1") {
+            $(".requiredField").addClass("show");
+        }
+        else if (data != 3) {
+            if (data == "1") {
+                $("#inviteFriends").modal("show");
+            }
+            $(".requiredField").removeClass("show");
+            $('#groupListData').load('@Url.Action("_view_communities_groups", "community")');
+            $("select").val("-1");
+            $("input[type='text']").val("");
+            $("input[type='hidden']").val(0);
+        }
+    }
+
+    function failure(data) {
+        $(".requiredField").removeClass("show");
+        $(".requiredField").addClass("show");
+    }
+
+    function successSent(data) {
+        if (data == 1) {
+            var Memid = $("#addGroupMem input[name='memId']").val();
+            $(".friendListAuto").find("li[data-memid='" + Memid + "'] button").text("Sent Invitation");
+        }
+    }
+</script>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("body").on("click", ".groupStatusUpdate", function () {
+            var curr = $(this);
+            var Status = $(this).attr("data-updatestatus");
+            var groupId = $(this).attr("data-groupid");
+            var GrMemId = $(this).attr("data-grmemid");
+            var data = "{'Status':" + Status + ",'groupId':" + groupId + ",'GrMemId':" + GrMemId + "}";
+
+            if (Status == 1 && curr.text() == "Accept") {
+                confirmBox("Do You Want Join This Group!");
+            }
+            else if (Status == 1 && curr.text() == "Unblock") {
+                confirmBox("Do You Want Unblock This Group!");
+            }
+            else if (Status == 2) {
+                confirmBox("Do You Want Decline for this group!")
+            }
+            else if (Status == 3) {
+                confirmBox("Do You Want Exit from this Group!")
+            } else if (Status == 4) {
+                confirmBox("Do You Want Resend Request!")
+            } else if (Status == 5) {
+                confirmBox("Do You Want Block this Group!")
+            }
+            else if (Status == 6) {
+                confirmBox("Do You Want Block this Member!")
+            }
+            else if (Status == -1) {
+                confirmBox("Do You Want Remove This Member From the Group!")
+            }
+
+            $("#confirmBox").modal("show").on('click', '#confirmResponse', function (e) {
+                $("#confirmBox").modal("hide");
+                $.ajax({
+                    type: "POST",
+                    url: "/community/memGroupStatusUpdate", // the URL of the controller action method
+                    data: data, // optional data
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    success: function (result) {
+                        if (result == "2") {
+                            if (Status == 1 && curr.text() == "Accept") {
+                                $("#passRes .modal-body h4").text("Congratulations, You Joined the Group Successfully!")
+                                $("#passRes").modal("show");
+                                var txt = curr.parent().parent().find("td:first-child").text().trim();
+                                curr.parent().parent().find("td:first-child").html("<a href='/community/group_profile?grId=" + groupId + "'>" + txt + "</a>");
+                                curr.parent().html("<button class='btn btn-primary btn-xs groupStatusUpdate' data-groupid='" + groupId + "' data-grmemid='" + GrMemId + "' data-updatestatus='3'>Exit</button>");
+                                curr.parent().html("<button class='btn btn-primary btn-xs groupStatusUpdate' data-groupid='" + groupId + "' data-grmemid='" + GrMemId + "' data-updatestatus='5'>Block</button>");
+                            }
+                            else if (Status == 1 && curr.text() == "Unblock") {
+                                $("#passRes .modal-body h4").text("Congratulations, You Unblock the Group Successfully!")
+                                $("#passRes").modal("show");
+                                var txt = curr.parent().parent().find("td:first-child").text().trim();
+                                curr.parent().parent().find("td:first-child").html("<a href='/community/group_profile?grId=" + groupId + "'>" + txt + "</a>");
+                                curr.parent().html("<button class='btn btn-primary btn-xs groupStatusUpdate' data-groupid='" + groupId + "' data-grmemid='" + GrMemId + "' data-updatestatus='3'>Exit</button>");
+                                curr.parent().html("<button class='btn btn-primary btn-xs groupStatusUpdate' data-groupid='" + groupId + "' data-grmemid='" + GrMemId + "' data-updatestatus='5'>Block</button>");
+                            }
+                            else if (Status == 2) {
+                                $("#passRes .modal-body h4").text("You Decline for the group!")
+                                $("#passRes").modal("show");
+                                curr.parent().parent().remove();
+                            }
+                            else if (Status == 3) {
+                                $("#passRes .modal-body h4").text("You Exit from this Group!")
+                                curr.parent().parent().remove();
+                                $("#passRes").modal("show");
+                            }
+                            else if (Status == 5) {
+                                $("#passRes .modal-body h4").text("You Blocked this Group!")
+                                var txt = curr.parent().parent().find("td:first-child").text().trim();
+                                curr.parent().parent().find("td:first-child").html(txt);
+                                $("#passRes").modal("show");
+                                curr.parent().html("<button class='btn btn-primary btn-xs groupStatusUpdate' data-groupid='" + groupId + "' data-grmemid='" + GrMemId + "' data-updatestatus='1'>Unblock</button>");
+                            }
+                        } else if (result == "0") {
+                            $("#passRes .modal-body h4").text("This Member Already Exist!")
+                            $("#passRes").modal("show");
+                        } else if (result == "-1") {
+                            curr.parent().parent().remove();
+                        }
+                    },
+                    Error: function (err) {
+                        alert(err);
+                    }
+                });
+            });
+        });
+
+        $(".makeFavourite").click(function (e) {
+            var curr = $(this);
+            var groupId = curr.attr("data-groupid");
+            var data = "{'groupId':" + groupId + "}";
+
+            $("#loadingreg").addClass("show");
+            $.ajax({
+                type: "POST",
+                url: "/community/_addFavouriteGroup", // the URL of the controller action method
+                data: data, // optional data
+                dataType: "text",
+                contentType: "application/json; charset=utf-8",
+                success: function (result) {
+                    if (result == "1") {
+                        curr.addClass("active");
+                    } else if (result == "0") {
+                        curr.removeClass("active");
+                    } else {
+                        alert(result);
+                    }
+                    curr = "";
+                    $("#loadingreg").removeClass("show");
+                },
+                Error: function (err) {
+                    alert(err);
+                }
+            });
+        });
+
+        $(".updateGroupStatus").click(function (e) {
+            var curr = $(this);
+            var groupId = curr.attr("data-groupid");
+            var status = curr.attr("data-status");
+            if (status == 1) {
+                status = 0;
+            } else {
+                status = 1;
+            }
+            var data = "{'groupId':" + groupId + ",'status':" + status + "}";
+
+            $("#loadingreg").addClass("show");
+            $.ajax({
+                type: "POST",
+                url: "/community/_updateGroupStatus", // the URL of the controller action method
+                data: data, // optional data
+                dataType: "text",
+                contentType: "application/json; charset=utf-8",
+                success: function (result) {
+                    if (result == "0") {
+                        curr.find("i").removeClass("glyphicon-remove").addClass("glyphicon-ok");
+                    } else {
+                        curr.find("i").removeClass("glyphicon-ok").addClass("glyphicon-remove");
+                    }
+                    $("#loadingreg").removeClass("show");
+                },
+                Error: function (err) {
+                    alert(err);
+                }
+            });
+        });
+
+        $(".groupDetail").click(function () {
+            $("#clickLink input[name='groupMemId']").val($(this).attr("data-groupMemId"));
+            $("#clickLink input[name='groupId']").val($(this).attr("data-groupid"));
+            $("#clickLink input[name='groupImg']").val($(this).attr("data-groupimg"));
+            $("#clickLink input[name='groupName']").val($(this).text());
+            $("#clickLink").submit();
+        });
+    });
+
+    function linkSuccess(data) {
+        if (data) {
+            window.location.href = "/community/group_profile";
+        }
+    }
+</script>

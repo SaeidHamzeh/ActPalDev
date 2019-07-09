@@ -1,0 +1,31 @@
+﻿@model IEnumerable<ViewModels.Products.BillingAddressViewModel>
+
+@if (Model.Count() > 0)
+{
+    int i = 0;
+    foreach (var data in Model)
+    {
+        i++;
+        <div class="row @(i==1?"active":"")">
+            <div class="col-sm-12">
+                <div class="BillingaddressBox grayborder">
+                    <div class="col-sm-8">
+                        <div class="addressDetail" data-addressId="@data.AddressId">
+                            <p>@data.FirstName @data.LastName</p>
+                            <p>Mobile: @data.PhoneNumber</p>
+                            <p>Address: @data.AddressDetail</p>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="col-sm-6 text-center">
+                            <span>Remove</span>
+                        </div>
+                        <div class="col-sm-6 text-center">
+                            <span>Edit</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}

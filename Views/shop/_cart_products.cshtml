@@ -1,0 +1,75 @@
+﻿@model IEnumerable<ViewModels.Products.CartViewModel>
+
+
+<div class="col-sm-9">
+    <h2>
+        My Cart <span class="badge redBG"><span id="@(Session["UserID"] == null ? "" : "cartCount")">@ViewBag.totalCartItem</span> Items</span>
+        <span class="totalCost">Total - <span class="cost">$ @ViewBag.totalDiscountCost</span></span>
+    </h2>
+    <div class="cartList marginTop30px">
+
+
+        @if (Model.Count() > 0)
+        {
+            <div class="media cartList">
+                <div class="media-body">
+
+                    @foreach (var data in Model)
+                    {
+                        <div class="cartProducts" id="CartBox@(data.Cartid)">
+                            <div class="productImg">
+                                @if (data.featureImage == null || data.featureImage == "")
+                                {
+                                    <img src="~/Content/images/no_image.jpg" class="img-responsive" alt="Banner">
+                                }
+                                else
+                                {
+                                    <img src="http://localhost:40795/Content/images/Service_Offer_Photos/@data.ServiceProvider_ID/@data.featureImage" class="img-responsive" alt="Banner">
+                                }
+                            </div>
+                            <div class="productSummary">
+                                <h4><a href="/shop/product_details/@data.Product_Id">@data.Name</a> | <small>Color-@data.ColorName, Size-@data.size</small></h4>
+                                @Html.Action("_product_price_details", "shop", new { productId = data.Product_Id, colorId = data.ColorId, sizeId = data.sizeId })
+
+                                <div class="row cartActionBox">
+                                    <div class="col-sm-6">
+                                        <div class="quantityManager">
+                                            <ul class="list-inline widthAuto noborder nopadding">
+                                                <li><button class="btn less"><i class="fa fa-minus"></i></button></li>
+                                                <li><input type="number" name="quantity" min="1" value="@data.Quantity" class="text-center" /></li>
+                                                <li><button class="btn increase"><i class="fa fa-plus"></i></button></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-5 pull-right">
+                                        <ul class="list-inline pull-right marginT15px">
+                                            <li><button class="btn-link removeFromCart" data-cartid="@data.Cartid">Remove</button></li>
+                                            <li><button class="btn-link">Move to Wishlist</button></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+        else
+        {
+            <span>No Products</span>
+        }
+    </div>
+</div>
+<div class="col-sm-3">
+    <div class="cartBilling widget">
+        <h4>Order Details</h4>
+        @Html.Action("_order_calculation", "shop")
+        <p>
+            <a href="~/shop/checkout" class="btn BtnCssyellow btnMedium fullWidth text-upppercase">Proceed to Checkout</a>
+        </p>
+        <p>
+            <a href="#" class="btn BtnCssyellow btnMedium fullWidth text-upppercase">Continue Shopping</a>
+        </p>
+    </div>
+</div>
+        

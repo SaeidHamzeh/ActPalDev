@@ -1,0 +1,155 @@
+﻿@if (Session["UserID"] == null)
+{
+    Response.Redirect("/Account");
+}
+else
+{
+    ViewBag.Title = "Product Details";
+    Layout = "~/Views/Shared/_Shop_Dashboard_Layout.cshtml";
+}
+
+<section class="container-fluid cart_page marginTop30px">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-9">
+                <h2>
+                    Select Address
+                    <span class="totalCost">
+                        <button type="button" class="btn BtnCssyellow btnMedium text-upppercase" data-toggle="modal" data-target="#myModal">Add New Address</button>
+                    </span>
+                </h2>
+                <div class="cartList marginTop30px" id="addressList">
+                    @Html.Action("_user_billing_address", "shop")
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="cartBilling widget" style="margin-top: 66px;">
+                    <h4>Order Details</h4>
+                    @Html.Action("_order_calculation", "shop")
+                    <p>
+                        <button type="button" class="btn BtnCssyellow btnMedium fullWidth text-upppercase OrderComplete">Order Complete Now</button>
+                    </p>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Modal -->
+<div id="myModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Add New Address</h4>
+            </div>
+            @using (Ajax.BeginForm("_addBillingAddress", "shop", new AjaxOptions { HttpMethod="Post", OnSuccess="addAddressSuccess",OnFailure="addAddressFailure"}))
+            { 
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <input type="hidden" name="AddressId" value="0" />
+                        <label>First Name</label>
+                        <span><input type="text" name="FirstName" class="form-control" /></span>
+                    </div>
+                    <div class="col-sm-6">
+                        <label>Last Name</label>
+                        <span><input type="text" name="LastName" class="form-control" /></span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-6">
+                        <label>Area Code</label>
+                        <span><input type="text" name="AreaCode" class="form-control" /></span>
+                    </div>
+                    <div class="col-sm-6">
+                        <label>Phone</label>
+                        <span><input type="text" name="PhoneNumber" class="form-control" /></span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-6">
+                        <label>Pincode</label>
+                        <span><input type="text" name="PinCode" class="form-control" /></span>
+                    </div>
+                    <div class="col-sm-6">
+                        <label>Locality</label>
+                        <span><input type="text" name="Locality" class="form-control" /></span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <label>Address</label>
+                        <span><textarea name="AddressDetail" class="form-control" rows="2"></textarea></span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-6">
+                        <label>Country</label>
+                        <span id="CountryContainer">
+                            @Html.Action("CountryView", "CascadingDropDown")
+                        </span>
+                    </div>
+                    <div class="col-sm-6">
+                        <label>State</label>
+                        <span id="StateProvinceContainer">
+                            @Html.Action("StateProvinceView", "CascadingDropDown")
+                        </span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-6">
+                        <label>City</label>
+                        <span id="CityContainer">
+                            @Html.Action("CityView", "CascadingDropDown")
+                        </span>
+                    </div>
+                    <div class="col-sm-6">
+                        <label>Type Of Address</label>
+                        <span>
+                            <select name="TypeOfAddr" class="form-control">
+                                <option value="-1">Choose A Type--</option>
+                                <option value="Home">Home</option>
+                                <option value="Office">Office</option>
+                            </select>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn BtnCssyellow btnMedium text-upppercase">Submit</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+            }
+        </div>
+
+    </div>
+</div>
+
+<script type="text/javascript">
+    function addAddressSuccess(data) {
+        if (data == "1") {
+            $("#myModal").modal("hide");
+            $("#addressList").load('@Url.Action("_user_billing_address", "shop")');
+        }
+    }
+
+    function addAddressFailure(data) {
+        alert(data);
+    }
+
+    $(document).ready(function () {
+        $(".OrderComplete").click(function () {
+            var addressId = $("#addressList .row.active").find(".addressDetail").attr("data-addressid");
+            window.location.href = "/shop/payment?addrId=" + addressId;
+        });
+    });
+</script>

@@ -1,0 +1,24 @@
+﻿@model ViewModels.Products.OrderDetailViewModal
+
+<table class="table orderDetailTable nomargin">    
+        <tr class="cartProducts" style="border-bottom:0;">
+            <td rowspan="2" style="border-top:0;">
+                @if (Model.featureImage == null || Model.featureImage == "")
+                {
+                    <img src="~/Content/images/no_image.jpg" class="img-responsive" alt="Banner">
+                }
+                else
+                {
+                    <img src="http://localhost:40795/Content/images/Service_Offer_Photos/@Model.ServiceProvider_ID/@Model.featureImage" class="img-responsive" alt="Banner">
+                }
+            </td>
+            <td class="productSummary" style="border-top:0;">
+                <h4><strong><a href="/shop/product_details/@Model.ProductId">@Model.Name</a></strong></h4>
+                <p class="smallText">QTY - <span class="darkColor">@Model.Quantity</span> | size - <span class="darkColor">@Model.size</span> | color - <span class="darkColor">@Model.ColorName</span></p>
+                <p>Seller - <a href="#">@Model.ServiceProvider_Name</a></p>
+                <p>Expected Delivery Date - <span class="darkColor">12 July 2019</span></p>
+            </td>
+            <td style="border-top:0;"><strong>$@((Model.DiscountType == 1 ? Model.Price - ((Model.Price * Model.Discount) / 100) : (Model.DiscountType == 2 ? Model.Price - Model.Discount : Model.Price)) * @Model.Quantity)</strong></td>            
+        </tr> 
+</table>
+  

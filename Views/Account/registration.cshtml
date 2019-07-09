@@ -1,0 +1,33 @@
+﻿
+@{
+    ViewBag.Title = "registration";
+    Layout = "~/Views/Shared/_Shop_Layout.cshtml";
+}
+
+
+<section class="container-fluid" style="padding:100px 0;background:#f0f0f0;">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="loginBox">
+                    <div class="loginBanner tableCellBox" style="background:url(/Content/assets/images/login_banner.jpg) no-repeat;background-size:cover;color:#fff;">
+                        <h4>New to ActPal</h4>
+                        <p style="color:#fff;margin-bottom:40px">Already a ACTPAL User?</p>
+                        <p><small>Just login with your details</small></p>
+                        <p>
+                            <a href="/Account/" class="btn BtnCssyellow">Login</a>
+                        </p>
+                    </div>
+                    <div class="loginFormBox tableCellBox">
+                        <h4 class="marginB30Only">
+                            We are ACTPAL<br />
+                            <small><strong>Sign Up Now!</strong> it's free tacks less than 30seconds.</small>
+                        </h4>
+                        @Html.Action("_Registration", "Account")
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+

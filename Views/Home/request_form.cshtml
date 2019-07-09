@@ -1,0 +1,190 @@
+﻿@model IEnumerable<ViewModels.RequestDetailViewModel>
+
+
+@if (@Session["UserID"] == null)
+{
+
+    ViewBag.Title = "Home Page";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+else
+{
+    ViewBag.Title = "Home Page";
+    Layout = "~/Views/Shared/_LayoutDashboard.cshtml";
+}
+
+
+@Html.Partial("_optionSearchPanel")
+
+<div class="requestStatusBox">
+    <div class="col-sm-3">
+        <div class="requestStatus active">
+            <p><img src="~/Content/images/request-receive-icon-active.png" /></p>
+            <h5>Recieve Request</h5>
+        </div>
+    </div>
+    <div class="col-sm-3">
+        <div class="requestStatus">
+            <p><img src="~/Content/images/process-request.png" /></p>
+            <h5>Process Request</h5>
+        </div>
+    </div>
+    <div class="col-sm-3">
+        <div class="requestStatus">
+            <p><img src="~/Content/images/confirm-request-icon.png" /></p>
+            <h5>Confirm Request</h5>
+        </div>
+    </div>
+    <div class="col-sm-3">
+        <div class="requestStatus">
+            <p><img src="~/Content/images/complete-close.png" /></p>
+            <h5>Request Completed and Closed</h5>
+        </div>
+    </div>
+</div>
+
+<div class="requestSentFormBox">
+    <div class="col-sm-12">
+        <div class="requestSentFormBox">           
+            @if (ViewBag.catId == 1)
+            {
+                @Html.Action("_view_product_detail", "Home", new { serviceId = ViewBag.serviceId });
+            }
+            else if (ViewBag.catId == 2)
+            {
+                @Html.Action("_view_services_detail", "Home", new { serviceId = ViewBag.serviceId });
+            }
+            else if (ViewBag.catId == 3)
+            {
+                @Html.Action("_view_travels_detail", "Home", new { serviceId = ViewBag.serviceId });
+            }
+        </div>
+        <div class="clearfix"></div>
+        <div class="row">
+            <div class="col-sm-12">
+                <p class="pull-right">
+                    <a href="javascript:void(0)" id="requestSubmit" class="btn btn-primary">Confirm</a>
+                    <a href="javascript:void(0)" id="requestOptionCancel" data-toggle="modal" data-target="#confirmation" class="btn btn-primary">Cancel</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="modal fade" id="askForLogin" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header blueHeading">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Notification</h4>
+            </div>
+            <div class="modal-body">
+                <h4 class="text-center">Are you sure you want to select this option</h4>
+                @if (Session["UserID"] == null)
+                {
+                    <hr />
+                    <div class="col-sm-6">
+                        <h5 class="text-center">If you are New Member</h5>
+                        <p class="text-center"><a href="javascript:void(0)" id="modalRegPopup" class="btn btn-primary">Register</a></p>
+                    </div>
+                    <div class="col-sm-6">
+                        <h5 class="text-center">If you are Exist Member</h5>
+                        <p class="text-center"><a href="javascript:void(0)" id="modalLoginPopup" class="btn btn-primary">Login</a></p>
+                    </div>
+                }
+            </div>
+            <div class="clearfix"></div>
+            <div class="modal-footer">
+                @if (Session["UserID"] != null)
+                {
+                    <a href="/User/" id="prNumberOk" class="hide btn btn-primary">Ok</a>
+                    <a href="javascript:void(0)" id="requestSubmitConfirm" class="btn btn-primary">Ok</a>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="serviceMoviePlay" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header blueHeading">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Video Player</h4>
+            </div>
+            <div class="modal-body">
+                <div class="currentVideo">
+                    <div class="videoSection">
+                        <a href="" download target="_blank" class="btn btn-default downloadMoviebtn"><i class="fa fa-download"></i></a>
+                        <video controls id="playedVideo">
+                            <source src="" type="video/mp4" />
+                            <source src="" type="video/ogg">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var sentBy = 0;
+        $("#requestSubmit").click(function () {
+            var sentBy = $("#userId").val();
+            if (sentBy == "") {
+                $("#askForLogin").modal('show');
+            } else {
+                $("#askForLogin").modal('show');
+            }
+        });
+
+        $("#requestSubmitConfirm").click(function () {
+            var reqDetailId = $("#reqTypeID").val();
+            var data = { 'reqDetailId': reqDetailId }
+            $.ajax({
+                type: "Post",
+                url: "/Home/sumbitRequest",
+                data: data,
+                dataType: "text",
+                success: function (data) {
+                    $("#askForLogin .modal-body h4").text("Request Number is " + data + " . Your request would be analyzed and update you quickly once it confirmed.");
+                    $("#askForLogin #prNumberOk").removeClass("hide");
+                    $("#askForLogin #requestSubmitConfirm, #askForLogin button").css("display", "none");
+                },
+                error: function (data) {
+                    alert(data + "Error");
+                }
+            });
+        });
+
+        setTimeout(function () {
+            $("select#Country-DropdownID").val($("#countryId").val()).change();
+            $("select#Country-DropdownID").attr("disabled", true);
+
+
+            setTimeout(function () {
+                $("select#StateProvince-DropDownID").val($("#stateId").val()).change();
+                $("select#StateProvince-DropDownID").attr("disabled", true);
+
+
+                setTimeout(function () {
+                    $("select#City-DropdownID").val($("#cityId").val()).change();
+                    $("select#City-DropdownID").attr("disabled", true);
+                }, 1000);
+            }, 600);
+        }, 200);
+        $("select#reqSource, select#reqType").attr("disabled", true);
+    });
+
+</script>

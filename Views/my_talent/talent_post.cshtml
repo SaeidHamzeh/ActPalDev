@@ -1,0 +1,161 @@
+﻿@model IEnumerable<ViewModels.TalentPostViewModel>
+
+
+@if (Session["UserID"] != null)
+{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_User_Layout.cshtml";
+}
+else
+{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Home_Layout.cshtml";
+}
+
+
+
+<div class="row">
+    <div class="col-lg-12">
+        <h3 class="blueHeading">
+            My Talents
+            @if (Session["UserID"] != null)
+            {
+                <button type="button" class="btn blackBtnCss pull-right" data-toggle="modal" data-target="#addNewPost">Add Post</button>
+            }
+        </h3>
+    </div>
+    <div class="clearfix"></div>
+    <div class="col-md-9 col-sm-9">
+        @if (Model.Count() > 0)
+        {
+            foreach (var item in Model)
+            {
+                <div class="talentPostBox">
+                    <div class="postDetail">
+                        <div class="postOwner">
+                            <a href="~/my_talent/talent_post_detail?pid=@item.talentId">
+                                <div class="postOwnerImage">
+                                    <img src="@item.Mem_photo" class="img-responsive" />
+                                </div>
+                                <div class="memberDetail">
+                                    @item.Mem_Name<br />
+                                    <small>@item.entryDate</small>
+                                </div>
+                            </a>
+                            <div class="optionList userInfoTabs pull-right">
+                                <span class="optionIcon dropdown-toggle" data-toggle="dropdown"><i class="fa fa-ellipsis-v" aria-hidden="true"></i></span>
+                                <ul class="dropdown-menu">
+                                    <li class="editPost" data-commentid="@item.talentId">Edit</li>
+                                    <li class="deletePost" data-post="talent" data-commentid="@item.talentId">Delete</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="postContent">
+                            <a href="~/my_talent/talent_post_detail?pid=@item.talentId">
+                                <div class="pull-left marginB30Only">
+                                    @Html.Action("_getMediaTalentPost", "my_talent", new { talentId = item.talentId })
+                                </div>
+                                <p>@item.description</p>
+                            </a>
+                        </div>
+
+                    </div>
+                    <div class="postComments">
+                        @Html.Action("_talentComment", "my_talent", new { talentId = item.talentId, OwnerId = item.Mem_Id })
+                    </div>
+                </div>
+
+            }
+        }
+        else
+        {
+
+        }
+        <div class="paginationBox  col-sm-12" id="allOptionList">
+            @if (ViewBag.totalpages > 1)
+            {
+                <ul class="pagination personalReqPage pull-left nomargin">
+                    @if (ViewBag.CurrentPage != 1)
+                    {
+                        <li><a href="javascript:void(0)" data-page="1"><span aria-hidden="true">&laquo;</span></a></li>
+                        <li><a href="javascript:void(0)" data-page="@(ViewBag.CurrentPage-1)"><span aria-hidden="true">&lsaquo;</span></a></li>
+                    }
+                    @if (ViewBag.totalpages > 1)
+                    {
+                        var i = 1; var last = 5;
+                        if (ViewBag.CurrentPage > 3)
+                        {
+                            i = ViewBag.CurrentPage - 2;
+                            last = ViewBag.CurrentPage + 2;
+                        }
+                        if (last > ViewBag.totalpages)
+                        {
+                            last = ViewBag.totalpages;
+                        }
+
+                        for (; i <= last; i++)
+                        {
+                            if (i == ViewBag.CurrentPage)
+                            {
+                                <li class="active"><a href="javascript:void(0)" data-page="@i">@i</a></li>
+                            }
+                            else
+                            {
+                                <li><a href="javascript:void(0)" data-page="@i">@i</a></li>
+                            }
+
+                        }
+                    }
+                    @if (ViewBag.totalpages > ViewBag.CurrentPage)
+                    {
+                        <li>
+                            <a href="javascript:void(0)" data-page="@(ViewBag.CurrentPage+1)">
+                                <span aria-hidden="true">&rsaquo;</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0)" data-page="@ViewBag.totalpages">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                    }
+                </ul>
+
+                <ul class="pull-left nomargin" style="list-style:none;padding: 0 0 0 10px;">
+                    <li>
+                        <input type="hidden" value="@ViewBag.pageSize" id="pageSize" />
+                        <select name="" class="perPageDropdown">
+                            <option>10</option>
+                            <option>20</option>
+                            <option>50</option>
+                        </select>
+                        select per page
+                    </li>
+                </ul>
+            }
+            <p class="pull-right nomargin">@ViewBag.CurrentPage-@ViewBag.totalpages of @ViewBag.TotalRows items</p>
+        </div>
+    </div>
+
+    <div class="col-sm-4 col-md-3">
+
+    </div>
+
+
+</div>
+
+
+<!-- Modal -->
+<div id="addNewPost" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close closeBtn" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">New Post</h4>
+            </div>
+            @Html.Action("add_talent", "my_talent")
+        </div>
+
+    </div>
+</div>

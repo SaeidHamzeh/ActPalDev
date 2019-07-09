@@ -1,0 +1,84 @@
+﻿@if (Session["groupMemId"]==null) { 
+    <h3 class="text-center">           
+        <a href="~/community/groups">Go TO Groups</a>
+    </h3>
+}
+else if (Session["groupMemId"].ToString() == Session["UserId"].ToString())
+{
+    using (Html.BeginForm("_addGroupTopic", "community", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        <div class="row">
+            <div class="col-sm-8 col-sm-offset-2 marginTop30px">
+                <input type="hidden" value="0" name="topicId" />
+                <input type="hidden" value="@Request.QueryString["grId"]" name="grId" />
+                <p><label>Topic Name</label><input type="text" name="topicName" class="form-control" /></p>
+                <p><label>Topic Description</label><textarea rows="6" class="form-control" name="description"></textarea></p>
+                <p><label>Add Images</label><input type="file" class="form-control" max="5" multiple name="TopicImages" accept="image/x-png,image/gif,image/jpeg" /></p>
+                <p><label>Add Videos</label><input type="file" class="form-control" maxlength="5" multiple name="TopicVideos" accept="video/*" /></p>
+                <p><label>Add Document</label><input type="file" class="form-control" multiple max="5" name="TopicDocument" accept="" /></p>
+                <p class="text-right"><input type="submit" class="btn btn-primary" value="Add Topic" /></p>
+            </div>
+        </div>
+    }
+}
+else
+{
+    <h3 class="text-center">You Are Not Authorized Person</h3>
+}
+
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("input[name='TopicImages']").unbind().on("change", function (e) {
+            $(this).parent().find(".errorMsg").remove();
+            var curr = $(this);
+            var input = $(this)[0];
+            var count = $(this)[0].files.length
+
+            if (count < 5) {
+                var fileSize = 0;
+                for (var i = 0; i < count; i++) {
+                    if (input.files && input.files[i]) {
+                        var reader = new FileReader();
+                        reader.onload = function (e) {
+                            //curr.parent().append("<img style='width:100px;height:100px;' src=" + e.target.result + " />");
+                        };
+                        reader.readAsDataURL(input.files[i]);
+                    }
+                    fileSize = fileSize + input.files[i].size;
+                }
+                $(this).attr("data-fileSize", fileSize / (1024 * 1024));
+            } else {
+                $(this).val("");
+                $(this).parent().append("<span class='errorMsg'>You Can upload Maximum 10 images, Please select again!</span>");
+            }
+        });
+
+        $("input[name='TopicVideos']").unbind().on("change", function (e) {
+            $(this).parent().find(".errorMsg").remove();
+
+            var curr = $(this);
+            var input = $(this)[0];
+            var count = $(this)[0].files.length
+
+            var fileSize = 0;
+            for (var i = 0; i < count; i++) {
+                fileSize = fileSize + input.files[i].size;
+            }
+            /*==file size in mb==*/
+            var allFileSize = fileSize / (1024 * 1024);
+            $(this).attr("data-fileSize", allFileSize);
+            if (allFileSize > 51) {
+                $(this).parent().find(".errorMsg").remove();
+                $(this).parent().append("<span class='errorMsg'>Video size(" + Math.floor(allFileSize) + ") is to big</span>");
+                $(this).attr("type", "text");
+                $(this).attr("type", "file");
+                // $(id).parent().removeClass("active");
+            } else {
+                $(this).parent().find(".errorMsg").remove();
+                curr.parent().addClass("active");
+            }
+        });
+    });
+</script>

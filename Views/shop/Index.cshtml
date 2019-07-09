@@ -1,0 +1,165 @@
+﻿@if (Session["UserID"]==null)
+{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Shop_Layout.cshtml";
+}
+else
+{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Shop_Dashboard_Layout.cshtml";
+}
+
+
+<section class="container-fluid">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-9">
+                <div class="owl-carousel shoppingBanner" style="overflow:hidden">
+                    <div>
+                        <img src="~/Content/assets/images/banner.jpg" alt="Banner">
+                        <div class="overlayer">
+                            <h3>Surface Studio</h3>
+                            <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, </p>
+                            <p><a href="#" class="btnCss yellowBg marginTB15Only">Buy Now</a></p>
+                        </div>
+                    </div>
+                    <div>
+                        <img src="~/Content/assets/images/banner.jpg" alt="Banner">
+                        <div class="overlayer">
+                            <h3>Surface Studio</h3>
+                            <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, </p>
+                            <p><a href="#" class="btnCss yellowBg marginTB15Only">Buy Now</a></p>
+                        </div>
+                    </div>
+                    <div>
+                        <img src="~/Content/assets/images/banner.jpg" alt="Banner">
+                        <div class="overlayer">
+                            <h3>Surface Studio</h3>
+                            <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, </p>
+                            <p><a href="#" class="btnCss yellowBg marginTB15Only">Buy Now</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <p><img src="~/Content/assets/images/Adv-images.png" class="img-responsive" alt="Adv1"></p>
+                <p><img src="~/Content/assets/images/Adv-images.png" class="img-responsive" alt="Adv1"></p>
+            </div>
+        </div>
+    </div>
+</section>
+
+@Html.Action("_popular_product_slider")
+
+<section class="container-fluid marginTB15Only">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-4">
+                <a href="#"><img src="~/Content/assets/images/offer_1.png" class="img-responsive" /></a>
+            </div>
+            <div class="col-sm-4">
+                <a href="#"><img src="~/Content/assets/images/offer_2.png" class="img-responsive" /></a>
+            </div>
+            <div class="col-sm-4">
+                <a href="#"><img src="~/Content/assets/images/offer_3.png" class="img-responsive" /></a>
+            </div>
+        </div>
+    </div>
+</section>
+
+@Html.Action("_featured_product_slider", "shop")
+
+@Html.Action("_best_seller","shop")
+
+<section class="container-fluid marginTB15Only">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <a href="#"><img src="~/Content/assets/images/full-ad-banner.jpg" class="img-responsive" /></a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="container-fluid">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <h2>Product Category</h2>
+            </div>
+            <div class="col-sm-12">
+                <ul class="ul-table categoryTabs">
+                    <li>
+                        <a href="#">
+                            <img src="~/Content/assets/icons/category-electronics.png" alt="Electronics" /><br />
+                            electronic
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <img src="~/Content/assets/icons/category-mobile.png" alt="Mobiles" /><br />
+                            MOBILE
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <img src="~/Content/assets/icons/category-jwellery.png" /><br />
+                            FASHION
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <img src="~/Content/assets/icons/category-wallet.png" /><br />
+                            PURSES
+                        </a>
+                    </li>
+                    <li><a href="#"><img src="~/Content/assets/icons/category-bags.png" /><br />BAGS</a></li>
+                    <li>
+                        <a href="#">
+                            <img src="~/Content/assets/icons/category-watches.png" /><br />WATCHES
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <img src="~/Content/assets/icons/category-gifts.png" /><br />GIFTS
+                        </a>
+                    </li>
+                    <li><a href="#"><img src="~/Content/assets/icons/category-kitchen.png" /><br />KITCHEN</a></li>
+                    <li>
+                        <a href="#">
+                            <img src="~/Content/assets/icons/category-foods.png" /><br />FOODS
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <img src="~/Content/assets/icons/category-clothing.png" /><br />CLOTHINGS
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-sm-12">
+                <div class="owl-carousel popularProducts" style="overflow:hidden">
+                    <div>
+                        <img src="~/Content/assets/images/popularProduct1.png" class="img-responsive" alt="Banner">
+                        <div class="contentDetail">
+                            <h6>Apple MacBook Pro</h6>
+                            <h5>₹ 93,990</h5>
+                        </div>
+                        <div class="productReviews">
+                            <ul class="ul-table">
+                                <li><i class="fa fa-thumbs-up"></i> 500</li>
+                                <li><i class="fa fa-comments"></i> 200</li>
+                                <li><i class="fa fa-eye"></i> 300</li>
+                            </ul>
+                        </div>
+                        <div class="addToCart">
+                            <button><i class="fa fa-cart-plus"></i> Add To Cart</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+

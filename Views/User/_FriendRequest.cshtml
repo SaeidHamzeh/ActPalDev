@@ -1,0 +1,72 @@
+﻿@model IEnumerable<ViewModels.FriendRequestViewModel>
+
+
+<script type="text/javascript">
+
+    $(function () {
+        // Proxy created on the fly
+
+        $('#totPenReqcount').html(@ViewBag.TotPenReqCount);
+
+        var chatHub = $.connection.chatHub;
+        $.connection.hub.logging = true;
+        chatHub.client.puchFriendRequest = function (allUsers, totcount) {
+            $('#totPenReqcount').html(totcount);
+            if (allUsers.length > 0) {
+                $('#noReqFound').css('display', 'none');
+                for (i = 0; i < allUsers.length; i++) {
+                    AddRequest(allUsers[i].RequestID, allUsers[i].Mem_ID, allUsers[i].Mem_Name, allUsers[i].Mem_Pic);//AddUser(chatHub, allUsers[i].Mem_ID, allUsers[i].Mem_Name, allUsers[i].Mem_Email, allUsers[i].Mem_Pic, allUsers[i].ConnectionID, allUsers[i].CountUnreadMsg)
+                }
+            }
+        }
+        function AddRequest(RequestID, Mem_ID, Mem_Name, Mem_Pic) {
+            var code = "";
+            code = $("<div class='userInfoLog' id='req_" + RequestID + "'><div class='UserImg'>" + (Mem_Pic == null ? "<img src='/Content/images/default-profile.png' class='img-circle img-responsive' />" : "<img src=" + Mem_Pic + " class='img-circle img-responsive' />") + "</div><div class='userName'><h5>" + Mem_Name + "</h5><p class='logButtons text-right'><span id='btnaccept' onclick='AcceptRequest(" + RequestID + ",this)' class='btn btn-primary'>Accept</span> <span id='btnreject' onclick='RejectRequest(" + RequestID + ",this)' class='btn btn-primary'>Reject</span></p></div></div>");
+            if ($(".requestdiv").find('#req_' + RequestID).length > 0)
+            { }
+            else {
+                $(".requestdiv").append(code);
+            }
+
+        }
+
+    });
+
+</script>
+
+
+<div class="requestdiv loginForm logoutBox">
+    @if (Model.Count() > 0)
+    {
+        foreach (var item in Model)
+        {
+            <div class="userInfoLog" id='req_@item.RequestID'>
+                <div class="UserImg">
+                    @if (@item.Mem_Pic == null)
+                    {
+                        <img src="~/Content/images/default-profile.png" class="img-circle img-responsive" />
+
+                    }
+                    else
+                    {
+                        <img src="@item.Mem_Pic" class="img-circle img-responsive" />
+                    }
+                </div>
+                <div class="userName">
+                    <h5>@item.Mem_Name</h5>
+                    <p class="logButtons text-right">
+                        <span id="btnaccept" onclick='AcceptRequest(@item.RequestID,this)' class="btn btn-primary">Accept</span>&nbsp;
+                        <span id="btnreject" onclick='RejectRequest(@item.RequestID,this)' class="btn btn-primary">Reject</span>
+                    </p>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <div style="color:black" id="noReqFound">
+            <text>No Request Found.</text>
+        </div>
+
+    }
+</div>

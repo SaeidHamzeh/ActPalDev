@@ -1,0 +1,57 @@
+﻿@{
+    ViewBag.Title = "Friends";
+    Layout = "~/Views/Shared/_User_Layout.cshtml";
+}
+
+<script>
+    var pageSize = 15;
+    var pageIndex = 0;
+    var category = '';
+
+    $(document).ready(function () {
+        $(function () {
+            $('.AllFriends').click(function () {
+                $('.contentSection').load(this.href);
+                return false;
+            });
+
+        });
+    });
+
+</script>
+<div class="clearfix"></div>
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="blueHeading">
+            <h3 class="nomargin">Friends</h3>
+        </div>
+        <div class="clearfix"></div>
+        <div class="frndsCounts row">
+            <div class="col-sm-7">
+                <label>All Friends <i class="badge redBG">@ViewBag.allfrnCount</i></label>&nbsp;&nbsp;
+                <label>Birthdays <i class="badge redBG">@ViewBag.commingbirthday</i></label>&nbsp;&nbsp;
+                <label>New Posts <i class="badge redBG">3</i></label>
+            </div>
+            <div class="col-sm-5">
+                <label class="frndBoxSearch">
+                    <span class="input-group">
+                        <input type="text" class="form-control" id="searchfriend" placeholder="Search Friend" style="margin-right:5px;width:96%;" />
+                        <span class="input-group-btn reviewAndDiscussion">
+                            <button class="btn BtnCssyellow nomargin" type="button">Search</button>
+                        </span>
+                    </span>
+                </label><!-- /input-group -->
+                </div>
+            </div>
+        <hr class="nomargin" />
+    </div>
+
+
+    <div class="col-lg-12 margin25pxTB">
+        @Html.Action("AllFriends","User")
+    </div>
+    <div style="text-align:center">
+        @*<a class="more" href="#">More</a>*@
+    </div>
+</div>

@@ -1,0 +1,7 @@
+﻿@model ViewModels.Products.ProductViewModels
+
+<h3 class="marginTB15Only">
+    <span class="sellingPrice">$ @(Model.DiscountType == 2 ? (Model.Price - Model.Discount).ToString() : (Model.DiscountType == 1 ? (Model.Price - (Model.Price * Model.Discount) / 100).ToString() : ""))</span>
+    <del class="regularPrice text-"><i class="fa fa-dollar"></i> @Model.Price</del>
+    <span class="discountValue">@(Model.DiscountType == 2 ? "$" : "")@Model.Discount@(Model.DiscountType == 1 ? "%" : "") Off</span>
+</h3>

@@ -1,0 +1,96 @@
+﻿@model IEnumerable<ViewModels.GroupTopicDiscussionViewModel>
+@{
+    ViewBag.Title = "group_topic_detail";
+    Layout = "~/Views/Shared/_LayoutMemGroup.cshtml";
+}
+
+<h2 class="blueHeading">Add New @(ViewBag.CatId == 1 ? "Product" : ViewBag.CatId == 2 ? "Service" : "") Topic <a href="~/community/group_profile" class="btn btn-primary pull-right btn-xs">Back</a></h2>
+@if (Session["groupMemId"].ToString() == Session["UserId"].ToString())
+{
+    using (Html.BeginForm("_addExperienceTopic", "community", FormMethod.Post))
+    {
+        <div class="row">
+            <div class="col-sm-8 col-sm-offset-2 marginTop30px">
+                <input type="hidden" value="0" name="topicId" />
+                <input type="hidden" value="@Session["groupId"]" name="grId" />
+                <p>
+                    <label>Select Category</label>
+                    <select class="form-control" name="ServiceCat">
+                        <option value="-1">Select Service Category</option>
+                        <option value="1" @(ViewBag.CatId == 1 ? "selected" : "")>Products</option>
+                        <option value="2" @(ViewBag.CatId == 2 ? "selected" : "")>Services</option>
+                    </select>
+                </p>
+                <div>
+                    <label>Search By Keyword</label>
+                    <input type="hidden" name="serviceId" value="0" />
+                    <input list="OfferServOnKey" name="OfferServOnKey" autocomplete="off" class="form-control" placeholder="Enter Items" />
+                    <ul id="OfferServOnKey" class="autoCompleteBox"></ul>
+                </div>
+                <p><label>Topic Description</label><textarea rows="6" class="form-control" name="description"></textarea></p>
+                <p class="text-right"><input type="submit" class="btn btn-primary" value="Add Topic" /></p>
+            </div>
+        </div>
+    }
+}
+else
+{
+    <h3 class="text-center">You Are Not Authorized Person</h3>
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("input[name='OfferServOnKey']").keyup(function () {
+            var curr = $(this);
+            var length = $(this).val().length;
+            var dataL = $("#OfferServOnKey option").length;
+            if (length < 3) {
+                $("#OfferServOnKey li").remove();
+            }
+            if (length == 3 && dataL == 0) {
+                var CatId = $("form select[name='ServiceCat']").val();
+                var keyword = $(this).val();
+                var data = "{'CatId':" + CatId + ",'keywords':'" + keyword + "'}";
+                if (CatId != -1) {
+                    $("#OfferServOnKey").empty();
+                    $.ajax({
+                        type: "POST",
+                        url: "/AutoComplete/getServicesOffered", // the URL of the controller action method
+                        data: data, // optional data
+                        dataType: "json",
+                        contentType: "application/json; charset=utf-8",
+                        success: function (result) {
+                            var prData = JSON.stringify(result);
+                            var serOffList = JSON.parse(prData);
+                            for (var i = 0; i < serOffList.length; i++) {
+                                $("#OfferServOnKey").append("<li data-id='" + serOffList[i].Request_Details_ID + "'>" + serOffList[i].Request_Details_Title + " " + serOffList[i].Mem_Name + "</li>")
+                            }
+                            $(curr).next().addClass("active");
+                        },
+                        Error: function (err) {
+                            alert(err);
+                        }
+                    });
+                } else {
+                    $("#notification .modal-body h4").text("Please Select the Service Category");
+                    $("#notification").modal("show");
+                }
+
+            } else {
+                var value = $(this).val().toLowerCase();
+                $("#OfferServOnKey li").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            }
+        });
+
+        $(".autoCompleteBox").on("click", "li", function () {
+            var inpBox = $(this).parent().prev();
+            var Id = $(this).attr("data-id");
+            var selectedItem = $(this).text();
+            inpBox.val(selectedItem);
+            $("input[name='serviceId']").val(Id);
+            $(this).parent().removeClass("active");
+        })
+    });
+</script>

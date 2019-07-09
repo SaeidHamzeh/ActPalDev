@@ -1,0 +1,52 @@
+﻿
+@if (Session["UserID"] == null)
+{
+    ViewBag.Title = "Product Details";
+    Layout = "~/Views/Shared/_Shop_Layout.cshtml";
+}
+else
+{
+    ViewBag.Title = "Product Details";
+    Layout = "~/Views/Shared/_Shop_Dashboard_Layout.cshtml";
+}
+
+
+<section class="container-fluid cart_page marginTop30px">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-3">
+                @Html.Action("_product_filter", "shop", new { categoryId = ViewBag.catId, catType = ViewBag.ctype })
+            </div>
+            <div class="col-sm-9">
+                <h4 class="searchedDataSort">
+                    iPhone - 6 Items <span class="pull-right">
+                        Sort By:
+                        <select name="sortBy">
+                            <option value="-1">--Choose An Option--</option>
+                            <option value="popularity">Popularity</option>
+                            <option value="lowtohigh">Price -Low to High</option>
+                            <option value="hightolow">Price -High to Low</option>
+                            <option value="newest">Newest First</option>
+                        </select>
+                    </span>
+                </h4>
+
+                <input type="hidden" name="keyword" value="@ViewBag.keyword">
+                <div class="productBoxPanel" id="searchedData">
+                    @Html.Action("_search_data_by_keywords", "shop", new { keyword = ViewBag.keyword,sortBy="" })
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".searchedDataSort select[name='sortBy']").change(function () {
+            var keyword = $("input[name='keyword']").val().replace(" ","_");
+            var sortBy = $(this).val();
+            
+            $("#searchedData").load('@Url.Action("_search_data_by_keywords", "shop")?keyword=' + keyword + '&sortBy=' + sortBy);
+        });
+    });
+</script>

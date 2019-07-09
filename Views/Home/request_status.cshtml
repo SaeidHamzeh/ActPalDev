@@ -1,0 +1,299 @@
+﻿@model IEnumerable<ViewModels.RequestDetailViewModel>
+
+
+@if (@Session["UserID"] == null)
+{
+
+    ViewBag.Title = "Home Page";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+else
+{
+    ViewBag.Title = "Home Page";
+    Layout = "~/Views/Shared/_LayoutDashboard.cshtml";
+}
+
+
+@Html.Partial("_optionSearchPanel")
+
+
+<div class="clearfix"></div>
+<!-- Nav tabs -->
+<!-- Tab panes -->
+<!-- Nav tabs -->
+@if (Model.Count() > 0)
+{
+    foreach (var item in Model)
+    {
+        var flag = (Session["UserId"] == null && ViewBag.shareStatus == 2) ? true : (Session["UserId"] != null) ? true : false;
+        
+        <div class="clearfix marginTop10px"></div>
+        if (flag) { 
+        <ul class="nav nav-tabs tabsButton requestStatusTabs" role="tablist">
+            <li role="presentation" class="@(Request.QueryString["name"] == null || Request.QueryString["name"] == "request" ? "active" : "")"><a href="#request" class="changeURL" data-dataurl="request" role="tab" data-toggle="tab">Request</a></li>
+            <li role="presentation" class="@(Request.QueryString["name"] == "photos" ? "active" : "")"><a href="#photos" class="changeURL" data-dataurl="photos" aria-controls="photos" role="tab" data-toggle="tab">Photos</a></li>
+            <li role="presentation" class="@(Request.QueryString["name"] == "movies" ? "active" : "")"><a href="#movies" class="changeURL" data-dataurl="movies" aria-controls="movies" role="tab" data-toggle="tab">Movies</a></li>
+            <li role="presentation" class="@(Request.QueryString["name"] == "comments" ? "active" : "")"><a href="#comments" class="changeURL" data-dataurl="comments" aria-controls="comments" role="tab" data-toggle="tab">Comments</a></li>
+        </ul>
+
+        <!-- Tab panes -->
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane @(Request.QueryString["name"] == null || Request.QueryString["name"] == "request" ? "active" : "")" id="request">
+                <div class="requestStatusBox">
+                    <div class="col-sm-3">
+                        <div class="requestStatus">
+                            <p><img src="~/Content/images/request-receive-icon.png" /></p>
+                            <h5>Recieve Request</h5>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        @if (item.Request_Status == 2)
+                        {
+                            <div class="requestStatus active" data-reqhisid="@item.Request_History_ID">
+                                <p><img src="~/Content/images/process-request-active.png" /></p>
+                                <h5>Process Request</h5>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="requestStatus">
+                                <p><img src="~/Content/images/process-request.png" /></p>
+                                <h5>Process Request</h5>
+                            </div>
+                        }
+                    </div>
+                    <div class="col-sm-3">
+                        @if (item.Request_Status == 3)
+                        {
+                            <div class="requestStatus active">
+                                <p><img src="~/Content/images/confirm-request-icon-active.png" /></p>
+                                <h5>Confirm Request</h5>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="requestStatus">
+                                <p><img src="~/Content/images/confirm-request-icon.png" /></p>
+                                <h5>Confirm Request</h5>
+                            </div>
+                        }
+                    </div>
+                    <div class="col-sm-3">
+                        @if (item.Request_Status == 4)
+                        {
+                            <div class="requestStatus active">
+                                <p><img src="~/Content/images/complete-close-active.png" /></p>
+                                <h5>Request Completed and Closed</h5>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="requestStatus">
+                                <p><img src="~/Content/images/complete-close.png" /></p>
+                                <h5>Request Completed and Closed</h5>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+
+                <div class="requestSentFormBox">
+                    
+                    @if (ViewBag.catId == 1)
+                    {                        
+                            @Html.Action("_view_product_detail", "Home", new { serviceId = ViewBag.serviceId });
+                       
+                    }
+                    else if (ViewBag.catId == 2)
+                    {                        
+                            @Html.Action("_view_services_detail", "Home", new { serviceId = ViewBag.serviceId });
+                        
+                    }
+                    else if (ViewBag.catId == 3)
+                    {                        
+                            @Html.Action("_view_travels_detail", "Home", new { serviceId = ViewBag.serviceId });                       
+                    }
+                </div>
+                @if (item.Request_Status == 2)
+                {
+                    <div class="row">
+                        <div class="col-sm-12 text-center">
+                            <button type="button" class="btn btn-primary" id="cancelRequest">Cancel Request</button>
+                        </div>
+                    </div>
+                }
+
+            </div>
+
+            <div role="tabpanel" class="tab-pane @(Request.QueryString["name"] == "photos" ? "active" : "")" id="photos">
+                <div class="row">
+                    <div class="col-sm-12">
+                        @if (Model.Count() > 0)
+                        {
+                            <div id="allReqPhoto">
+                                @Html.Action("_request_photos")
+                            </div>
+                        }
+                        else
+                        {
+                            <h3>No Record Found</h3>
+                        }
+                    </div>
+                </div>
+            </div>
+            <div role="tabpanel" class="tab-pane @(Request.QueryString["name"] == "movies" ? "active" : "")" id="movies">
+                <div class="row">
+                    <div class="col-sm-12">
+                        @if (Model.Count() > 0)
+                        {
+                            <div id="allReqPhoto">
+                                @Html.Action("_request_movies")
+                            </div>
+                        }
+                        else
+                        {
+                            <h3>No Record Found</h3>
+                        }
+                    </div>
+                </div>
+            </div>
+            <div role="tabpanel" class="tab-pane @(Request.QueryString["name"] == "comments" ? "active" : "")" id="comments">
+                @if (Model.Count() > 0)
+                {
+                    <div class="row">
+                        <div class="col-sm-10 col-sm-offset-1">
+                            <br />
+                            @using (Ajax.BeginForm("_request_comments", "Home", new AjaxOptions { HttpMethod = "Get", LoadingElementId = "loadinglogin", UpdateTargetId = "allCommentList", OnComplete = "ClearInputField" }))
+                            {
+                                <input type="hidden" name="reqHId" />
+                                <p><textarea class="form-control" name="comment"></textarea></p>
+                                <p class="text-right"><input type="submit" class="btn btn-primary" value="Comment" /></p>
+                            }
+                            @*<div id="tempCommentForm">
+                                    <p><textarea class="form-control" name="comment"></textarea></p>
+                                    <p class="text-right"><a id="loginF" class="btn btn-primary">Comment</a></p>
+                                </div>*@
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-10 col-sm-offset-1">
+                            <div id="allCommentList">
+                                @Html.Action("_request_comments")
+                            </div>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="col-lg-12">
+                        <h3>No Record Found</h3>
+                    </div>
+                }
+            </div>
+
+        </div>
+        }else
+{
+    <div class="col-lg-12">
+        <h3>No Record Found</h3>
+    </div>
+}
+
+    }
+}
+else
+{
+    <div class="col-lg-12">
+        <h3>No Record Found</h3>
+    </div>
+}
+<div class="modal fade" id="serviceMoviePlay" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header blueHeading">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Video Player</h4>
+            </div>
+            <div class="modal-body">
+                <div class="currentVideo">
+                    <div class="videoSection">
+                        <a href="" download target="_blank" class="btn btn-default downloadMoviebtn"><i class="fa fa-download"></i></a>
+                        <video controls id="playedVideo">
+                            <source src="" type="video/mp4" />
+                            <source src="" type="video/ogg">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("input[name='reqHId']").val($("#reqId").val());
+        var userId = $("#userId").val();
+
+
+        $("#loginF").click(function () {
+            $("#confirmation .modal-body h4").text("Please Login First");
+            $("#confirmation .modal-footer a").hide();
+            $("#confirmation .modal-footer button").text("Ok");
+            $("#confirmation").modal("show");
+        });
+
+        $("textarea[name='comment']").keyup(function (e) {
+            var key = e.which;
+            if (key == 13)  // the enter key code
+            {
+                $("#form0 input[type='submit']").trigger('click');
+            }
+        });
+        $(".fancybox").fancybox();
+
+        $("#cancelRequest").click(function () {
+            var reqHisId = $(".requestStatus.active").attr("data-reqhisid");
+            var data = { "Request_History_ID": reqHisId }
+            confirmBox("Do You Want Cancel This Request!");
+            $("#confirmBox").modal("show").on('click', '#confirmResponse', function (e) {
+                $.ajax({
+                    type: "Post",
+                    url: "/User/cancel_request",
+                    data: data,
+                    dataType: "text",
+                    success: function (data) {
+                        $("#confirmBox").modal("hide");
+                        $('#confirmation').modal({
+                            backdrop: 'static',
+                            keyboard: false
+                        })
+                        $("#confirmation").modal("show");
+                        var msg;
+                        if (data == "0") {
+                            msg = "Request Cancel successfully !";
+                        } else {
+                            msg = data;
+                        }
+                        $("#confirmation .modal-body h4").text(msg);
+                        $("#confirmation a").attr("href", "/User/").show();
+                        $("#confirmation .close").remove();
+                        $("#confirmation .modal-footer button").hide();
+                    },
+                    error: function (data) {
+                        //alert(data.d + "Error");
+                    }
+                });
+            });
+        });
+    });
+    function ClearInputField() {
+        $("textarea[name='comment']").val("");
+    }
+
+</script>

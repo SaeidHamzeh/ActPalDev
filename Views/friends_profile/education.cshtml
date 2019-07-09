@@ -1,0 +1,77 @@
+﻿@model Models.UserEducationModel
+
+@if (@Session["UserID"] == null)
+{
+    Response.Redirect("/");
+}
+else
+{
+    ViewBag.Title = "Gallery Page";
+    Layout = "~/Views/Shared/_LayoutFriends.cshtml";
+}
+
+@if (Model != null)
+{
+
+
+    <div class="row">
+        <div class="col-lg-12">
+            <h3 class="blueHeading">Education</h3>
+        </div>
+        <div class="clearfix"></div>
+
+        <div class="col-md-10 col-md-offset-1">
+            <h4>Education</h4>
+            <p>
+                @Model.Edu_description
+            </p>
+
+            <h4>School</h4>
+            <p>@Model.Schools_detail</p>
+
+            <h4>Skill Summary</h4>
+            <p>
+                @Model.Skill_detail
+            </p>
+           
+
+            <h4>Experience</h4>            
+            <p>
+                @Model.Experience_detail
+            </p>
+            @*<ul>
+                    <li>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.</li>
+                    <li>Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece</li>
+                    <li>There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form</li>
+                    <li>The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. </li>
+                </ul>*@
+
+
+            <h4>Certificates</h4>            
+            <p>
+                @Model.Certificate_detail
+            </p>
+            @*<ul>
+                    <li>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.</li>
+                    <li>Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece</li>
+                    <li>There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form</li>
+                    <li>The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. </li>
+                </ul>*@
+            <h4>Interest</h4>
+            <p>
+                @Model.Interests_detail
+            </p>
+
+
+        </div>
+    </div>
+}
+else
+{
+    <div class="col-md-10 col-md-offset-1">
+       
+        <p>
+            <h4>No details Found</h4>
+        </p>
+    </div>
+}

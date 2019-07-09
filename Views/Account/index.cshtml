@@ -1,0 +1,33 @@
+﻿
+@{
+    ViewBag.Title = "index";
+    Layout = "~/Views/Shared/_Shop_Layout.cshtml";
+}
+
+<section class="container-fluid" style="padding:100px 0;background:#f0f0f0;">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="loginBox">
+                    <div class="loginBanner tableCellBox" style="background:url(/Content/assets/images/login_banner.jpg) no-repeat;background-size:cover;color:#fff;">
+                        <h4>New to ActPal</h4>
+                        <p style="color:#fff;margin-bottom:40px">It’s easy to join ACTPAL with simple signup.</p>
+                        <p>
+                            <a href="/account/registration" class="btn BtnCssyellow">Create Account</a>
+                        </p>
+                    </div>
+                    <div class="loginFormBox tableCellBox">
+                        <h4 class="marginB30Only">We are ACTPAL<br />
+                            <small>Welcome Back, Please login to your account.</small></h4>
+                        @Html.Action("_Login", "Account")
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                
+                @*@Html.Action("Registration", "Account")*@
+            </div>
+        </div>
+    </div>
+</section>
+

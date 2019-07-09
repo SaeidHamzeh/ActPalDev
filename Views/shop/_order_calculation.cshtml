@@ -1,0 +1,15 @@
+﻿<ul>
+    <li>
+        <label>Total</label><span>$ @ViewBag.totalCost</span>
+    </li>
+    <li>
+        <label>Discount</label><span>- $ @ViewBag.totalDiscount</span>
+    </li>
+    <li>
+        <label>Delivery Charges</label><span>$ 0</span>
+    </li>
+    <li>
+        <label>Total Payble</label><span>$ @ViewBag.totalDiscountCost</span>
+    </li>
+    <li><label>Reward Amount</label> <span>$ @String.Format("{0:0.00}", ViewBag.rewardAmount)</span></li>
+</ul>

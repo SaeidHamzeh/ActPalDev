@@ -1,0 +1,402 @@
+﻿@model ViewModels.ServiceProviderViewModel
+
+<div class="col-md-12 marginTop30px">
+    <p>
+        <strong>Do you want Actpal to help you in your business?</strong>        
+            @if (Model != null)
+            {
+                <span><input type="radio" checked="checked" name="business" id="yes" /> <label for="yes">Yes</label></span>
+            }
+            else
+            {
+                <span><input type="radio" name="business" id="yes" /> <label for="yes">Yes</label></span>
+            }
+            <input type="radio" name="business" id="no" />
+            <label for="no">No</label>
+        
+    </p>
+    <div class="clearfix marginTop30px"></div>
+
+
+
+    @using (Ajax.BeginForm("BecomeServiceProvider", "User", null, new AjaxOptions() { HttpMethod = "POST", OnSuccess = "becomeServiceProvider", LoadingElementId = "loadinglogin", UpdateTargetId = "basicInfo-body" }))
+    {
+        if (Model != null)
+        {
+
+            <div class="form-group businessForm active">
+                <input type="hidden" name="ServiceProvider_ID" value="@Model.ServiceProvider_ID" />
+                <div class="row">
+                    <label class="col-sm-4">Company/Individual Business Name</label>
+                    <span class="col-sm-8"><input type="text" name="ServiceProvider_Name" value="@Model.ServiceProvider_Name" class="form-control" /></span>
+                </div>
+                <div class="row">
+                    <label class="col-sm-4">Address</label>
+                    <span class="col-sm-8"><textarea class="form-control" name="ServiceProvider_Address">@Model.address</textarea></span>
+                </div>
+                <div class="row">
+                    <label class="col-sm-4">Country</label>
+                    <span class="col-sm-8" id="CountryContainer1">
+                        @if (Model.countryId > 0)
+                        {
+                            @Html.Action("ServCountryView", "CascadingDropDown", new { selectedValue = Model.countryId })
+                        }
+                        else
+                        {
+                            @Html.Action("ServCountryView", "CascadingDropDown")
+                        }
+                    </span>
+                </div>
+                <div class="row">
+                    <label class="col-sm-4">State</label>
+                    <span class="col-sm-8" id="StateProvinceContainer1">
+                        @if (Model.stateId > 0)
+                        {
+                            @Html.Action("ServStateProvinceView", "CascadingDropDown", new { countryID = Model.countryId, selectedValue = Model.stateId })
+                        }
+                        else
+                        {
+                            @Html.Action("ServStateProvinceView", "CascadingDropDown")
+                        }
+                    </span>
+                </div>
+                <div class="row">
+                    <label class="col-sm-4">City</label>
+                    <span class="col-sm-8" id="CityContainer1">
+                        @if (Model.stateId > 0)
+                        {
+                            @Html.Action("ServCityView", "CascadingDropDown", new { countryID = Model.countryId, stateprovinceID = Model.stateId, selectedValue = Model.cityId })
+                        }
+                        else
+                        {
+                            @Html.Action("ServCityView", "CascadingDropDown")
+                        }
+                    </span>
+                </div>
+                <div class="row">
+                    <label class="col-sm-4">ZipCode</label>
+                    <span class="col-sm-8"><input type="text" name="ServiceProvider_Zip" onkeydown="return isNumber(event)" value="@Model.zipCode" class="form-control" /></span>
+                </div>
+                <div class="row">
+                    <label class="col-sm-4">Tel</label>
+                    <span class="col-sm-8"><input type="text" name="ServiceProvider_Tel" onkeydown="return isNumber(event)" value="@Model.phone" data-optional="optional" class="form-control" /></span>
+                </div>
+                <div class="row">
+                    <label class="col-sm-4">Fax</label>
+                    <span class="col-sm-8"><input type="text" name="ServiceProvider_Fax" onkeydown="return isNumber(event)" value="@Model.fax" data-optional="optional" class="form-control" /></span>
+                </div>
+                <div class="row">
+                    <label class="col-sm-4">Industry</label>
+                    <span class="col-sm-8" id="industryList">
+                        @Html.Action("IndustryView", "CascadingDropDown", new { selectedValue = Model.industryId })
+                    </span>
+                    <span class="marginTop10px forOther col-sm-8 col-sm-offset-4">
+                        <input type="text" class="form-control" id="industryName" placeholder="Enter Industry" />
+                        <button class="btn btn-primary pull-right marginTop10px" id="addIndustry">Add Industry</button>
+                    </span>
+                </div>
+
+                <div class="row">
+                    <label class="col-sm-4">Business Type</label>
+                    <span class="col-sm-8" id="BusinessTypeList">
+                        @Html.Action("BusinessTypeView", "CascadingDropDown", new { industryId = Model.industryId, selectedValue = Model.businessTypeId })
+                    </span>
+                    <span class="marginTop10px forOther col-sm-8 col-sm-offset-4" id="businessTypeOther">
+                        <input type="text" class="form-control" id="businessName" placeholder="Business Type" />
+                        <button class="btn btn-primary pull-right marginTop10px" id="addBusinessType">Add Business Type</button>
+                    </span>
+                </div>
+                <div class="row">
+                    <label class="col-sm-4">Business Community</label>
+                    <span class="col-sm-8" id="BusinessCommunity">
+                        @Html.Action("BusinessCommunityView", "CascadingDropDown", new { selectedValue = Model.businessCommId })
+                    </span>
+                    <span class="marginTop10px forOther col-sm-8 col-sm-offset-4" id="businessCommunityOther">
+                        <input type="text" class="form-control" id="CommunityName" placeholder="Community Name" />
+                        <button class="btn btn-primary pull-right marginTop10px" id="addCommunity">Add Community</button>
+                    </span>
+                </div>
+                <div class="row">
+                    <label class="col-sm-4">Business Email</label>
+                    <span class="col-sm-8"><input type="text" name="ServiceProvider_Email" readonly value="@Model.BusinessEmail" class="form-control" /></span>
+                </div>
+                <div class="row">
+                    <label class="col-sm-4">Business User Name</label>
+                    <span class="col-sm-8"><input type="text" name="ServiceProvider_UserName" readonly value="@Model.Bus_user_name" class="form-control" /></span>
+                </div>
+                @*<div class="row">
+                        <label>Password</label>
+                        <span><input type="text" name="ServiceProvider_Password" class="form-control" /></span>
+                    </div>*@
+                @*<div class="row">
+                        <label>Confirm Password</label>
+                        <span><input type="text" class="form-control" /></span>
+                    </div>*@
+
+                <div class="row">
+                    <p class="text-right">
+                        <input type="submit" class="btn btn-primary" value="Save All And Close" disabled="disabled" />
+                    </p>
+                </div>
+            </div>
+
+        }
+        else
+        {
+            <div class="form-group businessForm">
+                <input type="hidden" name="ServiceProvider_ID" value="0" />
+                <div class="row">
+                    <label class="col-sm-4">Company/Individual Business Name<span class="requiredField">(*)</span></label>
+                    <span class="col-sm-8"><input type="text" name="ServiceProvider_Name" class="form-control" /></span>
+                </div>
+                <div class="row">
+                    <label class="col-sm-4">Address<span class="requiredField">(*)</span></label>
+                    <span class="col-sm-8"><textarea class="form-control" name="ServiceProvider_Address"></textarea></span>
+                </div>
+                <div class="row">
+                    <label class="col-sm-4">Country<span class="requiredField">(*)</span></label>
+                    <span class="col-sm-8" id="CountryContainer1">
+                        @Html.Action("ServCountryView", "CascadingDropDown")
+                    </span>
+                </div>
+                <div class="row">
+                    <label class="col-sm-4">State<span class="requiredField">(*)</span></label>
+                    <span class="col-sm-8" id="StateProvinceContainer1">
+                        @Html.Action("ServStateProvinceView", "CascadingDropDown")
+                    </span>
+                </div>
+                <div class="row">
+                    <label class="col-sm-4">City<span class="requiredField">(*)</span></label>
+                    <span class="col-sm-8" id="CityContainer1">
+                        @Html.Action("ServCityView", "CascadingDropDown")
+                    </span>
+                </div>
+                <div class="row">
+                    <label class="col-sm-4">ZipCode<span class="requiredField">(*)</span></label>
+                    <span class="col-sm-8"><input type="text" name="ServiceProvider_Zip" onkeydown="return isNumber(event)" class="form-control" /></span>
+                </div>
+                <div class="row">
+                    <label class="col-sm-4">Tel</label>
+                    <span class="col-sm-8"><input type="text" name="ServiceProvider_Tel" onkeydown="return isNumber(event)" class="form-control" data-optional="optional" /></span>
+                </div>
+                <div class="row">
+                    <label class="col-sm-4">Fax</label>
+                    <span class="col-sm-8"><input type="text" name="ServiceProvider_Fax" onkeydown="return isNumber(event)" class="form-control" data-optional="optional" /></span>
+                </div>
+                <div class="row">
+                    <label class="col-sm-4">Industry<span class="requiredField">(*)</span></label>
+                    <span class="col-sm-8" id="industryList">
+                        @Html.Action("IndustryView", "CascadingDropDown")
+                    </span>
+                    <span class="marginTop10px forOther col-sm-8 col-sm-offset-4">
+                        <input type="text" class="form-control" id="industryName" placeholder="Enter Industry" />
+                        <button class="btn btn-primary pull-right marginTop10px" id="addIndustry">Add Industry</button>
+                    </span>
+
+                </div>
+                <div class="row">
+                    <label class="col-sm-4">Business Type<span class="requiredField">(*)</span></label>
+                    <span class="col-sm-8" id="BusinessTypeList">
+                        @Html.Action("BusinessTypeView", "CascadingDropDown")
+                    </span>
+                    <span class="marginTop10px forOther col-sm-8 col-sm-offset-4" id="businessTypeOther">
+                        <input type="text" class="form-control" id="businessName" placeholder="Business Type" />
+                        <button class="btn btn-primary pull-right marginTop10px" id="addBusinessType">Add Business Type</button>
+                    </span>
+                </div>
+                <div class="row">
+                    <label class="col-sm-4">Business Community<span class="requiredField">(*)</span></label>
+                    <span class="col-sm-8" id="BusinessCommunity">
+                        @Html.Action("BusinessCommunityView", "CascadingDropDown")
+                    </span>
+                    <span class="marginTop10px forOther col-sm-8 col-sm-offset-4" id="businessCommunityOther">
+                        <input type="text" class="form-control" id="CommunityName" placeholder="Community Name" />
+                        <button class="btn btn-primary pull-right marginTop10px" id="addCommunity">Add Community</button>
+                    </span>
+                </div>
+                <div class="row">
+                    <label class="col-sm-4">Business Email<span class="requiredField">(*)</span></label>
+                    <span class="col-sm-8"><input type="text" name="ServiceProvider_Email" class="form-control" /></span>
+                </div>
+
+                <div class="row">
+                    <label class="col-sm-4">Password<span class="requiredField">(*)</span></label>
+                    <span><input type="password" name="ServiceProvider_Password" id="ServPassword" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" class="form-control" /></span>
+                    <div id="passwordValidation">
+                        <p>
+                            <label class="col-sm-4"></label>
+                            <span>
+                                Password must contain the following:<br />
+                                <text id="letter" class="invalid">A <b>lowercase</b> letter</text>,<br />
+                                <text id="capital" class="invalid">A <b>capital (uppercase)</b> letter</text>,<br />
+                                <text id="number" class="invalid">A <b>number</b></text>, <br />
+                                <text id="length" class="invalid">Minimum <b>8 characters</b></text>
+                            </span>
+                        </p>
+                    </div>
+                </div>
+                <div class="row"><label class="col-sm-4">Confirm Password<span class="requiredField">(*)</span></label><span><input type="password" name="confirmPass" id="confirmPass" class="form-control" /></span></div>
+
+                <div class="row">
+                    <label class="col-sm-4">Business User Name<span class="requiredField">(*)</span></label>
+                    <span><input type="text" name="ServiceProvider_UserName" id="userName" class="form-control" /></span>
+                    <span class="messageBox"></span>
+                </div>
+
+                <div class="row">
+                    <p class="text-right">
+                        <input type="submit" class="btn btn-primary" disabled value="Save All And Close" />
+
+                    </p>
+                </div>
+
+            </div>
+        }
+    }
+</div>
+
+
+<script type="text/javascript">
+    $(function () {
+        // Populate State/Provinces
+        $('#addIndustry').click(function () {
+            var industryName = $("#industryName").val().trim();
+            // $("#industryName").parent().find(".errorMsg").remove();
+            if (industryName != "") {
+                var data = "{'industryName':'" + industryName + "'}";
+                $.ajax({
+                    type: "POST",
+                    url: "/CascadingDropDown/_addIndustry", // the URL of the controller action method
+                    data: data, // optional data
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    success: function (result) {
+                        if (result > 0) {
+                            $('#industryList').load('@Url.Action("IndustryView", "CascadingDropDown")?selectedValue=' + result);
+                            $("#businessTypeOther").addClass("active").attr("data-industryId", result);
+                            $("#industryName").parent().removeClass("active");
+                        } else {
+                            $("#industryName").parent().append("<span class='errorMsg'>Something is wrong!</span>");
+                        }
+                    },
+                    error: function (req, status, error) {
+                        // do something with error
+                    }
+                });
+            } else {
+                $("#industryName").parent().append("<span class='errorMsg'>Something is wrong!</span>");
+            }
+        });
+
+        $('#addBusinessType').click(function () {
+            var businessName = $("#businessName").val();
+            var industryId = $("#Industry-DropdownID").val();
+            var data = "{'businessName':'" + businessName + "','industryId':'" + industryId + "'}";
+            var curr = $(this);
+
+            $.ajax({
+                type: "POST",
+                url: "/CascadingDropDown/_addBusinessType", // the URL of the controller action method
+                data: data, // optional data
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                success: function (result) {
+                    if (result > 0) {
+                        $('#BusinessTypeList').load('@Url.Action("BusinessTypeView","CascadingDropDown")?industryID=' + industryId + '&selectedValue=' + result);
+                        curr.parent().removeClass("active");
+                    } else {
+                        alert("Something is wrong!");
+                    }
+                },
+                error: function (req, status, error) {
+                    // do something with error
+                }
+            });
+        });
+
+        $('#addCommunity').click(function () {
+            var CommunityName = $("#CommunityName").val();
+            var data = "{'CommunityName':'" + CommunityName + "'}";
+            $.ajax({
+                type: "POST",
+                url: "/CascadingDropDown/_addCommunity", // the URL of the controller action method
+                data: data, // optional data
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                success: function (result) {
+                    if (result > 0) {
+                        $('#BusinessCommunity').load('@Url.Action("BusinessCommunityView", "CascadingDropDown")?selectedValue=' + result);
+                        $("#businessCommunityOther").removeClass("active");
+                    } else {
+                        alert("Something is wrong!");
+                    }
+                },
+                error: function (req, status, error) {
+                    // do something with error
+                }
+            });
+        });
+    });
+
+</script>
+
+
+<script>
+    var myInput = document.getElementById("ServPassword");
+    var letter = document.getElementById("letter");
+    var capital = document.getElementById("capital");
+    var number = document.getElementById("number");
+    var length = document.getElementById("length");
+
+    // When the user clicks on the password field, show the message box
+    myInput.onfocus = function () {
+        $("#passwordValidation").css("display", "block");
+    }
+
+    // When the user clicks outside of the password field, hide the message box
+    myInput.onblur = function () {
+        $("#passwordValidation").css("display", "none");
+    }
+
+    // When the user starts to type something inside the password field
+    myInput.onkeyup = function () {
+        // Validate lowercase letters
+        var lowerCaseLetters = /[a-z]/g;
+        if (myInput.value.match(lowerCaseLetters)) {
+            letter.classList.remove("invalid");
+            letter.classList.add("valid");
+        } else {
+            letter.classList.remove("valid");
+            letter.classList.add("invalid");
+        }
+
+        // Validate capital letters
+        var upperCaseLetters = /[A-Z]/g;
+        if (myInput.value.match(upperCaseLetters)) {
+            capital.classList.remove("invalid");
+            capital.classList.add("valid");
+        } else {
+            capital.classList.remove("valid");
+            capital.classList.add("invalid");
+        }
+
+        // Validate numbers
+        var numbers = /[0-9]/g;
+        if (myInput.value.match(numbers)) {
+            number.classList.remove("invalid");
+            number.classList.add("valid");
+        } else {
+            number.classList.remove("valid");
+            number.classList.add("invalid");
+        }
+
+        // Validate length
+        if (myInput.value.length >= 8) {
+            length.classList.remove("invalid");
+            length.classList.add("valid");
+        } else {
+            length.classList.remove("valid");
+            length.classList.add("invalid");
+        }
+    }
+</script>

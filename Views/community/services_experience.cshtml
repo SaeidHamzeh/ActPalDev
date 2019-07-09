@@ -1,0 +1,8 @@
+﻿
+@{
+    ViewBag.Title = "Services_Experience";
+    Layout = "~/Views/Shared/_Group_Topics.cshtml";
+}
+
+
+@Html.Action("_get_services_list", "community", new { catId = ViewBag.CatId })

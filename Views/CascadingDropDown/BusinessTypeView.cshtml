@@ -1,0 +1,6 @@
+﻿@model ViewModels.BusinessTypeViewModel
+
+@{
+    Layout = null;
+}
+@Html.DropDownListFor(p => p.BusTypeId, Model.BusinessTypeIEnum, "--Business Type--", new { @id = "BusinessTypeId", @class = "form-control", selected = @Model.BusTypeId })

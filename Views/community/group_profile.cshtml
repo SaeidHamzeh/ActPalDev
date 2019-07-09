@@ -1,0 +1,26 @@
+﻿@{
+    ViewBag.Title = "group_profile";
+    Layout = "~/Views/Shared/_Group_Topics.cshtml";
+}
+
+<h2 class="blueHeading">
+    Topic List
+
+    @if (Session["groupMemId"] == null)
+    {
+        <a href="~/community/groups" class="btn btn-primary pull-right btn-xs">Groups</a>
+
+    }
+    else if (Session["groupMemId"].ToString() == Session["UserId"].ToString())
+    {
+        <a href="~/community/add_group_topic?grId=@Session["groupId"]" class="btn btn-primary pull-right btn-xs">Add New Topic</a>
+    }
+</h2>
+@if (Session["groupMemId"] == null)
+{
+    <h3 class="text-center"><a href="~/community/groups">Go to Groups</a></h3>
+}
+else
+{
+    @Html.Action("_view_group_topics", "community", new { grId = ViewBag.grId })
+}

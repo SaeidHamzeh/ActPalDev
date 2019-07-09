@@ -1,0 +1,16 @@
+﻿@model IEnumerable<ViewModels.RequestCommentViewModel>
+
+
+@if(Model.Count() > 0){
+foreach(var comm in Model){
+<div class="commentBox">
+    <div class="imgBox img-circle">
+        <img src="@comm.Mem_photo" class=" img-responsive" />
+    </div>
+    <div class="commentContent">
+        <p><span class="userName">@comm.Mem_Name</span> <span class="dateTime pull-right">@comm.Request_Comment_Date</span></p>
+        <p>@comm.Request_Comment_Desc</p>
+    </div>
+</div>
+}
+}
